@@ -24,5 +24,7 @@ urlpatterns = [
     path('products/<int:pk>/edit/', ProductPatchView.as_view(), name='product_edit'),
     path('add/', views.addOrderItems, name='orders-add'),
     path('order/<str:pk>/', views.getOrderById, name='get_order_by_id'),
+    path('<str:pk>/pay/', views.updateOrderToPaid, name='pay'),
+    path('myorders/', views.getMyOrders, name='myorders'),
 ]
 

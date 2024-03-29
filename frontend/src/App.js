@@ -15,7 +15,7 @@ import ProductHome from "./Screens/ProductHomeScreen";
 import Home from "./Screens/HomeScreen";
 import RequestChangePass from "./Screens/RequestChangepass";
 import ConfirmChangePass from "./Screens/ConfirmChangepass";
-import UploadProduct from "./Screens/UploadScreen";
+import UploadScreen from "./Screens/UploadScreen";
 import OTPVerification from "./Screens/OTPVerification";
 import HomeScreen from "./Screens/HomeScreen";
 import StudentNav from "./Screens/StudentHomeScreen";
@@ -56,7 +56,7 @@ function App() {
           />
           <Route path="/products" element={<ProductHome />} exact />
           <Route path="/product/:id" element={<Productscreen />} />
-          <Route path="/upload" element={<UploadProduct />} />
+          <Route path="/upload" element={<UploadScreen />} />
           <Route
             path={`/verify-otp/user_id/:userId/otp/:otpId`}
             element={<OTPVerification />}

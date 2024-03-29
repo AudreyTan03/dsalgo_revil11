@@ -1,61 +1,38 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { uploadProduct } from '../actions/uploadAction'; // Adjust the import path as needed
-import './UploadScreen.css'; // Import your CSS file
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadProduct } from '../actions/uploadAction';
+import './UploadScreen.css';
 
-const UploadScreen = ({ uploadProduct }) => {
-    const [imageFile, setImageFile] = useState(null);
-    const [videoFile, setVideoFile] = useState(null);
+const UploadScreen = () => {
+    const dispatch = useDispatch();
+    // Access userInfo from the Redux store
+    const { userInfo } = useSelector(state => state.userLogin);
+
     const [name, setName] = useState('');
+    const [imageFile, setImageFile] = useState(null);
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [countInStock, setCountInStock] = useState('');
+    const [videoFile, setVideoFile] = useState(null);
 
-    const handleImageChange = (e) => {
-        setImageFile(e.target.files[0]);
-    };
-
-    const handleVideoChange = (e) => {
-        setVideoFile(e.target.files[0]);
-    };
-
-    const handleNameChange = (e) => {
-        setName(e.target.value);
-    };
-
-    const handleDescriptionChange = (e) => {
-        setDescription(e.target.value);
-    };
-
-    const handlePriceChange = (e) => {
-        setPrice(e.target.value);
-    };
-
-    const handleCountInStockChange = (e) => {
-        setCountInStock(e.target.value);
-    };
+    const handleInputChange = (e, setState) => setState(e.target.files[0]);
+    const handleTextChange = (e, setState) => setState(e.target.value);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        let formData = new FormData();
-        formData.append('image', imageFile);
-        formData.append('video', videoFile);
+        const formData = new FormData();
         formData.append('name', name);
+        formData.append('image', imageFile);
         formData.append('description', description);
         formData.append('price', price);
         formData.append('countInStock', countInStock);
+        formData.append('preview_video', videoFile);
 
-        // Dispatch the uploadProduct action
-        uploadProduct(formData);
+        // Dispatch the action, passing formData and the user's token
+        dispatch(uploadProduct(formData, userInfo.token));
 
-        // Reset form fields
-        setImageFile(null);
-        setVideoFile(null);
-        setName('');
-        setDescription('');
-        setPrice('');
-        setCountInStock('');
+        // Optionally reset form fields after submission
     };
 
     return (
@@ -63,28 +40,28 @@ const UploadScreen = ({ uploadProduct }) => {
             <h2>Upload Product</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="image">Image:</label>
-                    <input type="file" id="image" onChange={handleImageChange} accept="image/*" required />
-                </div>
-                <div>
-                    <label htmlFor="video">Video:</label>
-                    <input type="file" id="video" onChange={handleVideoChange} accept="video/*" required />
-                </div>
-                <div>
                     <label htmlFor="name">Name:</label>
-                    <input type="text" id="name" value={name} onChange={handleNameChange} required />
+                    <input type="text" id="name" value={name} onChange={(e) => handleTextChange(e, setName)} required />
+                </div>
+                <div>
+                    <label htmlFor="image">Image:</label>
+                    <input type="file" id="image" onChange={(e) => handleInputChange(e, setImageFile)} accept="image/*" required />
                 </div>
                 <div>
                     <label htmlFor="description">Description:</label>
-                    <textarea id="description" value={description} onChange={handleDescriptionChange} required />
+                    <textarea id="description" value={description} onChange={(e) => handleTextChange(e, setDescription)} required />
                 </div>
                 <div>
                     <label htmlFor="price">Price:</label>
-                    <input type="number" id="price" value={price} onChange={handlePriceChange} required />
+                    <input type="number" id="price" value={price} onChange={(e) => handleTextChange(e, setPrice)} required />
                 </div>
                 <div>
                     <label htmlFor="countInStock">Count in Stock:</label>
-                    <input type="number" id="countInStock" value={countInStock} onChange={handleCountInStockChange} required />
+                    <input type="number" id="countInStock" value={countInStock} onChange={(e) => handleTextChange(e, setCountInStock)} required />
+                </div>
+                <div>
+                    <label htmlFor="video">Preview Video:</label>
+                    <input type="file" id="video" onChange={(e) => handleInputChange(e, setVideoFile)} accept="video/*" required />
                 </div>
                 <button type="submit">Upload</button>
             </form>
@@ -92,4 +69,4 @@ const UploadScreen = ({ uploadProduct }) => {
     );
 };
 
-export default connect(null, { uploadProduct })(UploadScreen);
+export default UploadScreen;

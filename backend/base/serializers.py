@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
+from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,10 +11,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
+# def validate_image(file):
+#     # Validate file size, type, etc.
+#     if not file.name.endswith(('.png', '.jpg', '.jpeg')):
+#         raise ValidationError('Unsupported file type.')
+#     # Add more validations as needed
+# def validate_video(file):
+#     # Validate file size, type, etc.
+#     if not file.name.endswith('.mp4'):
+#         raise ValidationError('Unsupported file type. Only MP4 videos are allowed.')
+#     # Add more validations as needed (e.g., file size)
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields ='__all__'
+        fields = '__all__'
+
+    # def validate_image(self, value):
+    #     validate_image(value)
+    #     return value
+    
+    # def validate_preview_video(self, value):
+    #     validate_video(value)
+    #     return value
 
 
 class CategorySerializer(serializers.ModelSerializer):

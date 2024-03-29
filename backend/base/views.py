@@ -32,6 +32,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.permissions import IsAuthenticated
 from .models import Product
 from .serializers import ProductSerializer
+from datetime import datetime
 
 
 class ProductPatchView(generics.UpdateAPIView):
@@ -113,18 +114,15 @@ class CategoryDetail(APIView):
 
 class PostProduct(APIView):
     permission_classes = [IsAuthenticated]
-
+    parser_classes = (MultiPartParser, FormParser)
     def post(self, request, *args, **kwargs):
-        if not request.user.is_instructor:
-            return Response({'error': 'Only instructors can post products'}, status=status.HTTP_403_FORBIDDEN)
-        
         product_serializer = ProductSerializer(data=request.data)
         if product_serializer.is_valid():
-            product = product_serializer.save(user=request.user)
+            product_serializer.save()
             return Response(product_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            print('error', product_serializer.errors)
             return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -246,6 +244,24 @@ def getOrderById(request, pk):  # Changed 'pk' to 'id'
         return Response({'detail': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyOrders(request):
+    user = request.user
+    orders = user.order_set.all()
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateOrderToPaid(request, pk):
+    order = Order.objects.get(_id=pk)
+    order.isPaid = True
+    order.paidAt = datetime.now()
+    order.save()
+
+    return Response({'detail': 'Order was paid'})
 
     
 

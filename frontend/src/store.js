@@ -5,7 +5,7 @@ import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResend
 // import { userRegisterReducer } from './reducers/registerReducers'; // Import new reducers
 import { cartReducer } from './reducers/cartReducer';
 import { userChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
-import { orderCreateReducer, orderDetailReducer } from './reducers/orderReducer';
+import { orderCreateReducer, orderDetailReducer,  orderListMyReducer, orderPayReducer } from './reducers/orderReducer';
 import {videoListReducer, videoDetailsReducer} from './reducers/videoReducer';
 
 // Define rootReducer using combineReducers
@@ -26,6 +26,8 @@ const rootReducer = combineReducers({
     videoDetails : videoDetailsReducer,
     orderCreate: orderCreateReducer,
     orderDetail: orderDetailReducer, 
+    orderPay: orderPayReducer,
+    orderListMy: orderListMyReducer,
 });
 
 // Retrieve cartItems and userInfo from localStorage
