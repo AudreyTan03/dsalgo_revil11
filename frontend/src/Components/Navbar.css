@@ -1,0 +1,179 @@
+/* Styles for Main Navbar */
+.navbar {
+  background: #161A30;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  padding: 0 20px;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  color: #080808;
+  cursor: pointer;
+}
+
+.search-input {
+  padding: 8px 30px 8px 30px; /* Adjust padding for the icon */
+  margin-right: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 50%;
+}
+
+.dark-mode-toggle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; /* Circle shape */
+  cursor: pointer;
+  margin-right: 10px; /* Add margin between search bar and mode toggle */
+  border: 2px solid #fff; /* White border */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  background: linear-gradient(90deg, #fff 50%, transparent 50%); /* Half-moon effect */
+}
+
+.dark-mode-toggle.light {
+  background: linear-gradient(90deg, #fff 50%, transparent 50%); /* Light mode half-moon */
+}
+
+.dark-mode-toggle.dark {
+  background: linear-gradient(90deg, #000 50%, transparent 50%); /* Dark mode half-moon */
+}
+
+.menu-icon {
+  display: none;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.nav-links {
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-links:hover {
+  border-bottom: 2px solid #fff;
+}
+
+@media screen and (max-width: 960px) {
+  .navbar-container {
+    justify-content: space-between;
+  }
+
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 80px;
+    left: -100%;
+    width: 100%;
+    background: #161A30;
+    padding: 0;
+    transition: all 0.5s ease;
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  .nav-item {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+
+/* Styles for Secondary Navbar */
+.secondary-navbar {
+  background: #1d2a35; /* Set background color */
+  height: auto; /* Set height to auto */
+  display: flex;
+  align-items: center;
+  overflow-x: auto; /* Allow horizontal scrolling */
+  padding: 10px 0; /* Add padding above and below */
+}
+
+.subject-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Ensure subject links are displayed inline */
+}
+
+.subject-links .nav-item {
+  margin-right: 10px; /* Adjust margin between subject links */
+}
+
+.subject-links .nav-links {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold; /* Make subject names bold */
+  transition: border 0.3s, background-color 0.3s; /* Add transition effect for smooth hover */
+}
+
+.subject-links .nav-links:hover {
+  border: 1px solid #000; /* Add black border around subject link on hover */
+  background-color: #000; /* Change background color to black on hover */
+  padding: 5px 10px; /* Optional: Add padding to create space around the text */
+}
+
+.arrow-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin: 0 10px; /* Adjust margin between arrow buttons */
+  outline: none;
+}
+
+.arrow-btn:hover {
+  text-decoration: underline;
+}
+
+
+
+
+
