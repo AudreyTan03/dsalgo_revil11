@@ -29,7 +29,7 @@ function LoginScreen() {
         if (userInfo) {
             const { user_type } = userInfo;
             if (user_type === 'instructor') {
-                navigate('/HomeScreen');
+                navigate('/InstructorNav');
             } else {
                 navigate('/studenthomescreen');
             }

@@ -102,6 +102,7 @@ const ProductScreen = () => {
   return (
     <div>
       <h1>{product.name}</h1>
+      <p>Uploaded by: {product.user_name}</p>
       {product.preview_video && (
         <video controls autoPlay style={{ width: '25%' }}>
           <source src={product.preview_video} type="video/mp4" />

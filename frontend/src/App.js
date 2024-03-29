@@ -27,6 +27,7 @@ import VideoDetailScreen from './Screens/VideoDetailScreen';
 import PaymentScreen from "./Screens/PaymentScreen";
 import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 import OrderScreen from "./Screens/OrderScreen";
+import InstructorNav from "./Components/InstructorNav";
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
           <Route path="/edit" element={<EditScreen />} />
           <Route path="/homeScreen" element={<HomeScreen/>} />
           <Route path="/StudentNav" element={<StudentNav />} />
-
+          <Route path="/InstructorNav" element={<InstructorNav />} />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
