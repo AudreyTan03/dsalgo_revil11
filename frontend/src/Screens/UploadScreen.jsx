@@ -28,6 +28,8 @@ const UploadScreen = () => {
         formData.append('price', price);
         formData.append('countInStock', countInStock);
         formData.append('preview_video', videoFile);
+        formData.append('user_email', userInfo.email);
+
 
         // Dispatch the action, passing formData and the user's token
         dispatch(uploadProduct(formData, userInfo.token));

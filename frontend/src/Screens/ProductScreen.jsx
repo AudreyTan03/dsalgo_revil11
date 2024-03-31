@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 
 const ProductScreen = () => {
@@ -11,27 +11,20 @@ const ProductScreen = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const userInfo = useSelector((state) => state.userInfo); // Assuming userInfo is stored in Redux state
   const [userType, setUserType] = useState(null); // State to store user type
 
   useEffect(() => {
-    // Simulate fetching user type from server after login
-    // Replace this with actual logic to fetch user type from backend
-    const fetchUserType = async () => {
-      try {
-        // Example: Fetch user type from server
-        const response = await fetch('http://127.0.0.1:8000/api/user-type');
-        if (!response.ok) {
-          throw new Error(`Failed to fetch user type. Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setUserType(data.user_type); // Set user type in component state
-      } catch (error) {
-        console.error('Error fetching user type:', error);
-      }
-    };
+    const userInfoString = localStorage.getItem('userInfo');
+    if (userInfoString) {
+        const userInfo = JSON.parse(userInfoString);
+        const { user_type } = userInfo;
+        setUserType(user_type);
+    }
+}, []);
 
-    fetchUserType(); // Fetch user type when component mounts
 
+  useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/products/${id}`);
@@ -116,7 +109,7 @@ const ProductScreen = () => {
 
       <div>
         <button onClick={handleAddToCart}>Add to Cart</button>
-        {userType === 'instructor' && ( // Check user type directly from state
+        {userType === 'instructor' && (
           <>
             <button onClick={handleDeleteProduct}>Delete Product</button>
             <button onClick={handleEditProduct}>Edit Product</button>

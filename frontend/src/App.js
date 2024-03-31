@@ -28,6 +28,7 @@ import PaymentScreen from "./Screens/PaymentScreen";
 import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 import OrderScreen from "./Screens/OrderScreen";
 import InstructorNav from "./Components/InstructorNav";
+import DeleteScreen from "./Screens/DeleteScreen";
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
       <Container>
         <Routes>
           <Route path="/HeroSection" element={<HeroSection />} />
+          <Route path="/delete" element={<DeleteScreen />} />
+
           <Route path="/studenthomescreen" element={<StudentHomeScreen />} />
           <Route path="/edit" element={<EditScreen />} />
           <Route path="/homeScreen" element={<HomeScreen/>} />
