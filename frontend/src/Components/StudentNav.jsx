@@ -55,7 +55,7 @@ function StudentNav() {
         <ul className={click ? 'nav-menu active' : 'nav-menu'}>
           
           <li className='nav-item'>
-            <Link to='/products' className='nav-links' onClick={closeMobileMenu}>
+            <Link to='/Stuproducts' className='nav-links' onClick={closeMobileMenu}>
               Products
             </Link>
           </li>
