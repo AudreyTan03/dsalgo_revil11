@@ -31,18 +31,20 @@ export const orderCreateReducer = (state = {}, action) => {
             return state;
     }
 }
-export const orderDetailReducer = (state = { loading: true, order: { orderItems: [] } }, action) => {
-    switch (action.type) {
-        case ORDER_DETAIL_REQUEST:
-            return { ...state, loading: true };
-        case ORDER_DETAIL_SUCCESS:
-            // Ensure the entire order, including orderItems, is nested within an order object.
-            return { ...state, loading: false, order: action.payload };
-        case ORDER_DETAIL_FAIL:
-            return { ...state, loading: false, error: action.payload };
-        default:
-            return state;
-    }
+export const orderDetailReducer = (
+  state = { loading: true, order: {} }, // Initialize order with an empty object
+  action
+) => {
+  switch (action.type) {
+    case ORDER_DETAIL_REQUEST:
+      return { ...state, loading: true };
+    case ORDER_DETAIL_SUCCESS:
+      return { ...state, loading: false, order: action.payload };
+    case ORDER_DETAIL_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
 };
 
 

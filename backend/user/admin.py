@@ -31,12 +31,7 @@ class UserModelAdmin(BaseUserAdmin):
 
 # Register the new UserModelAdmin...
 admin.site.register(User, UserModelAdmin)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'bio')
-    search_fields = ('name', 'bio')
-    list_filter = ('user',)
-
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Profile)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):

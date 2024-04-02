@@ -128,18 +128,26 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='userprofile_pics')
     name = models.CharField(max_length=200)
-    bio =  models.TextField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.user.name
-   
+        return self.user.name if self.user.name else f"Profile for user {self.user.id}"
+
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
-        UserPreference.objects.create(user=instance, theme='light')
+        profile = Profile.objects.create(user=instance)
+        # Set profile name to user's name by default
+        profile.name = instance.name
+        profile.save()
+
+        # Create a UserPreference instance with the default theme for the new user
+        UserPreference.objects.create(user=instance)
     else:
-        instance.profile.save()
+        # Existing user; update profile and preferences if needed
+        if instance.profile:
+            instance.profile.name = instance.name  # Assuming you want to update the profile name to the user's username
+            instance.profile.save()
 
 
   

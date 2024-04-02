@@ -52,36 +52,37 @@ export const createOrder = (order) => async (dispatch, getState) => {
 };
 
 export const getOrderDetails = (id) => async (dispatch, getState) => {
-    try {
-        dispatch({ type: ORDER_DETAIL_REQUEST });
+  try {
+      dispatch({ type: ORDER_DETAIL_REQUEST });
 
-        const {
-            userLogin: { userInfo },
-        } = getState();
-        
-        const config = {
-            headers: {
-                Authorization: `Bearer ${userInfo.token.access}`,
-                "Content-Type": "application/json"
-            },
-        };
+      const {
+          userLogin: { userInfo },
+      } = getState();
 
-        const { data } = await axios.get(`/api/order/${id}/`, config);
-        // console.log("API Response:", data); // Log the API response
+      const config = {
+          headers: {
+              Authorization: `Bearer ${userInfo.token.access}`,
+              "Content-Type": "application/json"
+          },
+      };
 
-        dispatch({
-            type: ORDER_DETAIL_SUCCESS,
-            payload: data,
-        });
-    } catch (error) {
-        dispatch({
-            type: ORDER_DETAIL_FAIL,
-            payload: error.response && error.response.data.detail
+      const { data } = await axios.get(`/api/order/${id}/`, config);
+      console.log("API Response:", data); // Log the API response
+
+      dispatch({
+          type: ORDER_DETAIL_SUCCESS,
+          payload: data,
+      });
+  } catch (error) {
+      dispatch({
+          type: ORDER_DETAIL_FAIL,
+          payload: error.response && error.response.data.detail
                     ? error.response.data.detail
                     : error.message,
-        });
-    }
+      });
+  }
 };
+
 
   
   

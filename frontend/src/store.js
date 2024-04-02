@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
     videoList : videoListReducer,
     videoDetails : videoDetailsReducer,
     orderCreate: orderCreateReducer,
-    orderDetail: orderDetailReducer, 
+    orderDetails: orderDetailReducer, 
     orderPay: orderPayReducer,
     orderListMy: orderListMyReducer,
 });
