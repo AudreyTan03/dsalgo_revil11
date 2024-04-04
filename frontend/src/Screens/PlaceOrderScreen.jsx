@@ -12,19 +12,19 @@ function PlaceOrderScreen() {
     
     // Assuming your Redux state structure includes orderCreate which has success and order properties
     const orderCreate = useSelector((state) => state.orderCreate);
-    const { success, order } = orderCreate; // Extract success and order state
+    const { order, error, success } = orderCreate; // Extract success and order state
 
     // Calculate total price
     const totalPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2);
 
     useEffect(() => {
-        if (success && order && order._id) {
+        if (success) {
             navigate(`/order/${order._id}`); // Ensure order._id is used to navigate
         }
         if (!cart.paymentMethod) {
             navigate("/payment");
         }
-    }, [success, order, navigate]);
+    }, [success, navigate]);
     
 
     const placeOrder = () => {
@@ -87,6 +87,9 @@ function PlaceOrderScreen() {
                                 <Col>${totalPrice}</Col>
                             </Row>
                         </ListGroup.Item>
+                        <ListGroup.Item>
+                            {error && <Message variant="danger">{error}</Message>}
+                         </ListGroup.Item>
                         <ListGroup.Item>
                             <Button
                                 type='button'
