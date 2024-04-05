@@ -7,17 +7,20 @@ const EditProduct = () => {
   const [editProductId, setEditProductId] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
+  const userId = JSON.parse(localStorage.getItem('userInfo')).token.id; // Define userId here
 
   useEffect(() => {
     // Fetch all products
     axios.get('http://127.0.0.1:8000/api/products/')
       .then(response => {
-        setProducts(response.data);
+        const userProducts = response.data.filter(product => product.user === userId);
+        setProducts(userProducts); // Set state with filtered products
       })
       .catch(error => {
         console.error('Error fetching products:', error);
       });
-  }, []);
+  }, [userId]);
+  
 
   const handleSelectProduct = productId => {
     setSelectedProduct(null);

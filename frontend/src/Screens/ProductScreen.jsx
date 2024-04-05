@@ -21,8 +21,7 @@ const ProductScreen = () => {
         const { user_type } = userInfo;
         setUserType(user_type);
     }
-}, []);
-
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -92,6 +91,10 @@ const ProductScreen = () => {
     return <div>No product found</div>;
   }
 
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
   return (
     <div>
       <h1>{product.name}</h1>
@@ -109,6 +112,8 @@ const ProductScreen = () => {
 
       <div>
         <button onClick={handleAddToCart}>Add to Cart</button>
+        <button onClick={handleGoBack}>Go Back</button>
+  
         {userType === 'instructor' && (
           <>
             <button onClick={handleDeleteProduct}>Delete Product</button>

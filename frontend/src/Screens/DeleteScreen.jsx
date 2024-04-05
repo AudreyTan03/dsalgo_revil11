@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ProductList = () => {
+const DeleteScreen = () => {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -9,19 +9,18 @@ const ProductList = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   useEffect(() => {
-    // Fetch products from the backend
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get('/api/products/');
-        setProducts(response.data);
-      } catch (error) {
-        setError('Error fetching products');
-      }
-      setLoading(false);
-    };
+    const userId = JSON.parse(localStorage.getItem('userInfo')).token.id;
 
-    fetchProducts();
+    // Fetch all products
+    axios.get('http://127.0.0.1:8000/api/products/')
+      .then(response => {
+        const userProducts = response.data.filter(product => product.user === userId);
+        setProducts(userProducts); // Set state with filtered products
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+        setError('Error fetching products');
+      });
   }, []);
 
   const handleProductSelection = (productId) => {
@@ -43,6 +42,7 @@ const ProductList = () => {
       setProducts(products.filter((product) => !selectedProducts.includes(product._id)));
       setSelectedProducts([]);
     } catch (error) {
+      console.error('Error deleting products:', error);
       setError('Error deleting products');
     }
     setLoading(false);
@@ -89,4 +89,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default DeleteScreen;

@@ -21,6 +21,9 @@ const UploadScreen = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const token = JSON.parse(localStorage.getItem('userInfo')).token;
+        const userId = token.id; 
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('image', imageFile);
@@ -28,7 +31,7 @@ const UploadScreen = () => {
         formData.append('price', price);
         formData.append('countInStock', countInStock);
         formData.append('preview_video', videoFile);
-        //formData.append('user',userInfo.id);
+        formData.append('user', userId);
 
 
         // Dispatch the action, passing formData and the user's token

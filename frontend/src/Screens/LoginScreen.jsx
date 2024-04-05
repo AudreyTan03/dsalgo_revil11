@@ -36,6 +36,10 @@ function LoginScreen() {
         }
     }, [navigate, userInfo]);
 
+    const goBack = () => {
+        navigate(-1); // Go back to the previous page
+    }
+
     return (
         <div className="inputContainer">
             <Row>
@@ -87,6 +91,9 @@ function LoginScreen() {
                                 </Button>
                             </Col>
                         </Row>
+                        <Button variant='link' onClick={goBack}>
+                            Go Back
+                        </Button>
                     </FormContainer>
                 </Col>
             </Row>
