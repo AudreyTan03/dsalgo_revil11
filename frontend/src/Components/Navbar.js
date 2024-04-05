@@ -67,8 +67,8 @@ function Navbar() {
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
-              <Link to='/options' className='nav-links' onClick={closeMobileMenu}>
-                Options
+              <Link to='/cart' className='nav-links' onClick={closeMobileMenu}>
+                CartItems
               </Link>
             </li>
             <li className='nav-item'>

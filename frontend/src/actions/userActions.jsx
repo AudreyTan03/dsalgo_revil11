@@ -194,6 +194,7 @@ export const login = (email, password) => async (dispatch) => {
             payload: data,
         });
         localStorage.setItem('userInfo', JSON.stringify(data));
+        dispatch(getUserDetails());
 
         // Set user role
         // if (data.is_instructor) {
@@ -273,49 +274,41 @@ export const resetUpdateProfile = () => (dispatch) => {
     dispatch({ type: USER_UPDATE_PROFILE_RESET });
   };
   
-  export const updateUserProfile = (updatedUser, profilePicture) => async (dispatch, getState) => {
+  export const updateUserProfile = (formData) => async (dispatch, getState) => {
     try {
-        dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
+      dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
   
-        const { userLogin: { userInfo } } = getState();
+      const { userLogin: { userInfo } } = getState();
   
-        if (!userInfo || !userInfo.token) {
-            throw new Error('User information is missing or incomplete');
-        }
+      if (!userInfo || !userInfo.token) {
+        throw new Error('User information is missing or incomplete');
+      }
   
-        const formData = new FormData();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token.access}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
   
-        formData.append('name', updatedUser.name || '');
-        formData.append('email', updatedUser.email || '');
+      const { data } = await axios.put('api/profile/update/', formData, config);
   
-        if (profilePicture) {
-            formData.append('userprofile_pics', profilePicture);
-        }
+      dispatch({
+        type: USER_UPDATE_PROFILE_SUCCESS,
+        payload: data.profile_data,
+      });
   
-        const config = {
-            headers: {
-                Authorization: `Bearer ${userInfo.token.access}`,
-                'Content-Type': 'multipart/form-data',
-            },
-        };
-
-        console.log('Access Token:', userInfo.token.access);
-  
-        const { data } = await axios.put('api/profile/update/', formData, config);
-  
-        dispatch({
-            type: USER_UPDATE_PROFILE_SUCCESS,
-            payload: data.profile_data,
-        });
+      // Refetch user details after updating profile
+      dispatch(getUserDetails());
     } catch (error) {
-        dispatch({
-            type: USER_UPDATE_PROFILE_FAIL,
-            payload: error.response
-                ? error.response.data.message
-                : error.message || 'Error updating user profile',
-        });
+      dispatch({
+        type: USER_UPDATE_PROFILE_FAIL,
+        payload: error.response
+          ? error.response.data.message
+          : error.message || 'Error updating user profile',
+      });
     }
-};
+  };
 
 
 

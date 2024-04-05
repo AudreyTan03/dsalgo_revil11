@@ -1,137 +1,141 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserDetails, updateUserProfile, resetUpdateProfile } from '../actions/userActions';
+import {
+  getUserDetails,
+  updateUserProfile,
+  resetUpdateProfile,
+} from '../actions/userActions';
+import { getMyOrders } from '../actions/orderActions';
+import { Button, Form, Table } from 'react-bootstrap';
 import StudentNav from '../Components/StudentNav';
 
 function ProfileScreen() {
-    const dispatch = useDispatch();
-    const userDetails = useSelector((state) => state.userDetails);
-    const userProfileUpdate = useSelector((state) => state.userUpdateProfile);
-    const { loading, error, user } = userDetails;
-    const { loading: updateLoading, success: updateSuccess, error: updateError } = userProfileUpdate;
+  const dispatch = useDispatch();
+  const [showOrders, setShowOrders] = useState(false);
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading: loadingDetails, error: errorDetails, user } = userDetails;
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [profilePicture, setProfilePicture] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [editMode, setEditMode] = useState(false);
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdateProfile;
 
-    useEffect(() => {
-        dispatch(getUserDetails());
-    }, [dispatch]);
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
-    useEffect(() => {
-        if (updateSuccess) {
-            dispatch(resetUpdateProfile());
-            dispatch(getUserDetails());
-            setEditMode(false);
-            // Update userInfo in localStorage after successful update
-            const userInfoString = localStorage.getItem('userInfo');
-            if (userInfoString) {
-                const userInfo = JSON.parse(userInfoString);
-                userInfo.token.name = name;
-                userInfo.token.email = email;
-                localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            }
-        }
-    }, [updateSuccess, dispatch, name, email]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [bio, setBio] = useState(''); // Add state for bio
+  const [profilePicture, setProfilePicture] = useState(null);
 
-    useEffect(() => {
-        const userInfoString = localStorage.getItem('userInfo');
-        if (userInfoString) {
-            const userInfo = JSON.parse(userInfoString);
-            setName(userInfo.token.name);
-            setEmail(userInfo.token.email);
-        }
-    }, []);
+  const toggleOrdersVisibility = () => {
+    setShowOrders(!showOrders);
+  };
 
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setProfilePicture(selectedFile);
-            setFileName(selectedFile.name);
-        } else {
-            setProfilePicture(null);
-            setFileName('');
-        }
-    };
+  useEffect(() => {
+    if (!user || successUpdate) {
+      dispatch(resetUpdateProfile());
+      dispatch(getUserDetails("profile"));
+    } else {
+      setName(user.name);
+      setEmail(user.email);
+      setBio(user.bio || ''); // Set bio if available
+    }
+    dispatch(getMyOrders());
+  }, [dispatch, user, successUpdate]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const updatedUser = {
-            name,
-            email,
-        };
-        await dispatch(updateUserProfile(updatedUser, profilePicture));
-    };
+  const handleProfileUpdate = (e) => {
+    e.preventDefault();
+    const formData = new FormData(); // Construct formData for multipart/form-data submission
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('bio', bio);
+    if (profilePicture) {
+      formData.append('profilePicture', profilePicture);
+    }
+    dispatch(updateUserProfile(formData)); // Pass formData directly
+  };
 
-    const toggleEditMode = () => {
-        setEditMode(!editMode);
-    };
+  const handleNameChange = (e) => setName(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleBioChange = (e) => setBio(e.target.value); // Handler for bio
 
-    return (
-        <div className="dashboard-container">
-            <StudentNav />
-            <div className="dashboard-content">
-                <div className="profile-container">
-                    <h2>Profile</h2>
-                    {loading ? (
-                        <p>Loading...</p>
-                    ) : error ? (
-                        <p>Error: {error}</p>
-                    ) : (
-                        <div className="profile-details">
-                            {editMode ? (
-                                <form onSubmit={handleSubmit}>
-                                    <div className="form-group">
-                                        <label htmlFor="name">Name:</label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="email">Email:</label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="profilePicture">Profile Picture:</label>
-                                        <input
-                                            type="file"
-                                            id="profilePicture"
-                                            onChange={handleFileChange}
-                                        />
-                                        {fileName && <p>Selected file: {fileName}</p>}
-                                    </div>
-                                    <button type="submit" disabled={updateLoading}>
-                                        {updateLoading ? 'Updating...' : 'Update Profile'}
-                                    </button>
-                                    {updateError && <p>Error: {updateError}</p>}
-                                </form>
-                            ) : (
-                                <>
-                                    <div className="details-group">
-                                        <p><strong>Name:</strong> {name}</p>
-                                        <p><strong>Email:</strong> {email}</p>
-                                    </div>
-                                </>
-                            )}
-                            <button onClick={toggleEditMode}>
-                                {editMode ? 'Cancel' : 'Edit Profile'}
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicture(file);
+    }
+  };
+
+  return (
+    <div>
+      <StudentNav />
+      <h2>Profile</h2>
+      <Form onSubmit={handleProfileUpdate}>
+        <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control type="text" value={name} onChange={handleNameChange} />
+        </Form.Group>
+        <Form.Group controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" value={email} onChange={handleEmailChange} />
+        </Form.Group>
+        <Form.Group controlId="bio">
+          <Form.Label>Bio</Form.Label>
+          <Form.Control as="textarea" rows={3} value={bio} onChange={handleBioChange} />
+        </Form.Group>
+        <Form.Group controlId="profilePicture">
+          <Form.Label>Profile Picture</Form.Label>
+          <Form.Control type="file" onChange={handleProfilePictureChange} />
+        </Form.Group>
+        <Button type="submit" variant="primary">Update Profile</Button>
+      </Form>
+      {loadingUpdate && <div>Updating...</div>}
+      {errorUpdate && <div>Error: {errorUpdate}</div>}
+      <Button variant="secondary" onClick={toggleOrdersVisibility} className="my-3">
+        {showOrders ? 'Hide OrdersHistory' : 'Show OrderHistory'}
+      </Button>
+      {showOrders && (
+        <>
+          <h2>My Orders</h2>
+          {loadingOrders ? (
+            <div>Loading orders...</div>
+          ) : errorOrders ? (
+            <div>Error: {errorOrders}</div>
+          ) : (
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Paid</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders && orders.map((order) => (
+                  <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>{order.createdAt?.substring(0, 10)}</td>
+                    <td>${order.totalPrice}</td>
+                    <td>
+                      {order.isPaid ? (
+                        order.paidAt?.substring(0, 10) || 'N/A'
+                      ) : (
+                        <i className="fas fa-times" style={{ color: "red" }}></i>
+                      )}
+                    </td>
+                    <td>
+                      <Button variant="light" size="sm">Details</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
+        </>
+      )}
+    </div>
+  );
 }
 
 export default ProfileScreen;
