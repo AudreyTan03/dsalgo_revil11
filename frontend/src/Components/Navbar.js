@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // Import Redux useDispatch hook
+import { Link, useLocation } from 'react-router-dom'; // Import useLocation hook
+import { useDispatch, useSelector } from 'react-redux';
 import { BsSearch } from "react-icons/bs";
-import { logout, updateThemePreference } from '../actions/userActions'; // Import Redux actions
+import { logout, updateThemePreference } from '../actions/userActions';
 import './Navbar.css';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const dispatch = useDispatch(); // Initialize useDispatch hook
+  const dispatch = useDispatch();
+  const location = useLocation(); // Use useLocation hook
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  console.log('userInfo:', userInfo);
 
   const handleThemeChange = (theme) => {
     dispatch(updateThemePreference(theme));
-    // Toggle dark mode state based on the current state value
     setDarkMode(prevDarkMode => !prevDarkMode);
   };
 
@@ -21,14 +26,11 @@ function Navbar() {
   const closeMobileMenu = () => setClick(false);
 
   const toggleDarkMode = () => {
-    // Toggle dark mode state
     setDarkMode(prevDarkMode => !prevDarkMode);
-    // Add logic to toggle dark mode
   };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    // Add logic for real-time search
   };
 
   useEffect(() => {
@@ -37,12 +39,10 @@ function Navbar() {
 
   const handleLogout = () => {
     dispatch(logout());
-    // Additional logic for logout if needed
   };
 
   return (
     <>
-      {/* Main Navbar */}
       <nav className={darkMode ? 'navbar dark-mode' : 'navbar'}>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
@@ -67,8 +67,8 @@ function Navbar() {
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
-              <Link to='/profile' className='nav-links' onClick={closeMobileMenu}>
-                Profile
+              <Link to='/options' className='nav-links' onClick={closeMobileMenu}>
+                Options
               </Link>
             </li>
             <li className='nav-item'>
@@ -86,11 +86,17 @@ function Navbar() {
                 Logout
               </Link>
             </li>
+            {/* Conditionally render admin panel link based on user role */}
+            {userInfo && userInfo.isAdmin && ( // Check if userInfo exists and user is admin
+              <li className='nav-item'>
+                <Link to='/admin' className='nav-links' onClick={closeMobileMenu}>
+                  Admin Panel
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
-
-      {/* Secondary Navbar for Subjects */}
       <nav className='secondary-navbar'>
         <div className='navbar-container'>
           <ul className='subject-links'>
@@ -104,7 +110,6 @@ function Navbar() {
                 English
               </Link>
             </li>
-            {/* Add more subjects as needed */}
           </ul>
         </div>
       </nav>

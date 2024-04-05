@@ -10,6 +10,12 @@ from django.contrib.auth import get_user_model
 from .models import UserPreference
 User = get_user_model()
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # Additional fields for user type
     USER_TYPE_CHOICES = (

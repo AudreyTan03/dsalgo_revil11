@@ -32,6 +32,14 @@ import DeleteScreen from "./Screens/DeleteScreen";
 import Protect from "./Screens/Utils/ProtectedRoutes";
 import Student from "./Screens/Utils/StudentProutes";
 import StudentProductHome from "./Screens/StudentProductHomescreen";
+import AdminPanel from "./Screens/AdminPanelScreen";
+import EditUsers from "./Screens/EditUsers";
+import EditProduct from "./Screens/EditProducts";
+import AdminUserDetails from "./Screens/AdminUserDetail";
+import AdminProductDetail from "./Screens/AdminProductDetail";
+import AdminVideoDetails from "./Screens/AdminVideoDetail";
+
+
 function App() {
   return (
     <Router>
@@ -71,6 +79,16 @@ function App() {
           />
           
           <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
+
+
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/edit-user/:userId/" element={<EditUsers/>} /> 
+          <Route path="/admin/user-details/:userId/" element={<AdminUserDetails/>} /> 
+          <Route path="/admin/video-details/:videoId/" element={<AdminVideoDetails/>} /> 
+          <Route path="/admin/edit-product/:productId/" element={<EditProduct/>} /> 
+          <Route path="/admin/product-details/:productId" element={<AdminProductDetail />} />
+
+          
 
           {/* <Route path='/sign-in' element={<SignIn />} /> */}
           <Route path="/" element={<Home />} />

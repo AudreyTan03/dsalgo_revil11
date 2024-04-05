@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
 from django.core.exceptions import ValidationError
+from videos.serializers import AdminVideoSerializer
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +41,15 @@ class ProductSerializer(serializers.ModelSerializer):
     # def validate_preview_video(self, value):
     #     validate_video(value)
     #     return value
+
+
+
+class AdminProductSerializer(serializers.ModelSerializer):
+    product_videos = AdminVideoSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Product
+        fields ='__all__'
 
 
 class CategorySerializer(serializers.ModelSerializer):

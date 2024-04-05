@@ -3,6 +3,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from . import views
 from .views import *
+from .adminviews import *
+
 # from user.views import SendPasswordResetEmailView, UserPasswordResetView, registerUser, UserProfileView, UserChangePasswordView
 
 urlpatterns = [
@@ -18,4 +20,18 @@ urlpatterns = [
     path('users/reset-password/<uid>/<token>', UserPasswordResetView.as_view(), name='reset-password'),# -> URL WAS CHANGED
     path('verify-otp/', verify_otp, name='verify_otp'),
     path('resend-otp/', resend_otp, name='resend_otp'),
+
+    path('admin/users/',adminpanelUsers.as_view(), name='adminpanelList'),
+    path('admin/users/<int:user_id>/', adminpanelUsers.as_view(), name='admin_user_detail'),
+
+    path('admin/products/', adminpanelProducts.as_view(), name='admin_panel_products'),
+    path('admin/products/<int:product_id>/', adminpanelProducts.as_view(), name='admin_panel_product_detail'),
+    path('admin/products/<int:product_id>/delete/', adminpanelProducts.as_view(), name='admin_delete_product'),
+
+
+    path('admin/videos/', adminpanelVideos.as_view(), name='admin_panel_videos'),
+    path('admin/videos/<int:video_id>/', adminpanelVideos.as_view(), name='admin_panel_video_detail'),
+    
+    path('admin/subscriptions/', adminpanelSubscriptions.as_view(), name='admin_panel_subscriptions'),
+    path('admin/subscriptions/<int:subscription_id>/', adminpanelSubscriptions.as_view(), name='admin_panel_subscription_detail'),
 ]

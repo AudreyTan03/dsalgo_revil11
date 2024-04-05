@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import *
 
 
+class AdminVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
+
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +19,7 @@ class VideoSerializer(serializers.ModelSerializer):
         user = request.user if request else None
         
         # If a user is authenticated and has a valid subscription for the associated product, allow access
-        if user and instance.is_accessible(user):
+        if request.user and instance.is_accessible(user):
             return data
         else:
             # Nakasub dapat user para maaccess

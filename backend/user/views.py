@@ -147,15 +147,13 @@ def loginUser(request, format=None):
             if user is not None:
                 token = get_tokens_for_user(user)
                 user_type = 'instructor' if user.is_instructor else 'student'
-
-                # Get the user's profile if it exists
-                # profile = Profile.objects.filter(user=user).first()
+                isAdmin = user.is_admin 
 
                 response_data = {
                     'token': token,
                     'msg': 'Login Success',
                     'user_type': user_type,
-                    # 'profile': UserProfileSerializer(profile).data if profile else None
+                    'isAdmin': isAdmin,  
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
