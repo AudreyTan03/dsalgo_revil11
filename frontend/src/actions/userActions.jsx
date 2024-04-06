@@ -256,7 +256,7 @@ export const updateThemePreference = (theme) => async (dispatch) => {
       dispatch({ type: THEME_UPDATE_REQUEST });
   
       // Send a request to update the theme preference
-      const { data } = await axios.put('/api/update-theme', { theme });
+      const { data } = await axios.put('api/update-theme/', { theme });
   
       dispatch({ type: THEME_UPDATE_SUCCESS, payload: data });
     } catch (error) {

@@ -38,6 +38,7 @@ import EditProduct from "./Screens/EditProducts";
 import AdminUserDetails from "./Screens/AdminUserDetail";
 import AdminProductDetail from "./Screens/AdminProductDetail";
 import AdminVideoDetails from "./Screens/AdminVideoDetail";
+import SalesStatisticScreen from "./Screens/SalesStatisticScreen";
 
 
 function App() {
@@ -48,16 +49,17 @@ function App() {
       <Container>
         <Routes>
           <Route path="/HeroSection" element={<HeroSection />} />
-          <Route path="/delete" element={<Protect><DeleteScreen /></Protect>} />
+          <Route path="/delete" element={<DeleteScreen />} />
 
-          <Route path="/studenthomescreen" element={<Student><StudentHomeScreen /></Student>} />
-          <Route path="/edit" element={<Protect><EditScreen /></Protect>} />
-          <Route path="/homeScreen" element={<Protect><HomeScreen/></Protect>} />
-          <Route path="/StudentNav" element={<Student><StudentNav /></Student>} />
-          <Route path="/InstructorNav" element={<Protect><InstructorNav /></Protect>} />
+          <Route path="/studenthomescreen" element={<StudentHomeScreen />} />
+          <Route path="/edit" element={<EditScreen />} />
+          <Route path="/homeScreen" element={<HomeScreen/>} />
+          <Route path="/StudentNav" element={<StudentNav />} />
+          <Route path="/InstructorNav" element={<InstructorNav />} />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/Statistics" element={<SalesStatisticScreen />} />
           <Route path="/cart/:id?" element={<CartScreen />} />  
           <Route path="/order/:id" element={<OrderScreen />} />
           <Route path="/payment" element={<PaymentScreen />} />
@@ -72,7 +74,7 @@ function App() {
           <Route path="/Stuproducts" element={<StudentProductHome />} exact />
 
           <Route path="/product/:id" element={<Productscreen />} />
-          <Route path="/upload" element={<Protect><UploadScreen /></Protect>} />
+          <Route path="/upload" element={<UploadScreen />} />
           <Route
             path={`/verify-otp/user_id/:userId/otp/:otpId`}
             element={<OTPVerification />}

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadProduct } from '../actions/uploadAction';
 import './UploadScreen.css';
 
 const UploadScreen = () => {
     const dispatch = useDispatch();
-    // Access userInfo from the Redux store
     const { userInfo } = useSelector(state => state.userLogin);
 
     const [name, setName] = useState('');
@@ -14,9 +13,28 @@ const UploadScreen = () => {
     const [price, setPrice] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [videoFile, setVideoFile] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/categories/');
+            if (response.ok) {
+                const data = await response.json();
+                setCategories(data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
+        }
+    };
 
     const handleInputChange = (e, setState) => setState(e.target.files[0]);
     const handleTextChange = (e, setState) => setState(e.target.value);
+    const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -32,12 +50,9 @@ const UploadScreen = () => {
         formData.append('countInStock', countInStock);
         formData.append('preview_video', videoFile);
         formData.append('user', userId);
+        formData.append('category', selectedCategory);
 
-
-        // Dispatch the action, passing formData and the user's token
         dispatch(uploadProduct(formData, userInfo.token));
-
-        // Optionally reset form fields after submission
     };
 
     return (
@@ -63,6 +78,15 @@ const UploadScreen = () => {
                 <div>
                     <label htmlFor="countInStock">Count in Stock:</label>
                     <input type="number" id="countInStock" value={countInStock} onChange={(e) => handleTextChange(e, setCountInStock)} required />
+                </div>
+                <div>
+                    <label htmlFor="category">Category:</label>
+                    <select id="category" value={selectedCategory} onChange={handleCategoryChange} required>
+                        <option value="">Select a category</option>
+                        {categories.map(category => (
+                            <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
+                    </select>
                 </div>
                 <div>
                     <label htmlFor="video">Preview Video:</label>

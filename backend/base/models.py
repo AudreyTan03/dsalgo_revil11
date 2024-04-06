@@ -76,6 +76,14 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"OrderItem - {self.name}"
     
+class Sale(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sales')
+    order_item = models.OneToOneField(OrderItem, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Sale #{self.pk} by {self.user.name}"
+    
 
 
 class ShippingAddress(models.Model):

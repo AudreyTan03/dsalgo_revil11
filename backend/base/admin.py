@@ -16,4 +16,10 @@ admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(ShippingAddress)
 
+@admin.register(Sale)
+class SaleAdmin(admin.ModelAdmin):
+    list_display = ('user', 'order_item', 'created_at')
+    list_filter = ('created_at', 'user')
+    search_fields = ('user__name', 'order_item__name')
+
 

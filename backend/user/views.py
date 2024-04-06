@@ -188,7 +188,7 @@ def updateProfile(request):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def updateTheme(request):
     user = request.user
     profile = Profile.objects.get(user=user)

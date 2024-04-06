@@ -33,6 +33,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Product
 from .serializers import ProductSerializer
 from datetime import datetime
+from django.db.models import Count, Sum
 
 
 class ProductPatchView(generics.UpdateAPIView):
@@ -262,6 +263,17 @@ def updateOrderToPaid(request, pk):
     order.save()
 
     return Response({'detail': 'Order was paid'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_sales_statistics(request):
+    user = request.user
+    total_sales = Sale.objects.filter(user=user).aggregate(total=Count('id'), total_revenue=Sum('order_item__price'))
+    return Response({
+        'total_sales': total_sales['total'],
+        'total_revenue': total_sales['total_revenue'] if total_sales['total_revenue'] else 0
+    })
 
     
 
