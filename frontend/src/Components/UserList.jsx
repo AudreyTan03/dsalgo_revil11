@@ -1,38 +1,51 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, deleteUser } from '../actions/adminActions';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import { Link } from 'react-router-dom';
+import './userlist.css'; // Make sure to import the styles
 
 const UserList = () => {
   const dispatch = useDispatch();
-  const users = useSelector(state => state.userReducer.users);
+  const users = useSelector((state) => state.userReducer.users);
 
   useEffect(() => {
-    console.log("Fetching users...");
     dispatch(getUsers());
   }, [dispatch]);
 
-  console.log("Users in component:", users);
-
-  const handleDelete = userId => {
+  const handleDelete = (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       dispatch(deleteUser(userId));
     }
   };
 
   return (
-    <div>
-      <h2>User List</h2>
-      <ul>
-        {users && users.map(user => (
-          <li key={user.id}>
-            <span> ID: {user.id} - </span>
-            <span> Name: <Link to={`/admin/user-details/${user.id}`} style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>{user.name}</Link></span>
-            <Link to={`/admin/edit-user/${user.id}/`} style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>Edit</Link>
-            <button onClick={() => handleDelete(user.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+    <div className="user-list-container">
+      <div className="user-list-header">
+        <div className="header-item">ID</div>
+        <div className="header-item">Name</div>
+        <div className="header-item">Status</div>
+        <div className="header-item">Admin</div>
+        <div className="header-item">Actions</div>
+      </div>
+      {users && users.map((user) => (
+        <div className="user-list-row" key={user.id}>
+          <div className="row-item">{user.id}</div>
+          <div className="row-item">
+            <Link to={`/admin/user-details/${user.id}`} className="user-link">{user.name}</Link>
+          </div>
+          <div className="row-item">
+            <span className={`status-indicator ${user.is_instructor ? 'instructor' : 'student'}`} />
+            {user.is_instructor ? 'Instructor' : 'Student'}
+          </div>
+          <div className="row-item">
+            {user.is_admin ? 'Yes' : 'No'}
+          </div>
+          <div className="row-item action-buttons">
+            <Link to={`/admin/edit-user/${user.id}`} className="edit-button">Edit</Link>
+            <button onClick={() => handleDelete(user.id)} className="delete-button">Delete</button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

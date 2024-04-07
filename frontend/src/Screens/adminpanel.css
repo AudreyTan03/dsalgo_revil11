@@ -1,0 +1,22 @@
+.admin-panel {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5; /* Choose a light background color */
+  }
+  
+  .admin-header {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .admin-sections {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+  }
+  
+  /* Import this stylesheet in your AdminPanel.js or in App.js */
+  

@@ -1,0 +1,128 @@
+.user-list-container {
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+  }
+  
+  .user-list-header, .user-list-row {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 1fr 2fr;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .header-item, .row-item {
+    text-align: left;
+  }
+  
+  .user-list-header {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    border-bottom: 2px solid #e1e1e1;
+  }
+  
+  .user-list-row {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e1e1;
+  }
+  
+  .status-indicator {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  
+  .student {
+    background-color: #2ecc71; /* Green for students */
+  }
+  
+  .instructor {
+    background-color: #3498db; /* Blue for instructors */
+  }
+  
+  .user-link {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: start;
+  }
+  
+  .edit-button, .delete-button {
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none; /* Remove underline from links */
+    display: inline-block; /* Align buttons correctly with text */
+  }
+  
+  .edit-button {
+    background-color: #3498db; /* Blue for edit button */
+  }
+  
+  .delete-button {
+    background-color: #e74c3c; /* Red for delete button */
+  }
+  
+  /* Add some responsiveness to the table layout */
+  @media (max-width: 768px) {
+    .user-list-header, .user-list-row {
+      grid-template-columns: 1fr 2fr 1fr 1fr 2fr;
+    }
+  }
+  
+  /* Optional: Add hover effects for interactivity */
+  .edit-button:hover, .delete-button:hover {
+    opacity: 0.8;
+  }
+  
+  /* Optional: Style for the list header to stick at the top */
+  .user-list-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  
+  .user-list-container {
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+    max-width: 800px; /* or your preferred width */
+    border-radius: 8px; /* gives the card rounded corners */
+    overflow: hidden; /* ensures the child elements do not overflow the rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* adds shadow to the card */
+    background-color: #fff; /* assuming a white card background */
+  }
+  
+  .user-list-header {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    border-bottom: 2px solid #e1e1e1;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 1fr 2fr;
+    align-items: center;
+    padding: 10px;
+    /* Add more styles if needed */
+  }
+  
+  /* ... other styles remain the same */
+  
+  /* Add a slight hover effect on rows for interactivity */
+  .user-list-row:hover {
+    background-color: #f2f2f2;
+  }
+  
+  /* Optional: Add transitions for smooth hover effects */
+  .user-list-row {
+    transition: background-color 0.3s ease;
+  }
+  
