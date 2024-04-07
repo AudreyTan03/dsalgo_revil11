@@ -52,7 +52,7 @@ function App() {
           <Route path="/delete" element={<DeleteScreen />} />
 
           <Route path="/studenthomescreen" element={<StudentHomeScreen />} />
-          <Route path="/edit" element={<EditScreen />} />
+          <Route path="/edit/:id" element={<EditScreen />} />
           <Route path="/homeScreen" element={<HomeScreen/>} />
           <Route path="/StudentNav" element={<StudentNav />} />
           <Route path="/InstructorNav" element={<InstructorNav />} />
