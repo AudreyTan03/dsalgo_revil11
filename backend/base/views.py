@@ -31,9 +31,10 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import BasePermission
 from rest_framework.permissions import IsAuthenticated
 from .models import Product
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, UploadProductSerializer
 from datetime import datetime
 from django.db.models import Count, Sum
+from videos.serializers import UploadVideoSerializer
 
 
 class ProductPatchView(generics.UpdateAPIView):
@@ -113,15 +114,37 @@ class CategoryDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+from django.http import JsonResponse
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class PostProduct(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
+
     def post(self, request, *args, **kwargs):
-        product_serializer = ProductSerializer(data=request.data)
+        product_serializer = UploadProductSerializer(data=request.data, context={'request': request})
         if product_serializer.is_valid():
-            product_serializer.save()
+           
+            product_instance = product_serializer.save(user=request.user)  # user nagrequest ng post masasave as user foreignkey
+            logger.info("Product instance created: %s", product_instance)
+
+            # Video shit
+            videos_data = request.FILES.getlist('videos')
+            for video_data in videos_data:
+                video_serializer = UploadVideoSerializer(data={'title': video_data.name, 'video_file': video_data, 'product': product_instance._id}, context={'request': request})
+                if video_serializer.is_valid():
+                    video_serializer.save()
+                else:
+                    
+                    product_instance.delete()
+                    return Response(video_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             return Response(product_serializer.data, status=status.HTTP_201_CREATED)
         else:
+            logger.error("Product creation failed. Errors: %s", product_serializer.errors)
             return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

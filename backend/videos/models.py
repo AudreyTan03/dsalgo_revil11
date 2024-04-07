@@ -24,7 +24,14 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
-    def is_accessible(self, user): # bool val babalik neto kung accessible
+    def is_accessible(self, user):
+        if user and user.is_admin:
+            return True
+        
+        if user and self.product.user == user:
+            return True
+
+        # Check if the user is subscribed to the associated product
         return Subscription.objects.filter(user=user, product=self.product).exists()
     
 class Subscription(models.Model):

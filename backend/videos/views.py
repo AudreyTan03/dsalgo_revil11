@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework import status
 from rest_framework.response import Response
 from .models import *
-from .serializers import DeleteVideoSerializer, VideoSerializer, SubscriptionSerializer
+from .serializers import DeleteVideoSerializer, VideoSerializer, SubscriptionSerializer, UploadVideoSerializer
 from base.models import Product
 
 @api_view(['POST'])
@@ -13,7 +13,7 @@ def uploadProductVideo(request):
     if not request.user.is_instructor:
         return Response({'error': 'Only instructors can upload videos for courses'}, status=status.HTTP_403_FORBIDDEN)
 
-    serializer = VideoSerializer(data=request.data, context={'request': request})
+    serializer = UploadVideoSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()  
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -45,7 +45,7 @@ def deleteVideo(request):
 def listProductVideos(request, product_id): # lilista lahat ng vids sa isang course
     try:
         videos = Video.objects.filter(product_id=product_id)
-        serializer = VideoSerializer(videos, many=True)
+        serializer = VideoSerializer(videos, many=True, context={'request': request})  # Pass request object to serializer context
         return Response(serializer.data)
     except Video.DoesNotExist:
         return Response({'detail': 'No videos found for the specified product'}, status=status.HTTP_404_NOT_FOUND)

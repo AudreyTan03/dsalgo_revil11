@@ -8,6 +8,13 @@ class AdminVideoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class UploadVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
+
+
+
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
@@ -24,7 +31,7 @@ class VideoSerializer(serializers.ModelSerializer):
         else:
             # Nakasub dapat user para maaccess
             data['message'] = "You must be subscribed to access this video." 
-            return data  
+            return data   
 
 
 class DeleteVideoSerializer(serializers.Serializer):

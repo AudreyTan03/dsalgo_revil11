@@ -2,26 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
+import { listVideos } from '../actions/videoActions'; // Import listVideos action
 
 const ProductScreen = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [videos, setVideos] = useState([]);
+  const videos = useSelector((state) => state.videoList.videos); // Access videos from Redux state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const userInfo = useSelector((state) => state.userInfo); // Assuming userInfo is stored in Redux state
+  const userInfo = useSelector((state) => state.userLogin.userInfo); // Access userInfo from Redux state
   const [userType, setUserType] = useState(null); // State to store user type
 
   useEffect(() => {
-    const userInfoString = localStorage.getItem('userInfo');
-    if (userInfoString) {
-        const userInfo = JSON.parse(userInfoString);
-        const { user_type } = userInfo;
-        setUserType(user_type);
+    // console.log('Redux UserInfo:', userInfo);
+    if (userInfo) {
+      console.log('userInfo:', userInfo);
+      const { user_type } = userInfo;
+      setUserType(user_type);
     }
-  }, []);
+  }, [userInfo]);
+  
+  console.log('User Type:', userType); // Log userType here to check its value
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -39,25 +42,13 @@ const ProductScreen = () => {
       }
     };
 
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/products/${id}/videos/`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch videos. Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setVideos(data);
-      } catch (error) {
-        console.error('Error fetching videos:', error);
-      }
-    };
-
     fetchProduct();
-    fetchVideos();
-  }, [id]);
+    dispatch(listVideos(id)); // Dispatch listVideos action to fetch videos
+  }, [dispatch, id]);
+  
 
   const handleAddToCart = () => {
-    dispatch(addToCart(id, 1)); // Assuming quantity is always 1
+    dispatch(addToCart(id, 1));
     navigate('/cart');
   };
 
@@ -69,14 +60,14 @@ const ProductScreen = () => {
       if (!response.ok) {
         throw new Error(`Failed to delete product. Status: ${response.status}`);
       }
-      navigate('/'); // Navigate back to the home page or any other appropriate page
+      navigate('/');
     } catch (error) {
       setError(error.message);
     }
   };
 
   const handleEditProduct = () => {
-    navigate(`/edit`); // Navigate to the edit screen for the current product
+    navigate(`/edit`);
   };
 
   if (loading) {
@@ -91,9 +82,8 @@ const ProductScreen = () => {
     return <div>No product found</div>;
   }
 
-  const handleGoBack = () => {
-    navigate(-1); // Go back to the previous page
-  };
+  console.log('Is userInfo available:', userInfo !== null);
+
 
   return (
     <div>
@@ -112,8 +102,6 @@ const ProductScreen = () => {
 
       <div>
         <button onClick={handleAddToCart}>Add to Cart</button>
-        <button onClick={handleGoBack}>Go Back</button>
-  
         {userType === 'instructor' && (
           <>
             <button onClick={handleDeleteProduct}>Delete Product</button>
@@ -126,7 +114,11 @@ const ProductScreen = () => {
       <ul>
         {videos.map((video) => (
           <li key={video.id}>
-            <a href={`/videos/${video.id}/`}>{video.title}</a>
+            <video controls play style={{ width: '25%' }}>
+              <source src={video.video_file} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <p>{video.title}</p>
           </li>
         ))}
       </ul>

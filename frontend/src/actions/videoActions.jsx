@@ -10,11 +10,28 @@ import {
   VIDEO_DETAILS_FAIL,
 } from '../constants/videoConstants';
 
-export const listVideos = (productId) => async (dispatch) => {
+export const listVideos = (productId) => async (dispatch, getState) => {
   try {
     dispatch({ type: VIDEO_LIST_REQUEST });
 
-    const { data } = await axios.get(`/api/products/${productId}/videos/`);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    console.log('User Info:', userInfo); // Log userInfo here
+
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token.access}`,
+      },
+    };
+
+    console.log('Request Config:', config); // Log request config here
+
+    const { data } = await axios.get(`/api/products/${productId}/videos/`, config);
+    console.log('Video Data:', data); // Log video data here
+
 
     dispatch({
       type: VIDEO_LIST_SUCCESS,

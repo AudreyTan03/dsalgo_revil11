@@ -10,7 +10,7 @@ export const uploadProduct = (formData) => async (dispatch, getState) => {
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${userInfo.token.access}`, // Ensure this matches backend expectation
+                'Authorization': `Bearer ${userInfo.token.access}`, 
             },
         };
 
