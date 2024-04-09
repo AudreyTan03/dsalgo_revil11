@@ -24,8 +24,8 @@ urlpatterns = [
     path('products/<int:pk>/edit/', ProductPatchView.as_view(), name='product_edit'),
     path('add/', views.addOrderItems, name='orders-add'),
     path('order/<str:pk>/', views.getOrderById, name='get_order_by_id'),
-    path('<str:pk>/pay/', views.updateOrderToPaid, name='pay'),
+    path('orders/<str:pk>/pay/', views.updateOrderToPaid, name='pay'),
     path('orders/myorders/', views.getMyOrders, name='myorders'),
     path('sales-statistics/', views.get_sales_statistics, name='sales-statistics'),
+    path('order-items/<str:pk>/', views.OrderItemView.as_view(), name='order-items'),
 ]
-

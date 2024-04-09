@@ -35,6 +35,12 @@ from .serializers import ProductSerializer, UploadProductSerializer
 from datetime import datetime
 from django.db.models import Count, Sum
 from videos.serializers import UploadVideoSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Order
+from .serializers import OrderSerializer
 
 
 class ProductPatchView(generics.UpdateAPIView):
@@ -228,9 +234,10 @@ def addOrderItems(request):
         )
         for item in orderItems:
             try:
-                product = Product.objects.get(_id=item['product'])  # Use _id here
-                order_item = order.order_items.create(  # Corrected usage of related name
+                product = Product.objects.get(_id=item['product'])
+                order_item = order.order_items.create(
                     product=product,
+                    user=product.user,
                     name=product.name,
                     qty=item['qty'],
                     price=item['price'],
@@ -238,6 +245,9 @@ def addOrderItems(request):
                 )
                 product.countInStock -= order_item.qty
                 product.save()
+                
+                # Create a Sale instance for this order item
+                Sale.objects.create(user=product.user, order_item=order_item)
             except Product.DoesNotExist:
                 return Response({'detail': f'Product with id {item["product"]} does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -245,13 +255,17 @@ def addOrderItems(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
     
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Order
-from .serializers import OrderSerializer
+class OrderItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        order_items = OrderItem.objects.filter(order=pk)
+        serializer = OrderItemSerializer(order_items, many=True)
+        return Response(serializer.data)
+    
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -297,10 +311,3 @@ def get_sales_statistics(request):
         'total_sales': total_sales['total'],
         'total_revenue': total_sales['total_revenue'] if total_sales['total_revenue'] else 0
     })
-
-    
-
-
-
-
-

@@ -14,6 +14,7 @@ function ProfileScreen() {
   const [showOrders, setShowOrders] = useState(false);
   const userDetails = useSelector((state) => state.userDetails);
   const { loading: loadingDetails, error: errorDetails, user } = userDetails;
+  console.log(user.name)
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdateProfile;
@@ -31,16 +32,20 @@ function ProfileScreen() {
   };
 
   useEffect(() => {
-    if (!user || successUpdate) {
-      dispatch(resetUpdateProfile());
-      dispatch(getUserDetails("profile"));
-    } else {
-      setName(user.name);
-      setEmail(user.email);
-      setBio(user.bio || ''); // Set bio if available
-    }
-    dispatch(getMyOrders());
-  }, [dispatch, user, successUpdate]);
+    dispatch(getUserDetails());
+  }, [dispatch])
+  
+  // useEffect(() => {
+  //   if (!user || successUpdate) {
+  //     dispatch(resetUpdateProfile());
+  //   } else {
+  //     setName(user.name);
+  //     setEmail(user.email);
+  //     setBio(user.bio || ''); // Set bio if available
+  //   }
+  //   dispatch(getMyOrders());
+  // }, [dispatch, user, successUpdate]);
+  // console.log(user.name)
 
   const handleProfileUpdate = (e) => {
     e.preventDefault();
@@ -72,15 +77,15 @@ function ProfileScreen() {
       <Form onSubmit={handleProfileUpdate}>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="text" value={name} onChange={handleNameChange} />
+          <Form.Control type="text" value={user.name} onChange={handleNameChange} />
         </Form.Group>
         <Form.Group controlId="email">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" value={email} onChange={handleEmailChange} />
+          <Form.Control type="email" value={user.email} onChange={handleEmailChange} />
         </Form.Group>
         <Form.Group controlId="bio">
           <Form.Label>Bio</Form.Label>
-          <Form.Control as="textarea" rows={3} value={bio} onChange={handleBioChange} />
+          <Form.Control as="textarea" rows={3} value={user.bio} onChange={handleBioChange} />
         </Form.Group>
         <Form.Group controlId="profilePicture">
           <Form.Label>Profile Picture</Form.Label>
