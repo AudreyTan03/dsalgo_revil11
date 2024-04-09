@@ -12,44 +12,63 @@ function OTPVerification() {
     const [otp, setOtp] = useState('');
     const [error, setError] = useState('');
     const inputRefs = useRef([]);
-    const [canResend, setCanResend] = useState(true);
+    const [canResend, setCanResend] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(() => {
+        // Initialize timeLeft from localStorage if available, or set it to 180 (3 minutes)
+        const storedTimeLeft = localStorage.getItem('otpVerificationTimeLeft');
+        return storedTimeLeft ? parseInt(storedTimeLeft) : 60;
+    });
 
     const ResendOtpState = useSelector((state) => state.userResendOtp);
     const { loading: resendLoading } = ResendOtpState;
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setCanResend(true); // Allow resending OTP after 300 seconds
-        }, 300000); // 300 seconds = 300000 milliseconds
+            if (timeLeft > 0) {
+                setTimeLeft(timeLeft - 1);
+                // Update localStorage with the new timeLeft value
+                localStorage.setItem('otpVerificationTimeLeft', timeLeft - 1);
+            } else {
+                setCanResend(true); // Allow resending OTP after 3 minutes
+                // Clear localStorage when timeLeft reaches 0
+                localStorage.removeItem('otpVerificationTimeLeft');
+            }
+        }, 1000); // Update every second
 
         return () => clearTimeout(timer); // Cleanup on unmount or re-render
-    }, [canResend]); // Re-run effect when canResend changes
+    }, [timeLeft]); // Re-run effect when timeLeft changes
 
-    const handleResendOtp = () => {
+    const handleResendOtp = async () => {
         // Check if resend is allowed
         if (!canResend) {
             return; // Exit early if resend is not allowed
         }
     
-        const queryParams = new URLSearchParams(location.search);
-        const user_id = queryParams.get('user_id');
-        const otp_id = queryParams.get('otp_id');
-        dispatch(ResendOtp(user_id, otp_id))
-            .then((response) => {
-                if (response.success) {
-                    console.log('OTP resent successfully');
-                    // Do not disable the resend button after successful resend
-                } else {
-                    setError(response.error);
-                }
-            })
-            .catch((error) => {
-                console.error('Error resending OTP:', error);
-                setError('Error resending OTP. Please try again.');
-            });
-        // Do not disable the resend button immediately after clicking
-    };
+        setCanResend(false);
+        setTimeLeft(60);
     
+        try {
+            const user_id = params.userId;
+            const otp_id = params.otpId;
+    
+            if (!user_id || !otp_id) {
+                console.error('User ID or OTP ID is null');
+                return;
+            }
+    
+            const response = await dispatch(ResendOtp(user_id, otp_id, otp)); 
+    
+            if (response && response.data && response.data.message) {
+                console.log('OTP resent successfully');
+            } else {
+                setError('Error resending OTP. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error resending OTP:', error);
+            setError('Error resending OTP. Please try again.');
+        }
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -95,6 +114,10 @@ function OTPVerification() {
         }
     };
 
+    // Format time left into minutes and seconds
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+
     return (
         <div className="otp-verification-container">
             <div className="outer-otp-container">
@@ -118,8 +141,8 @@ function OTPVerification() {
                         Submit
                     </button>
                     <button onClick={handleResendOtp} disabled={!canResend || resendLoading}>
-                    {canResend ? 'Resend OTP' : 'Please wait...'}
-                </button>
+                        {canResend ? 'Resend OTP' : `Resend OTP (${minutes}:${seconds < 10 ? '0' : ''}${seconds})`}
+                    </button>
                 </form>
             </div>
         </div>

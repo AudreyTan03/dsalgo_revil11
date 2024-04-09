@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col, Alert } from 'react-bootstrap'; // Added Alert component
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../actions/userActions';
 import FormContainer from '../Components/FormContainer';
@@ -18,11 +18,11 @@ function RegisterScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-  
+
     try {
       const response = await dispatch(register(name, email, password, userType, confirmPassword));
       console.log('Register Response:', response);
-  
+
       // Redirect to OTP verification screen
       const { user_id, otp_id } = response; // Ensure that user_id and otp_id are correctly returned from the register action
       navigate(`/verify-otp/user_id/${user_id}/otp/${otp_id}`); // Redirect to OTP verification screen with user_id and otp_id
@@ -31,7 +31,7 @@ function RegisterScreen() {
       // Handle other errors, e.g., display a generic error message
     }
   };
-  
+
   const handleGoBack = () => {
     navigate(-1); // Go back to the previous page
   };
@@ -41,13 +41,14 @@ function RegisterScreen() {
       <Row>
         <Col className='video' md={6} style={{ position: 'relative' }}>
           <video src="/Images/Gifforcode.mp4" autoPlay muted loop></video>
-          
+
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '10px', borderRadius: '5px' }}>
             <p style={{ margin: 0 }}>REVIL: Resources for Video Learning</p>
           </div>
         </Col>
         <Col md={6}>
           <h1>Register</h1>
+          {error && <Alert variant="danger">{error}</Alert>} {/* Display error message */}
           <Form onSubmit={submitHandler}>
             <div className='userInputContainer'>
               <Form.Group controlId='name'>
@@ -106,8 +107,8 @@ function RegisterScreen() {
                 </Form.Control>
               </Form.Group>
             </div>
-            <Button type='submit' variant='primary'>
-              Register
+            <Button type='submit' variant='primary' disabled={loading}> {/* Disable button during loading */}
+              {loading ? 'Loading...' : 'Register'} {/* Display loading text */}
             </Button>
           </Form>
           <Row className='py-3'>
