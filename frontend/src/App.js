@@ -30,7 +30,7 @@ import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 import OrderScreen from "./Screens/OrderScreen";
 import InstructorNav from "./Components/InstructorNav";
 import DeleteScreen from "./Screens/DeleteScreen";
-// import Protect from "./Screens/Utils/ProtectedRoutes";
+import Protect from "./Screens/Utils/ProtectedRoutes";
 import Student from "./Screens/Utils/StudentProutes";
 import StudentProductHome from "./Screens/StudentProductHomescreen";
 import AdminPanel from "./Screens/AdminPanelScreen";
@@ -61,14 +61,14 @@ function App() {
       <Container>
         <Routes>
           <Route path="/HeroSection" element={<HeroSection />} />
-          <Route path="/delete" element={<DeleteScreen />} />
+          <Route path="/delete" element={<Protect><DeleteScreen /></Protect>} />
 
-          <Route path="/studenthomescreen" element={<StudentHomeScreen />} />
-          <Route path="/edit/:id" element={<EditScreen />} />
-          <Route path="/homeScreen" element={<HomeScreen/>} />
-          <Route path="/StudentNav" element={<StudentNav />} />
-          <Route path="/InstructorNav" element={<InstructorNav />} />
-          <Route path="/navbar" element={<Navbar />} />
+          <Route path="/studenthomescreen" element={<Student><StudentHomeScreen /></Student>} />
+          <Route path="/edit/:id" element={<Protect><EditScreen /></Protect>} />
+          <Route path="/homeScreen" element={<Protect><HomeScreen/></Protect>} />
+          <Route path="/StudentNav" element={<Student><StudentNav /></Student>} />
+          <Route path="/InstructorNav" element={<Protect><InstructorNav /></Protect>} />
+          <Route path="/navbar" element={<Protect>-<Navbar /></Protect>} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
           <Route path="/productlist" element={<ProductListScreen />} />
@@ -83,11 +83,11 @@ function App() {
             path="/confirm-changepass/:uid/:token"
             element={<ConfirmChangePass />}
           />
-          <Route path="/products" element={<ProductHome />} exact />
-          <Route path="/Stuproducts" element={<StudentProductHome />} exact />
+          <Route path="/products" element={<Protect><ProductHome /></Protect>} exact />
+          <Route path="/Stuproducts" element={<Student><StudentProductHome /></Student>} exact />
 
           <Route path="/product/:id" element={<Productscreen />} />
-          <Route path="/upload" element={<UploadScreen />} />
+          <Route path="/upload" element={<Protect><UploadScreen /></Protect>} />
           <Route
             path={`/verify-otp/user_id/:userId/otp/:otpId`}
             element={<OTPVerification />}

@@ -42,6 +42,30 @@ from rest_framework import status
 from .models import Order
 from .serializers import OrderSerializer
 
+@api_view(['GET'])
+def getReview(request, pk):
+    try:
+        review = Review.objects.get(pk=pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
+    except Review.DoesNotExist:
+        return Response({'detail': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+    except ValueError:
+        return Response({'detail': 'Invalid product ID'}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def getReviews(request):
+    review = Review.objects.all()
+    serializers = ReviewSerializer(review, many=True)
+    return Response(serializers.data)
+
+class PostReview(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProductPatchView(generics.UpdateAPIView):
     queryset = Product.objects.all()

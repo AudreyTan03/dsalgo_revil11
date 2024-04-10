@@ -32,4 +32,9 @@ urlpatterns = [
     path('ratings/create/', RatingCreateAPIView.as_view(), name='rating-create'),
     path('ratings/<int:pk>/update/', RatingUpdateAPIView.as_view(), name='rating-update'),
     path('ratings/', RatingListAPIView.as_view(), name='rating-list'),
-]
+    path('post-reviews/', PostReview.as_view(), name="review_product"),
+    path('reviews/', views.getReviews, name="review_get"),
+    path('reviews/<int:pk>/', views.getReview, name="review_get"),
+
+
+]         

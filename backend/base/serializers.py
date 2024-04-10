@@ -12,6 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields =['id','name','email']
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
 
 # def validate_image(file):
 #     # Validate file size, type, etc.

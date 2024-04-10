@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadProduct } from '../actions/uploadAction';
 import './UploadScreen.css';
@@ -12,42 +12,55 @@ const UploadScreen = () => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [countInStock, setCountInStock] = useState('');
-    const [videoFiles, setVideoFiles] = useState([]);
     const [previewVideoFile, setPreviewVideoFile] = useState(null);
+    const [videoFiles, setVideoFiles] = useState([]);
     const [uploadedVideos, setUploadedVideos] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
 
-    const handleInputChange = (e, setState) => {
-        const file = e.target.files[0]; // Get the first file from the FileList
-        setState(file);
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/categories/');
+            if (response.ok) {
+                const data = await response.json();
+                setCategories(data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
+        }
     };
 
-    const handlePreviewVideoChange = (e) => {
+    const handleInputChange = (e, setState) => {
         const file = e.target.files[0];
-        setPreviewVideoFile(file);
+        setState(file);
     };
 
     const handleTextChange = (e, setState) => setState(e.target.value);
 
+    const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-    
+        const token = JSON.parse(localStorage.getItem('userInfo')).token;
+        const userId = token.id; 
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('image', imageFile);
         formData.append('description', description);
         formData.append('price', price);
         formData.append('countInStock', countInStock);
-        
-        if (previewVideoFile) {
-            formData.append('preview_video', previewVideoFile);
-        }
+        formData.append('preview_video', previewVideoFile);
+        videoFiles.forEach(video => {
+            formData.append('videos', video);
+        });
+        formData.append('user', userId);
+        formData.append('category', selectedCategory);
 
-        if (videoFiles && videoFiles.length > 0) {
-            videoFiles.forEach((video) => {
-                formData.append('videos', video);
-            });
-        }
-    
         dispatch(uploadProduct(formData, userInfo.token));
     };
 
@@ -90,7 +103,7 @@ const UploadScreen = () => {
                 </div>
                 <div>
                     <label htmlFor="preview_video">Preview Video:</label>
-                    <input type="file" id="preview_video" onChange={handlePreviewVideoChange} accept="video/*" />
+                    <input type="file" id="preview_video" onChange={(e) => handleInputChange(e, setPreviewVideoFile)} accept="video/*" />
                 </div>
                 <div>
                     <label htmlFor="videos">Videos:</label>
@@ -100,6 +113,15 @@ const UploadScreen = () => {
                             <li key={index}>{video.title}</li>
                         ))}
                     </ul>
+                </div>
+                <div>
+                    <label htmlFor="category">Category:</label>
+                    <select id="category" value={selectedCategory} onChange={handleCategoryChange} required>
+                        <option value="">Select a category</option>
+                        {categories.map(category => (
+                            <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
+                    </select>
                 </div>
                 <button type="submit">Upload</button>
             </form>
