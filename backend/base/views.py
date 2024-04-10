@@ -81,7 +81,6 @@ class ProductView(APIView):
         return Response(serializer.data)
 
 class CategoryList(APIView):
-    permission_classes = [IsAdminUser]
 
     def get(self, request):
         categories = Category.objects.all()
