@@ -9,6 +9,8 @@ import { getMyOrders } from '../actions/orderActions';
 import { Button, Form, Table, Modal } from 'react-bootstrap';
 import StudentNav from '../Components/StudentNav';
 import { Link } from 'react-router-dom';
+import MainDash from '../Components/Dashboard/MainDash';
+import Sidebar from '../Components/Sidebar/Sidebar';
 
 function ProfileScreen() {
   const dispatch = useDispatch();
@@ -71,6 +73,8 @@ function ProfileScreen() {
   return (
     <div>
       <StudentNav />
+      <MainDash />
+      <Sidebar />
       <h2>Profile</h2>
       <Form>
         <Form.Group controlId="name">
