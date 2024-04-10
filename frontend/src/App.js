@@ -39,6 +39,7 @@ import AdminUserDetails from "./Screens/AdminUserDetail";
 import AdminProductDetail from "./Screens/AdminProductDetail";
 import AdminVideoDetails from "./Screens/AdminVideoDetail";
 import SalesStatisticScreen from "./Screens/SalesStatisticScreen";
+import ProductListScreen from "./Screens/ProductListScreen";
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/productlist" element={<ProductListScreen />} />
           <Route path="/Statistics" element={<SalesStatisticScreen />} />
           <Route path="/cart/:id?" element={<CartScreen />} />  
           <Route path="/order/:id" element={<OrderScreen />} />

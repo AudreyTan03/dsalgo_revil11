@@ -6,15 +6,16 @@ import {
   resetUpdateProfile,
 } from '../actions/userActions';
 import { getMyOrders } from '../actions/orderActions';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Form, Table, Modal } from 'react-bootstrap';
 import StudentNav from '../Components/StudentNav';
+import { Link } from 'react-router-dom';
 
 function ProfileScreen() {
   const dispatch = useDispatch();
   const [showOrders, setShowOrders] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const userDetails = useSelector((state) => state.userDetails);
   const { loading: loadingDetails, error: errorDetails, user } = userDetails;
-  console.log(user.name)
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdateProfile;
@@ -22,9 +23,9 @@ function ProfileScreen() {
   const orderListMy = useSelector((state) => state.orderListMy);
   const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [bio, setBio] = useState(''); // Add state for bio
+  const [updatedName, setUpdatedName] = useState('');
+  const [updatedEmail, setUpdatedEmail] = useState('');
+  const [updatedBio, setUpdatedBio] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
 
   const toggleOrdersVisibility = () => {
@@ -34,65 +35,124 @@ function ProfileScreen() {
   useEffect(() => {
     dispatch(getUserDetails());
   }, [dispatch])
-  
-  // useEffect(() => {
-  //   if (!user || successUpdate) {
-  //     dispatch(resetUpdateProfile());
-  //   } else {
-  //     setName(user.name);
-  //     setEmail(user.email);
-  //     setBio(user.bio || ''); // Set bio if available
-  //   }
-  //   dispatch(getMyOrders());
-  // }, [dispatch, user, successUpdate]);
-  // console.log(user.name)
+
+  useEffect(() => {
+    if (!user || successUpdate) {
+      dispatch(resetUpdateProfile());
+    } else {
+      setUpdatedName(user.name);
+      setUpdatedEmail(user.email);
+      setUpdatedBio(user.bio || '');
+    }
+    dispatch(getMyOrders());
+  }, [dispatch, user, successUpdate]);
 
   const handleProfileUpdate = (e) => {
     e.preventDefault();
     const formData = new FormData(); // Construct formData for multipart/form-data submission
-    formData.append('name', name);
-    formData.append('email', email);
-    formData.append('bio', bio);
+    formData.append('name', updatedName);
+    formData.append('email', updatedEmail);
+    formData.append('bio', updatedBio);
     if (profilePicture) {
       formData.append('profilePicture', profilePicture);
     }
     dispatch(updateUserProfile(formData)); // Pass formData directly
+    setIsEditing(false);
   };
 
-  const handleNameChange = (e) => setName(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleBioChange = (e) => setBio(e.target.value); // Handler for bio
+  const handleEditProfile = () => {
+    setIsEditing(true);
+  };
 
-  const handleProfilePictureChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfilePicture(file);
-    }
+  const handleCloseEditProfile = () => {
+    setIsEditing(false);
   };
 
   return (
     <div>
       <StudentNav />
       <h2>Profile</h2>
-      <Form onSubmit={handleProfileUpdate}>
+      <Form>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="text" value={user.name} onChange={handleNameChange} />
+          <Form.Control type="text" value={user.name} readOnly />
         </Form.Group>
         <Form.Group controlId="email">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" value={user.email} onChange={handleEmailChange} />
+          <Form.Control type="email" value={user.email} readOnly />
         </Form.Group>
         <Form.Group controlId="bio">
           <Form.Label>Bio</Form.Label>
-          <Form.Control as="textarea" rows={3} value={user.bio} onChange={handleBioChange} />
+          <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
         </Form.Group>
-        <Form.Group controlId="profilePicture">
-          <Form.Label>Profile Picture</Form.Label>
-          <Form.Control type="file" onChange={handleProfilePictureChange} />
-        </Form.Group>
-        <Button type="submit" variant="primary">Update Profile</Button>
+        <Button variant="primary" onClick={handleEditProfile}>Edit Profile</Button>
       </Form>
+      <Modal show={isEditing} onHide={handleCloseEditProfile}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter new name"
+                value={updatedName}
+                onChange={(e) => setUpdatedName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter new email"
+                value={updatedEmail}
+                onChange={(e) => setUpdatedEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formBio" className="mt-3">
+              <Form.Label>Bio</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter new bio"
+                value={updatedBio}
+                onChange={(e) => setUpdatedBio(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProfilePicture" className="mt-3">
+              <Form.Label>Profile Picture</Form.Label>
+              <Form.Control
+                type="file"
+                accept=".jpg, .png"
+                onChange={(e) => setProfilePicture(e.target.files[0])}
+              />
+              {profilePicture && (
+                <img
+                  src={URL.createObjectURL(profilePicture)}
+                  alt="Profile"
+                  style={{
+                    marginTop: "10px",
+                    maxWidth: "100%",
+                    width: "150px",
+                    height: "150px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseEditProfile}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleProfileUpdate}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {loadingUpdate && <div>Updating...</div>}
       {errorUpdate && <div>Error: {errorUpdate}</div>}
       <Button variant="secondary" onClick={toggleOrdersVisibility} className="my-3">
@@ -130,7 +190,7 @@ function ProfileScreen() {
                       )}
                     </td>
                     <td>
-                      <Button variant="light" size="sm">Details</Button>
+                    <Link to={`/order/${order._id}`}>Details</Link>
                     </td>
                   </tr>
                 ))}

@@ -311,3 +311,17 @@ def get_sales_statistics(request):
         'total_sales': total_sales['total'],
         'total_revenue': total_sales['total_revenue'] if total_sales['total_revenue'] else 0
     })
+
+
+@api_view(['GET'])
+def get_user_products(request):
+    user_id = request.query_params.get('user')
+    if not user_id:
+        return Response({'error': 'User ID not provided'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        products = Product.objects.filter(user_id=user_id)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

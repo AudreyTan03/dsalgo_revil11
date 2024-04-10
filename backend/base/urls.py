@@ -28,4 +28,5 @@ urlpatterns = [
     path('orders/myorders/', views.getMyOrders, name='myorders'),
     path('sales-statistics/', views.get_sales_statistics, name='sales-statistics'),
     path('order-items/<str:pk>/', views.OrderItemView.as_view(), name='order-items'),
+    path('user-products/', views.get_user_products, name='user-products'),
 ]
