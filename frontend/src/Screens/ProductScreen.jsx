@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
+import '../Screens/ProductScreen.css';
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -14,13 +15,14 @@ const ProductScreen = () => {
   const userInfo = useSelector((state) => state.userInfo); // Assuming userInfo is stored in Redux state
   const [userType, setUserType] = useState(null); // State to store user type
   const userId = JSON.parse(localStorage.getItem('userInfo')).token.id;
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const userInfoString = localStorage.getItem('userInfo');
     if (userInfoString) {
-        const userInfo = JSON.parse(userInfoString);
-        const { user_type } = userInfo;
-        setUserType(user_type);
+      const userInfo = JSON.parse(userInfoString);
+      const { user_type } = userInfo;
+      setUserType(user_type);
     }
   }, []);
 
@@ -76,10 +78,17 @@ const ProductScreen = () => {
     }
   };
 
-  const handleEditProduct = (productId) => {
-    navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
+  const handleEditProduct = () => {
+    navigate(`/edit/${id}`); // Navigate to the edit screen for the current product
   };
-  
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -93,44 +102,74 @@ const ProductScreen = () => {
     return <div>No product found</div>;
   }
 
-  const handleGoBack = () => {
-    navigate(-1); // Go back to the previous page
-  };
-
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <p>Uploaded by: {product.user_name}</p>
-      {product.preview_video && (
-        <video controls autoPlay style={{ width: '25%' }}>
-          <source src={product.preview_video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      )}
-      <p>{product.description}</p>
-      <p>{product.price}</p>
-      <p>Created at: {product.createdAt}</p>
-      <p>Edited at: {product.editedAt}</p>
-
-      <div>
-        {userId === product.user && userType === 'instructor' && (
-          <>
-            <button onClick={handleDeleteProduct}>Delete Product</button>
-            <button onClick={() => handleEditProduct(product.id)}>Edit Product</button>
-          </>
+    <div className="App">
+      <div className="overlay">
+        {/* Video capture */}
+        {product.preview_video && (
+          <div className="video-capture">
+            {/* You can embed your video here */}
+            <video controls autoPlay style={{ width: '100%', height: '263px', marginTop: "-1px" }}>
+              <source src={product.preview_video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         )}
-        {userId !== product.user && <button onClick={handleAddToCart}>Add to Cart</button>}
-        <button onClick={handleGoBack}>Go Back</button>
+
+        {/* Product price */}
+        <div className="product-price-left">
+          <p style={{ fontWeight: 'bold', fontSize: '1.5em' }}>$: {product.price}</p>
+        </div>
+
+        {/* Add to Cart button */}
+        {userId !== product.user && (
+          <div className="ratings">
+            <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
+          </div>
+        )}
+
+        {/* Dropdown */}
+        <div className="dropdown-container">
+          <button className="dropdown-btn" onClick={toggleDropdown}>...</button>
+          {dropdownVisible && (
+            <div className="dropdown-content">
+              {userId === product.user && userType === 'instructor' && (
+                <>
+                  <button onClick={handleDeleteProduct}>Delete Product</button>
+                  <button onClick={handleEditProduct}>Edit Product</button>
+                </>
+              )}
+              <button onClick={handleGoBack}>Go Back</button>
+            </div>
+          )}
+        </div>
+
       </div>
 
-      <h2>Videos</h2>
-      <ul>
-        {videos.map((video) => (
-          <li key={video.id}>
-            <a href={`/videos/${video.id}/`}>{video.title}</a>
-          </li>
-        ))}
-      </ul>
+      {/* Product details */}
+      <div className="gray-section">
+        <h2 style={{ color: 'white', marginRight: '700px', fontSize: '20px', marginTop: '-31px' }}>
+          {product.name}
+        </h2>
+        <p style={{ color: 'white', marginRight: '700px', fontSize: '15px' }}>
+          {product.description}
+        </p>
+        <div className="best-seller-box" style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="star-rating">
+            {/* Star rating */}
+            &#9733;&#9733;&#9733;&#9733;&#9733;
+          </div>
+          {/* Best Seller or any other label */}
+          <div className="new-box-gray" style={{ '--box-padding': '-22px', '--box-width': '101px', '--box-height': '22px' }}>
+            Best Seller
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="footer" style={{ width: '100%' }}>
+        <p>pages</p>
+      </footer>
     </div>
   );
 };
