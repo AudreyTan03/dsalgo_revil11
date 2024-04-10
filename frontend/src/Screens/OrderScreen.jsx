@@ -7,6 +7,8 @@ import Loader from "../Components/Loader";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { subscribeToVideo } from "../actions/videoActions"; // Import subscribeToVideo action creator
+// import { useNavigate } from 'react-router-dom';
 
 function OrderScreen() {
   const { id } = useParams();
@@ -19,6 +21,9 @@ function OrderScreen() {
   const { loading: loadingPay, success: successPay, error: errorPay } = orderPay;
   const [sdkReady, setSdkReady] = useState(false);
 
+  // Subscribe to video action
+  const subscribeToVideoAction = useDispatch();
+
   useEffect(() => {
     if (!order || successPay || order._id !== Number(id)) {
       dispatch({ type: ORDER_PAY_RESET });
@@ -29,9 +34,23 @@ function OrderScreen() {
       } else {
         setSdkReady(true);
       }
+    } else if (successPay) {
+      // If payment is successful, trigger the subscription
+      const { orderItems } = order;
+      orderItems.forEach((item) => {
+        dispatch(subscribeToVideo(item.product, item.video)); // Dispatch subscription action
+      });
+  
+      // Get the videoId from orderItems or any other source
+      const videoId = orderItems[0].video; // Assuming the first item has the videoId
+  
+      // Navigate to the VideoDetailScreen after successful subscription
+      navigate(`/videos/${videoId}`);
     }
-  }, [dispatch, id, order, successPay]);
+  }, [dispatch, id, order, successPay, navigate]);
+  
 
+  // Add PayPal script
   const addPayPalScript = () => {
     const script = document.createElement("script");
     script.type = "text/javascript";
@@ -44,10 +63,12 @@ function OrderScreen() {
     document.body.appendChild(script);
   };
 
+  // Handle payment success
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(id, paymentResult));
   }
 
+  // Create PayPal order
   const createOrderHandler = (data, actions) => {
     return actions.order.create({
       purchase_units: [
@@ -61,6 +82,7 @@ function OrderScreen() {
     });
   };
 
+  // Handle approval
   const onApproveHandler = (data, actions) => {
     return actions.order.capture().then(function (details) {
       successPaymentHandler({ id: details.id, status: details.status, update_time: details.update_time });
@@ -73,6 +95,7 @@ function OrderScreen() {
       console.error("Payment error:", errorPay);
     }
   }, [errorPay]);
+
 
   return (
     <>

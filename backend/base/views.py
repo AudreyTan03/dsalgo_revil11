@@ -325,3 +325,33 @@ def get_user_products(request):
         return Response(serializer.data)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+class RatingCreateAPIView(APIView):
+    permission_classes = [IsAuthenticated]  # Add permission_classes here
+    
+    def post(self, request, *args, **kwargs):
+        serializer = RatingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)  # Assuming the user is authenticated
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RatingUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]  # Add permission_classes here
+    
+    def put(self, request, pk, *args, **kwargs):
+        rating = Rating.objects.get(pk=pk)
+        serializer = RatingSerializer(rating, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RatingListAPIView(APIView):
+    permission_classes = [IsAuthenticated]  # Add permission_classes here
+    
+    def get(self, request, *args, **kwargs):
+        ratings = Rating.objects.all()
+        serializer = RatingSerializer(ratings, many=True)
+        return Response(serializer.data)

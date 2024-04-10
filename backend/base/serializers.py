@@ -91,5 +91,10 @@ class OrderSerializer(serializers.ModelSerializer):
         user = obj.user
         serializer = UserSerializer(user, many=False)
         return serializer.data
+    
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = '__all__'
 
 

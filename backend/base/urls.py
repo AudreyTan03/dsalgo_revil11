@@ -29,4 +29,7 @@ urlpatterns = [
     path('sales-statistics/', views.get_sales_statistics, name='sales-statistics'),
     path('order-items/<str:pk>/', views.OrderItemView.as_view(), name='order-items'),
     path('user-products/', views.get_user_products, name='user-products'),
+    path('ratings/create/', RatingCreateAPIView.as_view(), name='rating-create'),
+    path('ratings/<int:pk>/update/', RatingUpdateAPIView.as_view(), name='rating-update'),
+    path('ratings/', RatingListAPIView.as_view(), name='rating-list'),
 ]

@@ -8,6 +8,9 @@ import {
   VIDEO_DETAILS_REQUEST,
   VIDEO_DETAILS_SUCCESS,
   VIDEO_DETAILS_FAIL,
+  VIDEO_SUBSCRIBE_REQUEST,
+  VIDEO_SUBSCRIBE_SUCCESS,
+  VIDEO_SUBSCRIBE_FAIL,
 } from '../constants/videoConstants';
 
 export const listVideos = (productId) => async (dispatch, getState) => {
@@ -61,6 +64,36 @@ export const getVideoDetails = (videoId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: VIDEO_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+export const subscribeToVideo = (productId, videoId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: VIDEO_SUBSCRIBE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token.access}`,
+      },
+    };
+
+    // Make API call to subscribe to the video
+    await axios.post(`/api/products/${productId}/videos/${videoId}/subscribe/`, {}, config);
+
+    dispatch({ type: VIDEO_SUBSCRIBE_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: VIDEO_SUBSCRIBE_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

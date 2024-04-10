@@ -3,9 +3,10 @@ import React from "react";
 import Navbar from "./Components/Navbar";
 // import Footer from "./Components/Footer";
 import HeroSection from "./Components/HeroSection";
+import { useSelector } from 'react-redux';
 import "./bootstrap.min.css";
 import { Container } from "react-bootstrap";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Productscreen from "./Screens/ProductScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import RegisterScreen from "./Screens/RegisterScreen";
@@ -29,7 +30,7 @@ import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 import OrderScreen from "./Screens/OrderScreen";
 import InstructorNav from "./Components/InstructorNav";
 import DeleteScreen from "./Screens/DeleteScreen";
-import Protect from "./Screens/Utils/ProtectedRoutes";
+// import Protect from "./Screens/Utils/ProtectedRoutes";
 import Student from "./Screens/Utils/StudentProutes";
 import StudentProductHome from "./Screens/StudentProductHomescreen";
 import AdminPanel from "./Screens/AdminPanelScreen";
@@ -43,6 +44,16 @@ import ProductListScreen from "./Screens/ProductListScreen";
 
 
 function App() {
+  // const { isSubscribed } = useSelector((state) => state.userSubscription); // Assuming you have a slice of state that stores subscription status
+
+  // // Define a protected route component
+  // const ProtectedRoute = ({ element, path }) => {
+  //   if (isSubscribed) {
+  //     return element;
+  //   } else {
+  //     return <Navigate to="/" replace />;
+  //   }
+  // };
   return (
     <Router>
       {/* <Header /> */}
@@ -82,7 +93,7 @@ function App() {
             element={<OTPVerification />}
           />
           
-          <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
+         <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
 
 
           <Route path="/admin" element={<AdminPanel />} />

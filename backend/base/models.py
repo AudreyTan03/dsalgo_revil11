@@ -3,8 +3,10 @@ from django.db import models
 import os
 import random
 from user.models import User
+from django.conf import settings
 # from django.db import models
-from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
+# from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
+from django.db.models import Avg
 # Create your models here.
 
 
@@ -48,7 +50,7 @@ class Review(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True)
     paymentMethod = models.CharField(max_length=200, null=True, blank=True)
     taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     shippingPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
@@ -60,8 +62,24 @@ class Order(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True)
 
+    @property
+    def mean_rating(self):
+        return self.rating.aggregate(Avg('rating'))['rating__avg']
+
+    @mean_rating.setter
+    def mean_rating(self, value):
+        # This setter method is optional and depends on your requirements.
+        # If you want to set the mean_rating explicitly, implement the setter accordingly.
+        pass
+
+    @property
+    def num_reviews(self):
+        return self.rating.count()
+
     def __str__(self):
-        return str(self.createdAt)
+        return f"Order {self._id} created at {self.createdAt}"
+    
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
@@ -76,6 +94,17 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"OrderItem - {self.name}"
     
+
+
+class Rating(models.Model):
+    order = models.ForeignKey('Order', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=((1, '1 star'), (2, '2 star'), (3, '3 star'), (4, '4 star'), (5, '5 star')))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Rating for Order {self.order_id}: {self.rating} stars by {self.user.name}"
+    
 class Sale(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sales')
     order_item = models.OneToOneField(OrderItem, on_delete=models.CASCADE)
@@ -84,6 +113,25 @@ class Sale(models.Model):
     def __str__(self):
         return f"Sale #{self.pk} by {self.user.name}"
     
+
+# @property
+#     def mean_rating(self):
+#         return self.rating.aggregate(Avg('rating'))['rating__avg']
+
+#     @mean_rating.setter
+#     def mean_rating(self, value):
+#         # This setter method is optional and depends on your requirements.
+#         # If you want to set the mean_rating explicitly, implement the setter accordingly.
+#         pass
+
+#     @property
+#     def num_reviews(self):
+#         return self.rating.count()
+    
+#     def __str__(self):
+#         return self.title
+
+
 
 
 class ShippingAddress(models.Model):
