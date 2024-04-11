@@ -1,167 +1,81 @@
-:root {
-  --yellow: linear-gradient(180deg, #F8D49A -146.42%, #FAD79D -46.42%);
-  --orange: #fca61f;
-  --black: #242d49;
-  --gray: #788097;
-  --purple: linear-gradient(180deg, #BB67FF 0%, #C484F3 100%);
-  --pink: #FF919D;
-  --glass: rgba(255, 255, 255, 0.54);
-  --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
-  --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
-  --activeItem: #f799a354;
-}
+/* Sidebar.css */
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
-.App {
-  color: white;
-  background: linear-gradient(106.37deg, #161a30 51.55%, #161A30 90.85%);
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Inter', sans-serif;
-}
-
-.AppGlass {
-  display: grid;
-  height: 97vh; 
-  width: 97vw; 
-  background: var();
-  border-radius: 2rem;
-  gap: 16px;
-  grid-template-columns: 11rem auto 20rem;
-  overflow: hidden;
-}
-
-@media screen and (max-width: 1200px) {
-  .AppGlass {
-    grid-template-columns: 10% 50% auto;
-    overflow-y: scroll;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .AppGlass {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Sidebar styles */
 .sidebar {
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: fixed;
   padding-top: 4rem;
   transition: all 300ms ease;
-}
-
-.bars{
-  display: none;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff; /* Change background color */
+  width: 250px; /* Set sidebar width */
+  z-index: 100; /* Ensure sidebar is above other content */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 .logo {
   display: flex;
-  height: 5rem;
-  font-weight: bold;
-  font-size: 22px;
-  gap: 1rem;
   align-items: center;
   justify-content: center;
-  height: 4%;
-}
-.logo > span > span {
-  color: var(--pink);
-}
-
-.logo > img {
-  width: 3rem;
-  height: 3rem;
+  padding: 5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333; /* Change text color */
+  background-color: #f9f9f9; /* Change background color */
 }
 
 .menu {
-  margin-top: 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  flex: 1; /* Allow menu to expand to fill remaining space */
+  padding: 1rem;
 }
+
 .menuItem {
   display: flex;
   align-items: center;
   gap: 1rem;
-  height: 2.5rem;
-  margin-left: 2rem;
-  position: relative;
-  transition: all 300ms ease;
-  border-radius: 0.7rem;
-  font-size: 14px;
+  height: 3rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s;
 }
 
 .menuItem:hover {
   cursor: pointer;
-}
-
-.menu .menuItem:last-child {
-  position: absolute;
-  bottom: 2.3rem;
-  width: 100%;
+  background-color: #f0f0f0; /* Change background color on hover */
 }
 
 .active {
-  background: var(--activeItem);
-  margin-left: 0;
-}
-.active::before {
-  content: "";
-  width: 8px;
-  height: 100%;
-  background: var(--pink);
-  margin-right: calc(1rem - 8px);
+  background-color: #e0f3ff; /* Change background color for active item */
 }
 
-/* Tablets */
-@media screen and (max-width: 1200px) {
-  .menuItem>span{
-    display: none;
-  }
-  .logo{
-    display: none;
-  }
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-@media screen and (max-width: 768px) {
-  .sidebar{
-    position: fixed;
-    z-index: 9;
-    background: #ffe0e0;
-    width: 55%;
-    padding-right: 1rem;
-    height: 100%;
-  }
-  .menuItem>span{
-    display: block;
-  }
-  .logo{
-    display: flex;
-  }
-  .menu .menuItem:last-child {
-    position: relative;
-    margin-top: 6rem;
-  }
-  .bars{
-    display: flex;
-    position: fixed;
-    top: 2rem;
-    left:60%;
-    background:#ffe0e0;
-    padding:10px;
-    border-radius: 10px;
-    z-index: 9;
-  }
-  .close{
-    left: -60%;
-  }
+.logo img {
+  width: 3rem; /* Set the width of the logo image */
+  height: 3rem; /* Set the height of the logo image */
+  border-radius: 50%; /* Make the logo image circular */
+  object-fit: cover; /* Ensure the logo image covers its container */
 }
+
+.logo span {
+  color: var(--pink); /* Use the pink color for the text */
+}
+
+
+
+
+
+

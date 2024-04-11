@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import MainDash from '../Components/Dashboard/MainDash';
 import Sidebar from '../Components/Sidebar/Sidebar';
 
+
 function ProfileScreen() {
   const dispatch = useDispatch();
   const [showOrders, setShowOrders] = useState(false);
@@ -73,8 +74,8 @@ function ProfileScreen() {
   return (
     <div>
       <StudentNav />
-      <MainDash />
       <Sidebar />
+      <MainDash />
       <h2>Profile</h2>
       <Form>
         <Form.Group controlId="name">
