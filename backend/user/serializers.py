@@ -90,10 +90,13 @@ class UserLoginSerializer(serializers.ModelSerializer):
 #         read_only_fields = ['id', 'user']  # Include all fields from the Profile model
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    merchant_id = serializers.CharField(read_only=True)
+    user_type = serializers.CharField(source='user.user_type', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'image', 'name', 'bio']
-        read_only_fields = ['user']
+        fields = ['id', 'user', 'image', 'name', 'bio', 'merchant_id', 'email', 'user_type']
+        read_only_fields = ['user',]
         extra_kwargs = {
             'name': {'required': False}  # Setting name field as not required
         }
@@ -101,6 +104,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.image = validated_data.get('image', instance.image)
         instance.name = validated_data.get('name', instance.name)
+        instance.merchant_id = validated_data.get('merchant_id', instance.merchant_id)
         
         # Only update bio if it is provided in the request data
         if 'bio' in validated_data:

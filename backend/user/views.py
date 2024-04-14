@@ -182,6 +182,9 @@ def updateProfile(request):
     profile = get_object_or_404(Profile, user=user)
     serializer = UserProfileSerializer(profile, data=request.data, partial=True)
     if serializer.is_valid():
+        if 'merchant_id' in request.data:
+            profile.merchant_id = request.data['merchant_id']
+            profile.save()
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

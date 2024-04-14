@@ -41,6 +41,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Order
 from .serializers import OrderSerializer
+from user.models import Profile
 
 @api_view(['GET'])
 def getReview(request, pk):
@@ -252,17 +253,20 @@ def addOrderItems(request):
             user=user,
             paymentMethod=data.get('paymentMethod'),
             taxPrice=data.get('taxPrice', 0),
-            shippingPrice=data.get('shippingPrice', 0),
             totalPrice=data.get('totalPrice', 0)
         )
         for item in orderItems:
             try:
                 product = Product.objects.get(_id=item['product'])
+                merchant_profile = Profile.objects.get(user=product.user)
+                itemPrice = round(float(item['price']) * int(item['qty']), 2)
+                taxedPrice = round(itemPrice * 0.12, 2)
                 order_item = order.order_items.create(
                     product=product,
-                    user=product.user,
+                    merchant_id=merchant_profile.merchant_id,
                     name=product.name,
                     qty=item['qty'],
+                    taxPrice=taxedPrice,
                     price=item['price'],
                     image=product.image.url
                 )

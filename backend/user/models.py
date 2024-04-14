@@ -129,6 +129,8 @@ class Profile(models.Model):
     image = models.ImageField(default='default.jpg', upload_to='userprofile_pics')
     name = models.CharField(max_length=200)
     bio = models.TextField(blank=True, null=True)
+    merchant_id = models.CharField(max_length=100, null=True)  
+
 
     def __str__(self):
         return self.user.name if self.user.name else f"Profile for user {self.user.id}"

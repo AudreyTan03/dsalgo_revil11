@@ -72,7 +72,7 @@ class Order(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True)
     paymentMethod = models.CharField(max_length=200, null=True, blank=True)
     taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
-    shippingPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    # shippingPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)  -> tangaling muna for now
     totalPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     isPaid = models.BooleanField(default=False)
     paidAt = models.DateTimeField(null=True, blank=True)
@@ -109,6 +109,8 @@ class OrderItem(models.Model):
     image = models.CharField(max_length=200, null=True, blank=True)
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)  
     _id = models.AutoField(primary_key=True)
+    merchant_id = models.CharField(max_length=100, null=True)  
+    taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"OrderItem - {self.name}"

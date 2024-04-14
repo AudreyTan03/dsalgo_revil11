@@ -12,13 +12,33 @@ import { Link } from 'react-router-dom';
 import MainDash from '../Components/Dashboard/MainDash';
 import Sidebar from '../Components/Sidebar/Sidebar';
 
-
 function ProfileScreen() {
   const dispatch = useDispatch();
   const [showOrders, setShowOrders] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const userDetails = useSelector((state) => state.userDetails);
+
+  useEffect(() => {
+    dispatch(getUserDetails());
+  }, [dispatch])
+
+  useEffect(() => {
+    if (userDetails && userDetails.user) {
+      if (userDetails.successUpdate) {
+        dispatch(resetUpdateProfile());
+      } else {
+        setUpdatedName(userDetails.user.name);
+        setUpdatedEmail(userDetails.user.email);
+        setUpdatedBio(userDetails.user.bio || '');
+        setUpdatedMerchantId(userDetails.user.merchant_id || ''); 
+      }
+    }
+    dispatch(getMyOrders());
+  }, [dispatch, userDetails]);
+
   const { loading: loadingDetails, error: errorDetails, user } = userDetails;
+  console.log("UserDetails: ", userDetails)
+  const isUserInstructor = user?.user_type === 'instructor'; 
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdateProfile;
@@ -29,26 +49,12 @@ function ProfileScreen() {
   const [updatedName, setUpdatedName] = useState('');
   const [updatedEmail, setUpdatedEmail] = useState('');
   const [updatedBio, setUpdatedBio] = useState('');
+  const [updatedMerchantId, setUpdatedMerchantId] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
 
   const toggleOrdersVisibility = () => {
     setShowOrders(!showOrders);
   };
-
-  useEffect(() => {
-    dispatch(getUserDetails());
-  }, [dispatch])
-
-  useEffect(() => {
-    if (!user || successUpdate) {
-      dispatch(resetUpdateProfile());
-    } else {
-      setUpdatedName(user.name);
-      setUpdatedEmail(user.email);
-      setUpdatedBio(user.bio || '');
-    }
-    dispatch(getMyOrders());
-  }, [dispatch, user, successUpdate]);
 
   const handleProfileUpdate = (e) => {
     e.preventDefault();
@@ -56,6 +62,7 @@ function ProfileScreen() {
     formData.append('name', updatedName);
     formData.append('email', updatedEmail);
     formData.append('bio', updatedBio);
+    formData.append('merchant_id', updatedMerchantId)
     if (profilePicture) {
       formData.append('profilePicture', profilePicture);
     }
@@ -74,23 +81,29 @@ function ProfileScreen() {
   return (
     <div>
       <StudentNav />
-      <Sidebar />
       <MainDash />
+      <Sidebar />
       <h2>Profile</h2>
       <Form>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="text" value={user.name} readOnly />
+          <Form.Control type="text" value={user?.name} readOnly />
         </Form.Group>
         <Form.Group controlId="email">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" value={user.email} readOnly />
+          <Form.Control type="email" value={user?.email} readOnly />
         </Form.Group>
         <Form.Group controlId="bio">
           <Form.Label>Bio</Form.Label>
-          <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
+          <Form.Control as="textarea" rows={3} value={user?.bio} readOnly />
         </Form.Group>
         <Button variant="primary" onClick={handleEditProfile}>Edit Profile</Button>
+        {isUserInstructor && (
+          <Form.Group controlId="merchantId">
+            <Form.Label>PayPal Merchant ID </Form.Label>
+            <Form.Control type="text" value={user?.merchant_id} readOnly />
+          </Form.Group>
+        )}
       </Form>
       <Modal show={isEditing} onHide={handleCloseEditProfile}>
         <Modal.Header closeButton>
@@ -125,6 +138,19 @@ function ProfileScreen() {
                 value={updatedBio}
                 onChange={(e) => setUpdatedBio(e.target.value)}
               />
+            </Form.Group>
+            <Form.Group controlId="formMerchantId" className="mt-3">
+            {isUserInstructor && ( 
+        <Form.Group controlId="formMerchantId" className="mt-3">
+          <Form.Label>Merchant ID</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter new merchant ID"
+            value={updatedMerchantId}
+            onChange={(e) => setUpdatedMerchantId(e.target.value)}
+          />
+        </Form.Group>
+               )}
             </Form.Group>
             <Form.Group controlId="formProfilePicture" className="mt-3">
               <Form.Label>Profile Picture</Form.Label>

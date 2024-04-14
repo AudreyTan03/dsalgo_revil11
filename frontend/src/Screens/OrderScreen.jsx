@@ -52,10 +52,12 @@ function OrderScreen() {
 
   // Add PayPal script
   const addPayPalScript = () => {
+    console.log("addPaypalMerchant ID:", order.orderItems.map(item => item.merchant_id)); // Log merchant ID
+
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.src =
-      "https://www.paypal.com/sdk/js?client-id=AUJayLpkW1gf5gQQWX0Tx3lVJ56yZUwPeAfvVaPVdhSEVrRumfzKZr63RwjMlsEYf9CRKAwUYljQuI0V&currency=USD";
+      "https://www.paypal.com/sdk/js?client-id=AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n&currency=USD";
     script.async = true;
     script.onload = () => {
       setSdkReady(true);
@@ -70,17 +72,45 @@ function OrderScreen() {
 
   // Create PayPal order
   const createOrderHandler = (data, actions) => {
-    return actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            value: order.totalPrice,
+    console.log(order);
+  
+    const purchaseUnits = order.orderItems.map(item => ({
+      amount: {
+        currency_code: "USD",
+        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)), // Include item price and tax price in the value
+        breakdown: {
+          item_total: { // Add item_total field
             currency_code: "USD",
+            value: Number((Number(item.price) * item.qty).toFixed(2)) // Calculate total value of items in this purchase unit
           },
+          tax_total: {
+            currency_code: "USD",
+            value: Number(item.taxPrice).toFixed(2) // Include tax total
+          }
+        }
+      },
+      
+      description: item.name,
+      reference_id: item.merchant_id,
+      payee: {
+        merchant_id: item.merchant_id
+      },
+      items: [{ // Define items array
+        name: item.name,
+        quantity: item.qty,
+        unit_amount: { // Specify the unit amount for the item
+          currency_code: "USD",
+          value: Number(item.price).toFixed(2) // Only include item price
         },
-      ],
+      }]
+    }));
+  
+    return actions.order.create({
+      purchase_units: purchaseUnits
     });
   };
+  
+  
 
   // Handle approval
   const onApproveHandler = (data, actions) => {
@@ -185,7 +215,8 @@ function OrderScreen() {
                         <PayPalScriptProvider
                           options={{
                             "client-id":
-                              "AUJayLpkW1gf5gQQWX0Tx3lVJ56yZUwPeAfvVaPVdhSEVrRumfzKZr63RwjMlsEYf9CRKAwUYljQuI0V",
+                              "AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n",
+                              merchantId: order.orderItems.map((item) => item.merchant_id)
                           }}
                         >
                           <PayPalButtons
@@ -193,6 +224,7 @@ function OrderScreen() {
                             onApprove={onApproveHandler}
                             style={{ layout: "vertical" }}
                             onSuccess={successPaymentHandler}
+                            
                           />
                         </PayPalScriptProvider>
                       )}
