@@ -57,7 +57,7 @@ function OrderScreen() {
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.src =
-      "https://www.paypal.com/sdk/js?client-id=AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n&currency=USD";
+      "https://www.paypal.com/sdk/js?client-id=AXVOOQasJ5vIYjiFPHmtCI2wrNJDXmOchM8SoFSBxHL61x8uNR0RIM1iCLjSesNPRuA_fhOzS240gQyn&currency=USD";
     script.async = true;
     script.onload = () => {
       setSdkReady(true);
@@ -72,35 +72,28 @@ function OrderScreen() {
 
   // Create PayPal order
   const createOrderHandler = (data, actions) => {
-    console.log(order);
-  
     const purchaseUnits = order.orderItems.map(item => ({
       amount: {
         currency_code: "USD",
-        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)), // Include item price and tax price in the value
+        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)),
         breakdown: {
-          item_total: { // Add item_total field
+          item_total: {
             currency_code: "USD",
-            value: Number((Number(item.price) * item.qty).toFixed(2)) // Calculate total value of items in this purchase unit
+            value: Number((Number(item.price) * item.qty).toFixed(2))
           },
           tax_total: {
             currency_code: "USD",
-            value: Number(item.taxPrice).toFixed(2) // Include tax total
+            value: Number(item.taxPrice).toFixed(2)
           }
         }
       },
-      
       description: item.name,
-      reference_id: item.merchant_id,
-      payee: {
-        merchant_id: item.merchant_id
-      },
-      items: [{ // Define items array
+      items: [{
         name: item.name,
         quantity: item.qty,
-        unit_amount: { // Specify the unit amount for the item
+        unit_amount: {
           currency_code: "USD",
-          value: Number(item.price).toFixed(2) // Only include item price
+          value: Number(item.price).toFixed(2)
         },
       }]
     }));
@@ -215,8 +208,7 @@ function OrderScreen() {
                         <PayPalScriptProvider
                           options={{
                             "client-id":
-                              "AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n",
-                              merchantId: order.orderItems.map((item) => item.merchant_id)
+                              "AXVOOQasJ5vIYjiFPHmtCI2wrNJDXmOchM8SoFSBxHL61x8uNR0RIM1iCLjSesNPRuA_fhOzS240gQyn",
                           }}
                         >
                           <PayPalButtons

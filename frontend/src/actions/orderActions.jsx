@@ -134,7 +134,7 @@ export const getMyOrders = () => async (dispatch, getState) => {
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.token.access}`, // Ensure this is "Bearer <token>"
         },
       };
       const { data } = await instance.put(`/api/orders/${id}/pay/`,paymentResult, config);
