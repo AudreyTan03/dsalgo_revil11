@@ -18,6 +18,8 @@ from rest_framework import permissions, status
 import pyotp
 from user.models import OTP
 from django.core.mail import send_mail
+from base.models import Product
+from base.serializers import ProductSerializer
 # from .serializers import  UserSerializerWithToken
 
 #Generate token Manually
@@ -230,4 +232,29 @@ class UserPasswordResetView(APIView):
             return Response({'msg':"Password Reset Succesfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@permission_classes([IsAuthenticated])
+def view_user_profile_with_products(request, user_id):
+    try:
+        # Retrieve the user profile
+        user = User.objects.get(id=user_id)
+        
+        # Serialize the user profile
+        user_serializer = UserProfileSerializer(user)
+        
+        # Retrieve the products associated with the user
+        products = Product.objects.filter(user=user)
+        
+        # Serialize the products
+        product_serializer = ProductSerializer(products, many=True)
+        
+        # Render the data
+        data = {
+            'user_profile': user_serializer.data,
+            'products': product_serializer.data
+        }
+        
+        return Response(data)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

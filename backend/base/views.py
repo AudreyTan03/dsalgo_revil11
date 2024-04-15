@@ -287,6 +287,7 @@ def addOrderItems(request):
                 )
                 order_item = order.order_items.create(
                     product=product,
+                    user=product.user,
                     name=product.name,
                     qty=item['qty'],
                     price=item['price'],
@@ -373,14 +374,40 @@ def updateOrderToPaid(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_sales_statistics(request):
     user = request.user
-    total_sales = Sale.objects.filter(user=user).aggregate(total=Count('id'), total_revenue=Sum('order_item__price'))
+    # Fetch total sales and revenue for the user
+    sales_data = Sale.objects.filter(user=user).aggregate(total_sales=Count('id'), total_revenue=Sum('order_item__price'))
+    
+    # Fetch all sales made by the user
+    sales = Sale.objects.filter(user=user).select_related('order_item__order', 'order_item__product')
+    
+    # Prepare data for response
+    users_data = []
+    for sale in sales:
+        order_item = sale.order_item
+        if order_item and order_item.order and order_item.product:
+            user_data = {
+                'id': order_item.order.user.id,
+                'name': order_item.order.user.name,
+                'orders': [{
+                    'id': order_item.order._id,
+                    'product': {
+                        'name': order_item.product.name,
+                        'description': order_item.product.description,
+                        'price': order_item.price
+                    }
+                }]
+            }
+            users_data.append(user_data)
+
     return Response({
-        'total_sales': total_sales['total'],
-        'total_revenue': total_sales['total_revenue'] if total_sales['total_revenue'] else 0
+        'total_sales': sales_data['total_sales'],
+        'total_revenue': sales_data['total_revenue'] if sales_data['total_revenue'] else 0,
+        'users': users_data
     })
+
+
 
 
 @api_view(['GET'])

@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {thunk} from 'redux-thunk'; // Correct import statement
 import { productListReducer, productDetailsReducer } from './reducers/productsReducer';
-import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResendOtpReducer, userDetailsReducer, userUpdateProfileReducer, userUpdateThemePreferenceReducer,  } from './reducers/userReducers';
+import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResendOtpReducer, userDetailsReducer, userUpdateProfileReducer, userUpdateThemePreferenceReducer, userProfileWithProductsReducer  } from './reducers/userReducers';
 // import { userRegisterReducer } from './reducers/registerReducers'; // Import new reducers
 import { cartReducer } from './reducers/cartReducer';
 import { userChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
@@ -36,7 +36,8 @@ const rootReducer = combineReducers({
     userReducer: userReducer,
     productReducer: productReducer,
     videoReducer: videoReducer,
-    subscriptionReducer: subscriptionReducer
+    subscriptionReducer: subscriptionReducer,
+    userProfileWithProducts: userProfileWithProductsReducer,
     
 });
 

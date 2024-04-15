@@ -41,7 +41,7 @@ import AdminProductDetail from "./Screens/AdminProductDetail";
 import AdminVideoDetails from "./Screens/AdminVideoDetail";
 import SalesStatisticScreen from "./Screens/SalesStatisticScreen";
 import ProductListScreen from "./Screens/ProductListScreen";
-
+import ProfileWithProductScreen from "./Screens/ProfileWithProductScreen";
 
 function App() {
   // const { isSubscribed } = useSelector((state) => state.userSubscription); // Assuming you have a slice of state that stores subscription status
@@ -71,6 +71,7 @@ function App() {
           <Route path="/navbar" element={<Protect>-<Navbar /></Protect>} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/profile/:userId" element={<ProfileWithProductScreen />} />
           <Route path="/productlist" element={<ProductListScreen />} />
           <Route path="/Statistics" element={<SalesStatisticScreen />} />
           <Route path="/cart/:id?" element={<CartScreen />} />  

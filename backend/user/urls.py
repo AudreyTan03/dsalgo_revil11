@@ -9,7 +9,7 @@ from .adminviews import *
 
 urlpatterns = [
     path('users/login/', views.loginUser, name='login'),  # Use TokenObtainPairView from rest_framework_simplejwt
-    # path('profile/', views.user_profile, name='user_profile'),
+    path('profile/<int:user_id>/products/', view_user_profile_with_products, name='view_user_profile_with_products'),  # Move this line before the 'profile/' pattern
     path('profile/', views.userProfile, name='profile'),
     path('profile/update/', updateProfile, name='update_profile'),
     path('update-theme/', views.updateTheme, name='update_theme_preference'), 

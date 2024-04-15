@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadProduct } from '../actions/uploadAction';
+import { Navigate } from 'react-router-dom'; // Import Navigate component
 import './UploadScreen.css';
+
 
 const UploadScreen = () => {
     const dispatch = useDispatch();
@@ -12,62 +14,55 @@ const UploadScreen = () => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [countInStock, setCountInStock] = useState('');
-    const [previewVideoFile, setPreviewVideoFile] = useState(null);
     const [videoFiles, setVideoFiles] = useState([]);
+    const [previewVideoFile, setPreviewVideoFile] = useState(null);
     const [uploadedVideos, setUploadedVideos] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
-
-    useEffect(() => {
-        fetchCategories();
-    }, []);
-
-    const fetchCategories = async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/categories/');
-            if (response.ok) {
-                const data = await response.json();
-                setCategories(data);
-            }
-        } catch (error) {
-            console.error('Failed to fetch categories:', error);
-        }
-    };
+    const [uploadSuccess, setUploadSuccess] = useState(false); // State to track upload success
 
     const handleInputChange = (e, setState) => {
         const file = e.target.files[0];
         setState(file);
     };
 
-    const handleTextChange = (e, setState) => setState(e.target.value);
+    const handlePreviewVideoChange = (e) => {
+        const file = e.target.files[0];
+        setPreviewVideoFile(file);
+    };
 
-    const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+    const handleTextChange = (e, setState) => {
+        const value = e.target.value;
+        setState(value);
+    };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = JSON.parse(localStorage.getItem('userInfo')).token;
-        const userId = token.id; 
-
+    
         const formData = new FormData();
         formData.append('name', name);
         formData.append('image', imageFile);
         formData.append('description', description);
         formData.append('price', price);
         formData.append('countInStock', countInStock);
-        formData.append('preview_video', previewVideoFile);
-        videoFiles.forEach(video => {
-            formData.append('videos', video);
-        });
-        formData.append('user', userId);
-        formData.append('category', selectedCategory);
+        
+        if (previewVideoFile) {
+            formData.append('preview_video', previewVideoFile);
+        }
 
-        dispatch(uploadProduct(formData, userInfo.token));
+        if (videoFiles && videoFiles.length > 0) {
+            videoFiles.forEach((video) => {
+                formData.append('videos', video);
+            });
+        }
+    
+        await dispatch(uploadProduct(formData, userInfo.token));
+
+        setUploadSuccess(true); // Set upload success to true
     };
 
     const handleAddVideo = () => {
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = 'video/*';
+        input.accept = '.mp4';
         input.multiple = true;
         input.onchange = (e) => {
             const videos = Array.from(e.target.files);
@@ -76,6 +71,11 @@ const UploadScreen = () => {
         };
         input.click();
     };
+
+    // If uploadSuccess is true, navigate to '/products'
+    if (uploadSuccess) {
+        return <Navigate to="/products" />;
+    }
 
     return (
         <div className="upload-screen">
@@ -87,7 +87,14 @@ const UploadScreen = () => {
                 </div>
                 <div>
                     <label htmlFor="image">Image:</label>
-                    <input type="file" id="image" onChange={(e) => handleInputChange(e, setImageFile)} accept="image/*" required />
+                    <input 
+                        type="file" 
+                        id="image" 
+                        onChange={(e) => handleInputChange(e, setImageFile)} 
+                        accept=".jpg, .jpeg, .png" 
+                        required 
+                        maxSize={5 * 1024 * 1024} 
+                    />
                 </div>
                 <div>
                     <label htmlFor="description">Description:</label>
@@ -95,7 +102,21 @@ const UploadScreen = () => {
                 </div>
                 <div>
                     <label htmlFor="price">Price:</label>
-                    <input type="number" id="price" value={price} onChange={(e) => handleTextChange(e, setPrice)} required />
+                    <input 
+                        type="number" 
+                        id="price" 
+                        value={price} 
+                        onChange={(e) => handleTextChange(e, setPrice)} 
+                        onKeyDown={(e) => {
+                            if (e.key === '-') {
+                                e.preventDefault();
+                                alert("You cannot input negative values.");
+                            }
+                        }}
+                        required 
+                        className={price < 0 ? "input-error" : ""}
+                    />
+                    {price < 0 && <p className="error-message">Price cannot be negative</p>}
                 </div>
                 <div>
                     <label htmlFor="countInStock">Count in Stock:</label>
@@ -103,7 +124,7 @@ const UploadScreen = () => {
                 </div>
                 <div>
                     <label htmlFor="preview_video">Preview Video:</label>
-                    <input type="file" id="preview_video" onChange={(e) => handleInputChange(e, setPreviewVideoFile)} accept="video/*" />
+                    <input type="file" id="preview_video" onChange={handlePreviewVideoChange} accept=".mp4" />
                 </div>
                 <div>
                     <label htmlFor="videos">Videos:</label>
@@ -113,15 +134,6 @@ const UploadScreen = () => {
                             <li key={index}>{video.title}</li>
                         ))}
                     </ul>
-                </div>
-                <div>
-                    <label htmlFor="category">Category:</label>
-                    <select id="category" value={selectedCategory} onChange={handleCategoryChange} required>
-                        <option value="">Select a category</option>
-                        {categories.map(category => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
-                    </select>
                 </div>
                 <button type="submit">Upload</button>
             </form>

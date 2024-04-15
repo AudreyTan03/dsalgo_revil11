@@ -35,6 +35,9 @@ import {
     THEME_UPDATE_REQUEST,
     THEME_UPDATE_SUCCESS,
     THEME_UPDATE_FAIL,
+    USER_FETCH_PROFILE_WITH_PRODUCTS_REQUEST,
+    USER_FETCH_PROFILE_WITH_PRODUCTS_SUCCESS,
+    USER_FETCH_PROFILE_WITH_PRODUCTS_FAIL,
 } from '../constants/userConstants';
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
@@ -406,6 +409,49 @@ export const confirmChangePassword = (password, password2, uid, token) => async 
             payload: error.response && error.response.data.details
                 ? error.response.data.details
                 : error.message,
+        });
+    }
+};
+
+
+export const fetchUserProfileWithProducts = (userId) => async (dispatch, getState) => {
+    try {
+        // Dispatch request action
+        dispatch({ type: USER_FETCH_PROFILE_WITH_PRODUCTS_REQUEST });
+
+        // Get user token from state
+        const { userLogin: { userInfo } } = getState();
+
+        // Ensure user token exists
+        if (!userInfo || !userInfo.token) {
+            throw new Error('User information is missing or incomplete');
+        }
+
+        // Set authorization header with user token
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token.access}`,
+            },
+        };
+
+        // Send GET request to fetch user profile with products
+        console.log("Requesting user profile with products...");
+        const { data } = await instance.get(`api/profile/${userId}/products/`, config);
+        console.log("Received data:", data);
+
+        // Dispatch success action with response data
+        dispatch({
+            type: USER_FETCH_PROFILE_WITH_PRODUCTS_SUCCESS,
+            payload: { profile: data.user, products: data.products }, // Adjust according to actual response if needed
+        });
+    } catch (error) {
+        // Dispatch fail action with error details
+        console.error("Error fetching user profile with products:", error);
+        dispatch({
+            type: USER_FETCH_PROFILE_WITH_PRODUCTS_FAIL,
+            payload: error.response
+                ? error.response.data.message
+                : error.message || 'Error fetching user details',
         });
     }
 };
