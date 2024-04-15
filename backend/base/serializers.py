@@ -80,6 +80,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = serializers.SerializerMethodField(read_only=True)
     user = serializers.SerializerMethodField(read_only=True)
+    product = serializers.SerializerMethodField(read_only=True)
     # id=serializers.SerializerMethodField(source='_id',read_only=True)
 
     class Meta:
@@ -88,17 +89,23 @@ class OrderSerializer(serializers.ModelSerializer):
     
     def get_orderItems(self, obj):
         items = obj.order_items.all()  # Corrected related name
-        serializer = OrderItemSerializer(items, many=True)
+        serializer = OrderItemSerializer(items, many=True)  # Assuming you have an OrderItemSerializer
         return serializer.data
     
     def get_user(self, obj):
         user = obj.user
-        serializer = UserSerializer(user, many=False)
+        serializer = UserSerializer(user, many=False)  # Assuming you have a UserSerializer
         return serializer.data
     
-class RatingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rating
-        fields = '__all__'
+    def get_product(self, obj):
+        product = obj.product
+        serializer = ProductSerializer(product)  # Assuming you have a ProductSerializer
+        return serializer.data
+
+    
+# class RatingSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Rating
+#         fields = '__all__'
 
 

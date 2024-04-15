@@ -7,6 +7,7 @@ from django.conf import settings
 # from django.db import models
 # from django.contrib.auth.models import BaseUserManager,AbstractBaseUser
 from django.db.models import Avg
+from django.db import models, transaction
 # Create your models here.
 
 
@@ -35,6 +36,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name or 'Unnamed Product'
+    
+    def get_videos(self):
+        return self.videos.all()
 
 
     def delete_files(self):
@@ -69,7 +73,8 @@ class Review(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey('user.User', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='orders')
     paymentMethod = models.CharField(max_length=200, null=True, blank=True)
     taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     # shippingPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)  -> tangaling muna for now
@@ -81,22 +86,16 @@ class Order(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True)
 
-    @property
-    def mean_rating(self):
-        return self.rating.aggregate(Avg('rating'))['rating__avg']
-
-    @mean_rating.setter
-    def mean_rating(self, value):
-        # This setter method is optional and depends on your requirements.
-        # If you want to set the mean_rating explicitly, implement the setter accordingly.
-        pass
-
-    @property
-    def num_reviews(self):
-        return self.rating.count()
+    
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            super().save(*args, **kwargs)  # Save the order first
+            if self.isPaid and self.product is not None:  # Check if the product exists
+                self.product.isPaid = True
+                self.product.save()
 
     def __str__(self):
-        return f"Order {self._id} created at {self.createdAt}"
+        return str(self.createdAt)
     
 
 
@@ -117,14 +116,7 @@ class OrderItem(models.Model):
     
 
 
-class Rating(models.Model):
-    order = models.ForeignKey('Order', on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(choices=((1, '1 star'), (2, '2 star'), (3, '3 star'), (4, '4 star'), (5, '5 star')))
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Rating for Order {self.order_id}: {self.rating} stars by {self.user.name}"
     
 class Sale(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sales')

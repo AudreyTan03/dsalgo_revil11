@@ -7,9 +7,10 @@ import {
   VIDEO_DETAILS_REQUEST,
   VIDEO_DETAILS_SUCCESS,
   VIDEO_DETAILS_FAIL,
-  VIDEO_SUBSCRIBE_REQUEST,
-  VIDEO_SUBSCRIBE_SUCCESS,
-  VIDEO_SUBSCRIBE_FAIL,
+  SUBSCRIPTION_REQUEST,
+  SUBSCRIPTION_SUCCESS,
+  SUBSCRIPTION_FAIL,
+  UPDATE_USER_INFO,
 } from '../constants/videoConstants';
 
 export const videoListReducer = (state = { videos: [] }, action) => {
@@ -38,16 +39,22 @@ export const videoDetailsReducer = (state = { video: {} }, action) => {
   }
 };
 
-
-export const videoSubscribeReducer = (state = { subscriptionInfo: {} }, action) => {
+export const subscriptionReducers = (state = { loading: false, subscriptions: {}, error: null }, action) => {
   switch (action.type) {
-    case VIDEO_SUBSCRIBE_REQUEST:
-      return { loading: true, ...state };
-    case VIDEO_SUBSCRIBE_SUCCESS:
-      return { loading: false, subscriptionInfo: action.payload };
-    case VIDEO_SUBSCRIBE_FAIL:
-      return { loading: false, error: action.payload };
+    case SUBSCRIPTION_REQUEST:
+      return { ...state, loading: true };
+    case SUBSCRIPTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        subscriptions: 
+          action.payload.isUserSubscribed,
+        error: null
+      };
+    case SUBSCRIPTION_FAIL:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
 };
+

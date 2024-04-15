@@ -7,7 +7,7 @@ import Loader from "../Components/Loader";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { subscribeToVideo } from "../actions/videoActions"; // Import subscribeToVideo action creator
+// import { subscribeToVideo } from "../actions/videoActions"; // Import subscribeToVideo action creator
 // import { useNavigate } from 'react-router-dom';
 
 function OrderScreen() {
@@ -22,8 +22,7 @@ function OrderScreen() {
   const [sdkReady, setSdkReady] = useState(false);
 
   // Subscribe to video action
-  const subscribeToVideoAction = useDispatch();
-
+  // const subscribeToVideoAction = useDispatch();
   useEffect(() => {
     if (!order || successPay || order._id !== Number(id)) {
       dispatch({ type: ORDER_PAY_RESET });
@@ -34,20 +33,8 @@ function OrderScreen() {
       } else {
         setSdkReady(true);
       }
-    } else if (successPay) {
-      // If payment is successful, trigger the subscription
-      const { orderItems } = order;
-      orderItems.forEach((item) => {
-        dispatch(subscribeToVideo(item.product, item.video)); // Dispatch subscription action
-      });
-  
-      // Get the videoId from orderItems or any other source
-      const videoId = orderItems[0].video; // Assuming the first item has the videoId
-  
-      // Navigate to the VideoDetailScreen after successful subscription
-      navigate(`/videos/${videoId}`);
     }
-  }, [dispatch, id, order, successPay, navigate]);
+  }, [dispatch, id, order, successPay]);
   
 
   // Add PayPal script
@@ -57,7 +44,7 @@ function OrderScreen() {
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.src =
-      "https://www.paypal.com/sdk/js?client-id=AXVOOQasJ5vIYjiFPHmtCI2wrNJDXmOchM8SoFSBxHL61x8uNR0RIM1iCLjSesNPRuA_fhOzS240gQyn&currency=USD";
+      "https://www.paypal.com/sdk/js?client-id=AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n&currency=USD";
     script.async = true;
     script.onload = () => {
       setSdkReady(true);
@@ -72,28 +59,35 @@ function OrderScreen() {
 
   // Create PayPal order
   const createOrderHandler = (data, actions) => {
+    console.log(order);
+  
     const purchaseUnits = order.orderItems.map(item => ({
       amount: {
         currency_code: "USD",
-        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)),
+        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)), // Include item price and tax price in the value
         breakdown: {
-          item_total: {
+          item_total: { // Add item_total field
             currency_code: "USD",
-            value: Number((Number(item.price) * item.qty).toFixed(2))
+            value: Number((Number(item.price) * item.qty).toFixed(2)) // Calculate total value of items in this purchase unit
           },
           tax_total: {
             currency_code: "USD",
-            value: Number(item.taxPrice).toFixed(2)
+            value: Number(item.taxPrice).toFixed(2) // Include tax total
           }
         }
       },
+      
       description: item.name,
-      items: [{
+      reference_id: item.merchant_id,
+      payee: {
+        merchant_id: item.merchant_id
+      },
+      items: [{ // Define items array
         name: item.name,
         quantity: item.qty,
-        unit_amount: {
+        unit_amount: { // Specify the unit amount for the item
           currency_code: "USD",
-          value: Number(item.price).toFixed(2)
+          value: Number(item.price).toFixed(2) // Only include item price
         },
       }]
     }));
@@ -208,7 +202,8 @@ function OrderScreen() {
                         <PayPalScriptProvider
                           options={{
                             "client-id":
-                              "AXVOOQasJ5vIYjiFPHmtCI2wrNJDXmOchM8SoFSBxHL61x8uNR0RIM1iCLjSesNPRuA_fhOzS240gQyn",
+                              "AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n",
+                              merchantId: order.orderItems.map((item) => item.merchant_id)
                           }}
                         >
                           <PayPalButtons

@@ -1,21 +1,21 @@
-import { CART_ADD_ITEM, CART_CLEAR_ITEMS, CART_REMOVE_ITEM, CART_SAVE_METHOD } from '../constants/cartConstants';
+import { CART_ADD_ITEM, CART_CLEAR_ITEMS, CART_REMOVE_ITEM, CART_SAVE_METHOD, CART_UPDATE_SUBSCRIPTION } from '../constants/cartConstants';
 
 export const cartReducer = (state = { cartItems: [], paymentMethod: '' }, action) => {
     switch (action.type) {
         case CART_ADD_ITEM:
-            const item = action.payload;
-            const existItem = state.cartItems.find(x => x.product === item.product);
-            if (existItem) {
+            const newItem = action.payload;
+            const existingItem = state.cartItems.find(x => x.product === newItem.product);
+            if (existingItem) {
                 return {
                     ...state,
                     cartItems: state.cartItems.map(x =>
-                        x.product === existItem.product ? item : x
+                        x.product === existingItem.product ? newItem : x
                     ),
                 };
             } else {
                 return {
                     ...state,
-                    cartItems: [...state.cartItems, item],
+                    cartItems: [...state.cartItems, newItem],
                 };
             }
         case CART_REMOVE_ITEM:
@@ -32,6 +32,14 @@ export const cartReducer = (state = { cartItems: [], paymentMethod: '' }, action
             return {
                 ...state,
                 cartItems: []
+            };
+        case CART_UPDATE_SUBSCRIPTION:
+            const { id, isSubscribed } = action.payload;
+            return {
+                ...state,
+                cartItems: state.cartItems.map(item =>
+                    item.product === id ? { ...item, isSubscribed } : item
+                )
             };
         default:
             return state;

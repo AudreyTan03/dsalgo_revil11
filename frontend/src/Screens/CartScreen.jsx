@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, useParams, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap';
 import Message from '../Components/Message';
@@ -9,7 +9,6 @@ import { FaTrash } from 'react-icons/fa';
 function CartScreen() {
     const { id } = useParams();
     const location = useLocation();
-    const [search, setSearch] = useSearchParams();
     const navigate = useNavigate();
 
     const productId = id;
@@ -18,7 +17,6 @@ function CartScreen() {
 
     const cart = useSelector(state => state.cart);
     const { cartItems } = cart;
-    console.log(cartItems);
 
     useEffect(() => {
         if (productId) {
@@ -52,34 +50,41 @@ function CartScreen() {
                                     </Col>
                                     <Col md={3}>
                                         <Link to={`/product/${item.product}`}>{item.name}</Link>
+                                        {item.isPurchased && <p>This product has already been purchased, but you can still add it to the cart.</p>}
                                     </Col>
                                     <Col md={2}>${item.price}</Col>
                                     <Col md={3}>
-                                        <Form.Control
-                                            as='select'
-                                            value={item.qty}
-                                            onChange={(e) =>
-                                                dispatch(
-                                                    addToCart(item.product, Number(e.target.value))
-                                                )
-                                            }
-                                        >
-                                            {console.log("Count in stock:", item.countInStock)}
-                                            {item.countInStock > 0 && [...Array(item.countInStock).keys()].map((x) => (
-                                                <option key={x + 1} value={x + 1}>
-                                                    {x + 1}
-                                                </option>
-                                            ))}
-                                        </Form.Control>
+                                        {!item.isSubscribed ? (
+                                            <Form.Control
+                                                as='select'
+                                                value={item.qty}
+                                                onChange={(e) =>
+                                                    dispatch(
+                                                        addToCart(item.product, Number(e.target.value))
+                                                    )
+                                                }
+                                            >
+                                                {console.log("Count in stock:", item.countInStock)}
+                                                {item.countInStock > 0 && [...Array(item.countInStock).keys()].map((x) => (
+                                                    <option key={x + 1} value={x + 1}>
+                                                        {x + 1}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+                                        ) : (
+                                            <p>You are already subscribed to this product.</p>
+                                        )}
                                     </Col>
                                     <Col md={1}>
-                                        <Button
-                                            type='button'
-                                            variant='outline-danger'
-                                            onClick={() => removeFromCartHandler(item.product)}
-                                        >
-                                            <FaTrash />
-                                        </Button>
+                                        {!item.isSubscribed && (
+                                            <Button
+                                                type='button'
+                                                variant='outline-danger'
+                                                onClick={() => removeFromCartHandler(item.product)}
+                                            >
+                                                <FaTrash />
+                                            </Button>
+                                        )}
                                     </Col>
                                 </Row>
                             </ListGroup.Item>

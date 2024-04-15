@@ -1,13 +1,15 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {thunk} from 'redux-thunk'; // Correct import statement
 import { productListReducer, productDetailsReducer } from './reducers/productsReducer';
-import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResendOtpReducer, userDetailsReducer, userUpdateProfileReducer, userUpdateThemePreferenceReducer } from './reducers/userReducers';
+import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResendOtpReducer, userDetailsReducer, userUpdateProfileReducer, userUpdateThemePreferenceReducer,  } from './reducers/userReducers';
 // import { userRegisterReducer } from './reducers/registerReducers'; // Import new reducers
 import { cartReducer } from './reducers/cartReducer';
 import { userChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
 import { orderCreateReducer, orderDetailReducer,  orderListMyReducer, orderPayReducer } from './reducers/orderReducer';
 import {videoListReducer, videoDetailsReducer} from './reducers/videoReducer';
 import { userReducer, productReducer, videoReducer, subscriptionReducer } from './reducers/adminReducer';
+import { subscriptionReducers } from './reducers/videoReducer';
+
 
 // Define rootReducer using combineReducers
 const rootReducer = combineReducers({
@@ -29,11 +31,13 @@ const rootReducer = combineReducers({
     orderDetails: orderDetailReducer, 
     orderPay: orderPayReducer,
     orderListMy: orderListMyReducer,
+    Subscription: subscriptionReducers,
     // admin shit
     userReducer: userReducer,
     productReducer: productReducer,
     videoReducer: videoReducer,
     subscriptionReducer: subscriptionReducer
+    
 });
 
 // Retrieve cartItems and userInfo from localStorage

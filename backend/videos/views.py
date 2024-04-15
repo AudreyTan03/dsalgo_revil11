@@ -5,7 +5,26 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import *
 from .serializers import DeleteVideoSerializer, VideoSerializer, SubscriptionSerializer, UploadVideoSerializer
-from base.models import Product
+from base.models import Order, Product
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Video
+from .serializers import VideoSerializer
+from django.shortcuts import get_object_or_404
+
+
+@api_view(['GET'])
+def get_video(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    serializer = VideoSerializer(video)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_all_videos(request):
+    videos = Video.objects.all()
+    serializer = VideoSerializer(videos, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -53,39 +72,62 @@ def listProductVideos(request, product_id): # lilista lahat ng vids sa isang cou
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getProductVideo(request, product_id, video_id):
+def get_product_video(request, product_id, video_id):
+    user = request.user
     try:
         video = Video.objects.get(pk=video_id, product_id=product_id)
-        
-        if video.is_accessible(request.user):
+        product = video.product
+
+        # Check if the user is subscribed to the product
+        is_subscribed = Subscription.objects.filter(user=user, product=product).exists()
+
+        if is_subscribed:
+            # Assuming you have a serializer to serialize video data
             serializer = VideoSerializer(video)
             return Response(serializer.data)
         else:
-            return Response({"error": "You must be subscribed to access this video."}, status=status.HTTP_403_FORBIDDEN)
-    
+            return Response({"error": "You do not have access to this video because you are not subscribed to the product."}, status=status.HTTP_403_FORBIDDEN)
     except Video.DoesNotExist:
         return Response({'detail': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['POST'])
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def subscribe_to_product(request, product_id):
+#     product = get_object_or_404(Product, pk=product_id)
+#     # Prevent duplicate subscriptions
+#     if Subscription.objects.filter(user=request.user, product=product).exists():
+#         return Response({"error": "You are already subscribed to this product."}, status=400)
+#     Subscription.objects.create(user=request.user, product=product)
+#     return Response({"message": "Successfully subscribed."}, status=201)
+
+@api_view(['GET'])
+def check_subscription(request,user_id, product_id):
+    # Assuming the user is authenticated, you can access the user object via request.user
+    user = User.objects.get(pk=user_id)
+
+    # Retrieve the product based on the product_id
+    product = Product.objects.get(pk=product_id)
+
+    # Check if the user is subscribed to the product
+    is_subscribed = Subscription.objects.filter(user=user, product=product).exists()
+
+    # Return the subscription status in the response
+    return Response({'isUserSubscribed': is_subscribed})
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def subscribe_to_course(request, product_id):
+def orderVideos(request, order_id):
     try:
-        # Retrieve the product/course object
-        product = Product.objects.get(pk=product_id)
-        
-        # Check if the user is already subscribed to the course
-        if Subscription.objects.filter(user=request.user, product=product).exists():
-            return Response({"error": "You are already subscribed to this course."}, status=400)
-        
-        # Create a new subscription for the user and the course
-        subscription = Subscription.objects.create(user=request.user, product=product)
-        
-        # Serialize the subscription data
-        serializer = SubscriptionSerializer(subscription)
-        
-        # Return the serialized subscription data with a success message
-        return Response({"message": "Successfully subscribed to the course.", "subscription": serializer.data}, status=201)
-    
-    except Product.DoesNotExist:
-        return Response({"error": "Course not found."}, status=404)
+        order = Order.objects.get(id=order_id)
+        product = order.product
+
+        # Check if the product has associated videos
+        if product:
+            videos = Video.objects.filter(product=product)
+            serializer = VideoSerializer(videos, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'detail': 'No videos found for the specified order'}, status=status.HTTP_404_NOT_FOUND)
+    except Order.DoesNotExist:
+        return Response({'detail': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)

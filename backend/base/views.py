@@ -41,7 +41,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Order
 from .serializers import OrderSerializer
-from user.models import Profile
+from videos.models import OrderVideo, Subscription, Video
 
 @api_view(['GET'])
 def getReview(request, pk):
@@ -157,7 +157,6 @@ class PostProduct(APIView):
     def post(self, request, *args, **kwargs):
         product_serializer = UploadProductSerializer(data=request.data, context={'request': request})
         if product_serializer.is_valid():
-           
             product_instance = product_serializer.save(user=request.user)  # user nagrequest ng post masasave as user foreignkey
             logger.info("Product instance created: %s", product_instance)
 
@@ -204,41 +203,66 @@ def getProducts(request):
 def getProduct(request, pk):
     try:
         product = Product.objects.get(pk=pk)
-        serializer = ProductSerializer(product)
-        return Response(serializer.data)
+        user = request.user
+
+        # Check if the user is authenticated
+        if user.is_authenticated:
+            # Check if the user is subscribed to the product
+            if Subscription.objects.filter(user=user, product=product).exists():
+                # User is subscribed, set add_to_cart to False
+                serializer = ProductSerializer(product)
+                data = serializer.data
+                data['add_to_cart'] = False
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                # User is authenticated but not subscribed, include the "Add to Cart" button
+                serializer = ProductSerializer(product)
+                data = serializer.data
+                data['add_to_cart'] = True
+                return Response(data, status=status.HTTP_200_OK)
+        else:
+            # User is not authenticated, include the "Add to Cart" button
+            serializer = ProductSerializer(product)
+            data = serializer.data
+            data['add_to_cart'] = True
+            return Response(data, status=status.HTTP_200_OK)
+
     except Product.DoesNotExist:
         return Response({'detail': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
     except ValueError:
         return Response({'detail': 'Invalid product ID'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def saveShippingAddress(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        user_id = data['user']
-        address = data['address']
-        city = data['city']
-        postalCode = data['postalCode']
-        country = data['country']
+# def saveShippingAddress(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         user_id = data['user']
+#         address = data['address']
+#         city = data['city']
+#         postalCode = data['postalCode']
+#         country = data['country']
 
-        user = User.objects.get(id=user_id)
+#         user = User.objects.get(id=user_id)
 
-        shipping_address, created = ShippingAddress.objects.update_or_create(
-            user=user,
-            defaults={
-                'address': address,
-                'city': city,
-                'postalCode': postalCode,
-                'country': country,
-            },
-        )
+#         shipping_address, created = ShippingAddress.objects.update_or_create(
+#             user=user,
+#             defaults={
+#                 'address': address,
+#                 'city': city,
+#                 'postalCode': postalCode,
+#                 'country': country,
+#             },
+#         )
 
-        return JsonResponse({'status': 'Address saved successfully'})
-    else:
-        return JsonResponse({'error': 'Invalid request'}, status=400)
+#         return JsonResponse({'status': 'Address saved successfully'})
+#     else:
+#         return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
     
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user = request.user
     data = request.data
@@ -249,40 +273,59 @@ def addOrderItems(request):
 
     try:
         # Create order
-        order = Order.objects.create(
-            user=user,
-            paymentMethod=data.get('paymentMethod'),
-            taxPrice=data.get('taxPrice', 0),
-            totalPrice=data.get('totalPrice', 0)
-        )
-        for item in orderItems:
-            try:
-                product = Product.objects.get(_id=item['product'])
-                merchant_profile = Profile.objects.get(user=product.user)
-                itemPrice = round(float(item['price']) * int(item['qty']), 2)
-                taxedPrice = round(itemPrice * 0.12, 2)
+        with transaction.atomic():  # Use atomic transaction to ensure data consistency
+            for item in orderItems:
+                product_id = item['product']
+                product = Product.objects.select_for_update().get(_id=product_id)  # Lock the product row for update
+
+                # Create order with associated product
+                order = Order.objects.create(
+                    user=user,
+                    paymentMethod=data.get('paymentMethod'),
+                    taxPrice=data.get('taxPrice', 0),
+                    totalPrice=data.get('totalPrice', 0)
+                )
                 order_item = order.order_items.create(
                     product=product,
-                    merchant_id=merchant_profile.merchant_id,
                     name=product.name,
                     qty=item['qty'],
-                    taxPrice=taxedPrice,
                     price=item['price'],
                     image=product.image.url
                 )
+                Subscription.objects.create(user=user, product=product)
                 product.countInStock -= order_item.qty
                 product.save()
                 
                 # Create a Sale instance for this order item
                 Sale.objects.create(user=product.user, order_item=order_item)
-            except Product.DoesNotExist:
-                return Response({'detail': f'Product with id {item["product"]} does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        
+                videos = Video.objects.filter(product=product)
+
+                # Associate each video with the order
+                for video in videos:
+                    OrderVideo.objects.create(order=order, video=video)
         serializer = OrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def access_videos(request, product_id):
+    user = request.user
+    product = get_object_or_404(Product, pk=product_id)
+
+    # Check if the user has purchased the product
+    has_purchased = Order.objects.filter(user=user, product=product, isPaid=True).exists()
+
+    if has_purchased:
+        # User has purchased the product, provide access to the videos
+        videos = product.get_videos()
+        video_urls = [video.video_file.url for video in videos]
+        return Response({'videos': video_urls})
+    else:
+        # User has not purchased the product, allow them to purchase it
+        return Response({'detail': 'You need to purchase the product to access the videos'}, status=status.HTTP_403_FORBIDDEN)
         
     
 class OrderItemView(APIView):
@@ -354,31 +397,31 @@ def get_user_products(request):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-class RatingCreateAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Add permission_classes here
+# class RatingCreateAPIView(APIView):
+#     permission_classes = [IsAuthenticated]  # Add permission_classes here
     
-    def post(self, request, *args, **kwargs):
-        serializer = RatingSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)  # Assuming the user is authenticated
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request, *args, **kwargs):
+#         serializer = RatingSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save(user=request.user)  # Assuming the user is authenticated
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class RatingUpdateAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Add permission_classes here
+# class RatingUpdateAPIView(APIView):
+#     permission_classes = [IsAuthenticated]  # Add permission_classes here
     
-    def put(self, request, pk, *args, **kwargs):
-        rating = Rating.objects.get(pk=pk)
-        serializer = RatingSerializer(rating, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def put(self, request, pk, *args, **kwargs):
+#         rating = Rating.objects.get(pk=pk)
+#         serializer = RatingSerializer(rating, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class RatingListAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Add permission_classes here
+# class RatingListAPIView(APIView):
+#     permission_classes = [IsAuthenticated]  # Add permission_classes here
     
-    def get(self, request, *args, **kwargs):
-        ratings = Rating.objects.all()
-        serializer = RatingSerializer(ratings, many=True)
-        return Response(serializer.data)
+#     def get(self, request, *args, **kwargs):
+#         ratings = Rating.objects.all()
+#         serializer = RatingSerializer(ratings, many=True)
+#         return Response(serializer.data)

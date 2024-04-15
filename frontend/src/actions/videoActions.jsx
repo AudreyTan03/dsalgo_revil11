@@ -8,9 +8,10 @@ import {
   VIDEO_DETAILS_REQUEST,
   VIDEO_DETAILS_SUCCESS,
   VIDEO_DETAILS_FAIL,
-  VIDEO_SUBSCRIBE_REQUEST,
-  VIDEO_SUBSCRIBE_SUCCESS,
-  VIDEO_SUBSCRIBE_FAIL,
+  SUBSCRIPTION_REQUEST,
+  SUBSCRIPTION_SUCCESS,
+  SUBSCRIPTION_FAIL,
+  UPDATE_USER_INFO,
 } from '../constants/videoConstants';
 
 export const listVideos = (productId) => async (dispatch, getState) => {
@@ -32,7 +33,7 @@ export const listVideos = (productId) => async (dispatch, getState) => {
 
     console.log('Request Config:', config); // Log request config here
 
-    const { data } = await axios.get(`/api/products/${productId}/videos/`, config);
+    const { data } = await instance.get(`api/products/${productId}/videos/`, config);
     console.log('Video Data:', data); // Log video data here
 
 
@@ -55,7 +56,7 @@ export const getVideoDetails = (videoId) => async (dispatch) => {
   try {
     dispatch({ type: VIDEO_DETAILS_REQUEST });
 
-    const { data } = await axios.get(`/api/videos/${videoId}/`);
+    const { data } = await axios.get(`api/videos/${videoId}/`);
 
     dispatch({
       type: VIDEO_DETAILS_SUCCESS,
@@ -72,10 +73,13 @@ export const getVideoDetails = (videoId) => async (dispatch) => {
   }
 };
 
+const instance = axios.create({
+  baseURL: 'http://127.0.0.1:8000/',
+});
 
-export const subscribeToVideo = (productId, videoId) => async (dispatch, getState) => {
+export const checkSubscription = (userId, productId) => async (dispatch, getState) => {
   try {
-    dispatch({ type: VIDEO_SUBSCRIBE_REQUEST });
+    dispatch({ type: SUBSCRIPTION_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -87,13 +91,16 @@ export const subscribeToVideo = (productId, videoId) => async (dispatch, getStat
       },
     };
 
-    // Make API call to subscribe to the video
-    await axios.post(`/api/products/${productId}/videos/${videoId}/subscribe/`, {}, config);
+    // Fetch subscription status for the specific product
+    const { data } = await instance.get(`api/check-subscription/${userId}/${productId}/`, config);
 
-    dispatch({ type: VIDEO_SUBSCRIBE_SUCCESS });
+    dispatch({
+      type: SUBSCRIPTION_SUCCESS,
+      payload: { productId, isUserSubscribed: data.isUserSubscribed },
+    });
   } catch (error) {
     dispatch({
-      type: VIDEO_SUBSCRIBE_FAIL,
+      type: SUBSCRIPTION_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
@@ -101,3 +108,4 @@ export const subscribeToVideo = (productId, videoId) => async (dispatch, getStat
     });
   }
 };
+
