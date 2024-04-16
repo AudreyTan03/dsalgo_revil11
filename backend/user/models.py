@@ -5,6 +5,23 @@ import pyotp
 from django.db.models.signals import post_save
 
 # Custom User Manager
+
+
+import os
+import random
+
+def get_filename_ext(filepath):
+    base_name = os.path.basename(filepath)
+    name, ext = os.path.splitext(base_name)
+    return name, ext
+
+def upload_profile_image_path(instance, filename):
+    new_filename = random.randint(1, 3910209312)
+    name, ext = get_filename_ext(filename)
+    final_filename = f"{new_filename}{ext}"
+    return f"user_profile/{final_filename}"
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, is_instructor=False, is_student=False):
         """
@@ -126,7 +143,7 @@ class UserPreference(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg', upload_to='userprofile_pics')
+    image = models.ImageField(upload_to=upload_profile_image_path, default='default.jpg')
     name = models.CharField(max_length=200)
     bio = models.TextField(blank=True, null=True)
     merchant_id = models.CharField(max_length=100, null=True)  

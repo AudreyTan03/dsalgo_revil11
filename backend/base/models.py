@@ -10,6 +10,25 @@ from django.db.models import Avg
 from django.db import models, transaction
 # Create your models here.
 
+import os
+import random
+
+def get_filename_ext(filepath):
+    base_name = os.path.basename(filepath)
+    name, ext = os.path.splitext(base_name)
+    return name, ext
+
+def upload_image_path(instance, filename):
+    new_filename = random.randint(1, 3910209312)
+    name, ext = get_filename_ext(filename)
+    final_filename = f"{new_filename}{ext}"
+    return f"product_images/{final_filename}"
+
+def upload_preview_video_path(instance, filename):
+    new_filename = random.randint(1, 3910209312)
+    name, ext = get_filename_ext(filename)
+    final_filename = f"{new_filename}{ext}"
+    return f"product_videos/{final_filename}"
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -20,7 +39,7 @@ class Category(models.Model):
 class Product(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
-    image = models.ImageField(upload_to="static_cdn/images/")
+    image = models.ImageField(upload_to=upload_image_path)
     brand = models.CharField(max_length=200, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -28,7 +47,7 @@ class Product(models.Model):
     numReviews = models.IntegerField(null=True, blank=True, default=0)  
     price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     countInStock = models.IntegerField(null=True, blank=True, default=0)
-    preview_video = models.FileField(upload_to="static_cdn/videos/", null=True, blank=True)
+    preview_video = models.FileField(upload_to=upload_preview_video_path, null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True)
     editedAt = models.DateTimeField(auto_now=True)

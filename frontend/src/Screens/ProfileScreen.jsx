@@ -1,3 +1,5 @@
+// ProfileScreen.js
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails, updateUserProfile, resetUpdateProfile } from '../actions/userActions';
@@ -52,7 +54,7 @@ function ProfileScreen() {
         formData.append('email', updatedEmail);
         formData.append('bio', updatedBio);
         if (profilePicture) {
-            formData.append('profilePicture', profilePicture);
+            formData.append('image', profilePicture);
         }
         dispatch(updateUserProfile(formData)); // Pass formData directly
         setIsEditing(false);
@@ -69,7 +71,6 @@ function ProfileScreen() {
     return (
         <div>
             <StudentNav />
-            <Sidebar />
             <MainDash />
             <h2>Profile</h2>
             <Form>
@@ -208,6 +209,7 @@ function ProfileScreen() {
                     )}
                 </>
             )}
+            {user.image && <img src={user.image} alt="Profile" />}
         </div>
     );
 }

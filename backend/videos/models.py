@@ -3,6 +3,9 @@ import os
 from django.db import models
 from base.models import Order, Product, User
 
+import os
+import random
+
 def get_filename_ext(filepath):
     base_name = os.path.basename(filepath)
     name, ext = os.path.splitext(base_name)
@@ -11,13 +14,13 @@ def get_filename_ext(filepath):
 def upload_video_path(instance, filename):
     new_filename = random.randint(1, 3910209312)
     name, ext = get_filename_ext(filename)
-    final_filename = '{new_filename}{ext}'.format(new_filename=new_filename, ext=ext)
-    return 'videos/{final_filename}'.format(new_filename=new_filename, final_filename=final_filename)
+    final_filename = f"{new_filename}{ext}"
+    return f"product_subscribed/{final_filename}"
 
 class Video(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
-    video_file = models.FileField(upload_to="videos/")
+    video_file = models.FileField(upload_to=upload_video_path)
     description = models.TextField(null=True, blank=True)
     uploadedAt = models.DateTimeField(auto_now_add=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='videos')
