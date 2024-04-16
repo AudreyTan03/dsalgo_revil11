@@ -34,4 +34,8 @@ urlpatterns = [
     
     path('admin/subscriptions/', adminpanelSubscriptions.as_view(), name='admin_panel_subscriptions'),
     path('admin/subscriptions/<int:subscription_id>/', adminpanelSubscriptions.as_view(), name='admin_panel_subscription_detail'),
+    path('contact/', ContactMessageView.as_view(), name='contact-message'),
+    path('get-contact/', ContactMessageListView.as_view(), name='contact-message-list'),
+    path('reply-to-message/<int:message_id>/', reply_to_message, name='reply_to_message'),
+
 ]

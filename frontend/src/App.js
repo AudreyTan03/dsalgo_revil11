@@ -43,6 +43,9 @@ import SalesStatisticScreen from "./Screens/SalesStatisticScreen";
 import ProductListScreen from "./Screens/ProductListScreen";
 import ProfileWithProductScreen from "./Screens/ProfileWithProductScreen";
 import VideoDetailViewScreen from "./Screens/VideoDetailViewScreen";
+import Contact from "./Screens/ContactUsScreen";
+import AdminConcern from "./Screens/AdminConcern";
+
 
 function App() {
   // const { isSubscribed } = useSelector((state) => state.userSubscription); // Assuming you have a slice of state that stores subscription status
@@ -85,6 +88,9 @@ function App() {
             path="/confirm-changepass/:uid/:token"
             element={<ConfirmChangePass />}
           />
+          <Route path="/concerns" element={<AdminConcern />} />
+          <Route path="/contact" element={<Contact />} />
+
           <Route path="/products" element={<Protect><ProductHome /></Protect>} exact />
           <Route path="/Stuproducts" element={<Student><StudentProductHome /></Student>} exact />
 

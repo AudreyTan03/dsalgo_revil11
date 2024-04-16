@@ -258,3 +258,69 @@ def view_user_profile_with_products(request, user_id):
         return Response({'error': 'User not found'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+    
+    
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import ContactMessage
+from .serializers import ContactMessageSerializer
+from django.core.mail import send_mail
+from django.conf import settings
+
+class ContactMessageView(APIView):
+    def post(self, request, format=None):
+        serializer = ContactMessageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            # Send email notification
+            send_mail(
+                'New Contact Message',
+                f'Name: {serializer.data["name"]}\nEmail: {serializer.data["email"]}\nMessage: {serializer.data["message"]}',
+                settings.EMAIL_HOST_USER,
+                [settings.CONTACT_EMAIL],
+                fail_silently=False,
+            )
+
+            return Response({'message': 'Message sent successfully'}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class ContactMessageListView(APIView):
+    def get(self, request, format=None):
+        messages = ContactMessage.objects.all()
+        serializer = ContactMessageSerializer(messages, many=True)
+        return Response(serializer.data)
+    
+   
+
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import ContactMessage
+from .serializers import ContactMessageSerializer
+
+@api_view(['POST'])
+def reply_to_message(request, message_id):
+    message = get_object_or_404(ContactMessage, id=message_id)
+    reply_text = request.data.get('reply')
+    recipient_email = message.email
+
+    # Send email
+    send_mail(
+        'Reply to Your Message',
+        reply_text,
+        'haugabster@gmail.com',  # Sender's email address
+        [recipient_email],       # List of recipient email addresses
+        fail_silently=False,
+    )
+
+    # Update the message with the reply
+    message.reply = reply_text
+    message.save()
+
+    # Serialize the updated message and return it in the response
+    serializer = ContactMessageSerializer(message)
+    return Response(serializer.data)
+
