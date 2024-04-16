@@ -1,0 +1,42 @@
+.upload-screen {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.upload-screen h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.upload-screen form {
+    display: flex;
+    flex-direction: column;
+}
+
+.upload-screen label {
+    margin-bottom: 5px;
+}
+
+.upload-screen input,
+.upload-screen textarea {
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.upload-screen button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.upload-screen button:hover {
+    background-color: #0056b3;
+}

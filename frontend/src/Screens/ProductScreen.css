@@ -1,0 +1,329 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif; /* Change font if needed */
+    position: fixed; /* Set position fixed for body and html */
+    width: 100%; /* Ensure full width */
+}
+
+.overlay {
+    position: fixed; /* Position the overlay fixed */
+    top: 0; /* Align to the top of the viewport */
+    right: 0; /* Align to the right side of the viewport */
+    height: 100%; /* Make the overlay cover the full height of the viewport */
+    width: 465px; /* Set the width of the overlay */
+    background-color: rgb(255, 255, 255);
+    margin-top: 143px;
+    margin-right: 150px;
+    border: 0 solid black; /* Add black border */
+    box-shadow: 0 0 78px 10px rgba(0, 0, 0, 0.3), 0 0 60px -4px rgba(177, 168, 168, 0.5); /* Add glow effect */
+    z-index: 9999; /* Ensure the overlay is on top of other elements */
+}
+
+.App {
+    display: flex; /* Use flexbox to arrange sections */
+    min-height: 100vh; /* Ensure the page takes at least the height of the viewport */
+    flex-direction: column; /* Stack children vertically */
+    position: fixed; /* Position the .App fixed */
+    width: 100%; /* Ensure full width */
+}
+
+.gray-section {
+    flex: 1; /* Make the gray section take up all remaining space */
+    background-color: #1c1e27; /* Light gray background */
+    padding: 210px;
+    color: white;
+    position: fixed; /* Position the gray section fixed */
+    width: 100%; /* Ensure full width */
+}
+
+.footer {
+    background-color: #ffffff; /* Dark background for the footer */
+    color: black;
+    padding: 100px;
+    text-align: left; /* Align text to the center */
+    position: fixed; /* Position the footer fixed */
+    width: 100%; /* Ensure full width */
+}
+
+:root {
+    --glow-color: rgba(0, 0, 0, 0.5); /* Default glow color */
+    --glow-intensity: 10px; /* Default glow intensity */
+  }
+
+.add-to-cart-button {
+    margin-top: 374px;
+    font-size: .8em; /* Increase font size */
+    padding: 14px 97px; /* Adjust padding to increase button size */
+    margin-left: -160px;
+    background-color: rgb(43 171 81);
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    font-family: Arial, sans-serif; /* Change font family if needed */
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase; /* Convert text to uppercase */
+    position: fixed; /* Position the button fixed */
+    overflow: hidden; /* Hide overflow to prevent shadow overflow */
+    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
+    border-radius: 5px;
+}
+
+.review-button {
+    margin-top: 320px;
+    font-size: .8em; /* Increase font size */
+    padding: 14px 97px; /* Adjust padding to increase button size */
+    margin-left: -160px;
+    background-color: rgb(43 171 81);
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    font-family: Arial, sans-serif; /* Change font family if needed */
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase; /* Convert text to uppercase */
+    position: fixed; /* Position the button fixed */
+    overflow: hidden; /* Hide overflow to prevent shadow overflow */
+    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
+    border-radius: 5px;
+}
+
+.add-to-cart-button:hover {
+    box-shadow: inset 0 0 var(--glow-intensity) var(--glow-color), 0 0 var(--glow-intensity) var(--glow-color); /* Glow effect on hover */
+}
+
+.bigger-button::before {
+    content: ''; /* Add content for pseudo-element */
+    position: absolute; /* Position pseudo-element */
+    top: 0; /* Align to top */
+    left: 0; /* Align to left */
+    width: 100%; /* Take full width */
+    height: 100%; /* Take full height */
+    background: rgba(0, 123, 255, 0.3); /* Initial shadow color */
+    mix-blend-mode: overlay; /* Blend mode for overlay effect */
+    opacity: 0; /* Hide initially */
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+.bigger-button:hover::before {
+    opacity: 1; /* Show pseudo-element on hover */
+    animation: glow 1s infinite alternate; /* Apply animation for continuous glowing effect */
+}
+
+:root {
+    --glow-color: rgba(0, 0, 0, 0.5); /* Default glow color */
+    --glow-intensity: 10px; /* Default glow intensity */
+}
+
+.new-box {
+    margin-top: 52px;
+    font-size: 1.0em; /* Increase font size */
+    padding: 13px 77px; /* Adjust padding to increase button size */
+    margin-left: 94px;
+    margin-right: 25px;
+    background-color: rgb(43 171 81); /* Set the background to transparent */
+    color: rgb(255, 255, 255); /* Text color */
+    cursor: pointer; /* Change cursor on hover */
+    font-family: Arial, sans-serif; /* Change font family if needed */
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase; /* Convert text to uppercase */
+    text-align: center; /* Center align text */
+    position: fixed; /* Position the new box fixed */
+    overflow: hidden; /* Hide overflow to prevent shadow overflow */
+    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
+    transition: box-shadow 0.3s ease; /* Smooth transition */
+    border-radius: 5px;
+}
+
+.new-box:hover {
+    box-shadow: inset 0 0 var(--glow-intensity) var(--glow-color), 0 0 var(--glow-intensity) var(--glow-color); /* Glow effect on hover */
+}
+
+
+:root {
+    --glow-color: rgba(0, 0, 0, 0.5); /* Default glow color */
+    --glow-intensity: 10px; /* Default glow intensity */
+}
+
+.new-little-box {
+    margin-top: 118px;
+    font-size: 1.0em; /* Increase font size */
+    padding: 13px 69px; /* Adjust padding to increase button size */
+    margin-left: 94px;
+    margin-right: 25px;
+    background-color: rgb(43 171 81); /* Set the background to transparent */
+    color: rgb(255, 255, 255); /* Text color */
+    border: 0px solid rgb(255, 255, 255); /* Set a 2px solid black border */
+    cursor: pointer; /* Change cursor on hover */
+    font-family: Arial, sans-serif; /* Change font family if needed */
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase; /* Convert text to uppercase */
+    text-align: center; /* Center align text */
+    position: fixed; /* Position the new box fixed */
+    overflow: hidden; /* Hide overflow to prevent shadow overflow */
+    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
+    transition: box-shadow 0.3s ease; /* Smooth transition */
+    border-radius: 5px;
+}
+
+.new-little-box:hover {
+    box-shadow: inset 0 0 var(--glow-intensity) var(--glow-color), 0 0 var(--glow-intensity) var(--glow-color); /* Glow effect on hover */
+}
+
+
+.new-box-gray {
+    background-color: #000000; /* Light gray background */
+    border-radius: 5px; /* Rounded corners */
+    padding: var(--box-padding, 20px); /* Padding inside the box */
+    margin-top: 303px; /* Spacing from the text */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+    width: var(--box-width, auto); /* Adjustable width */
+    height: var(--box-height, auto); /* Adjustable height */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Center text */
+    margin-left: 0px;
+    font-size: 11px; /* Adjust the font size as needed */
+    transition: box-shadow 0.3s; /* Add transition for smooth effect */
+    position: fixed; /* Position the new box gray fixed */
+    top: 103px; /* Adjust this value to change the vertical position */
+}
+
+.star-rating {
+    font-size: 14px; /* Adjust the font size as needed */
+    color: #FFD700; /* Star color (in this case, golden yellow) */
+    margin-left: 105px; /* Move to the right */
+    margin-top: 302px;
+    position: fixed; /* Position the star rating fixed */
+    top: 103px; /* Adjust this value to change the vertical position */
+}
+
+/* Glowing effect for buttons */
+@keyframes glow {
+    from {
+        box-shadow: inset 0 0 20px rgba(0, 123, 255, 0.3);
+    }
+    to {
+        box-shadow: inset 0 0 50px rgba(0, 123, 255, 0.6);
+    }
+}
+
+
+:root {
+    --glow-color: rgba(0, 0, 0, 0.5); /* Default glow color */
+    --glow-intensity: 10px; /* Default glow intensity */
+}
+
+.new {
+    margin-top: 184px;
+    font-size: .9em; /* Increase font size */
+    padding: 11px 92px; /* Adjust padding to increase button size */
+    background-color: rgb(43 171 81);
+    color: rgb(255, 255, 255); /* Text color */
+    border: none; /* Remove border */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    font-family: Arial, sans-serif; /* Change font family if needed */
+    font-weight: bold; /* Make the font bold */
+    text-transform: uppercase; /* Convert text to uppercase */
+    position: absolute; /* Position the button absolutely */
+    margin-left: 212px; /* Move left edge to the center */
+    transform: translateX(-50%); /* Center the button horizontally */
+    overflow: hidden; /* Hide overflow to prevent shadow overflow */
+    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
+    border-radius: 5px;
+    white-space: nowrap; /* Ensure the text remains on a single line */
+}
+
+.new:hover {
+    box-shadow: inset 0 0 var(--glow-intensity) var(--glow-color), 0 0 var(--glow-intensity) var(--glow-color); /* Glow effect on hover */
+}
+
+/* Circular buttons */
+.circle-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.circle-button:hover {
+    background-color: #0056b3;
+}
+
+/* Styles for other elements */
+
+
+.dropdown-container {
+    position: absolute;
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+  }
+  
+  .dropdown-btn {
+    width: 40px; /* Adjust the width and height to make it a circle */
+    height: 40px; /* Adjust the width and height to make it a circle */
+    border-radius: 50%; /* Make it a circle */
+    background-color: #333; /* Example background color */
+    color: white; /* Example text color */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 280px;
+  }
+  
+  .dropdown-btn:hover {
+    background-color: #555; /* Example hover background color */
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9; /* Example background color */
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-container:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .dropdown-content button:hover {
+    background-color: #ddd; /* Example hover background color */
+  }
+  
+  .product-price-left {
+    position: absolute;
+    top: 20px; /* Same position as the dropdown */
+    right: 151px; /* Adjust as needed */
+    left: 68px;
+    margin-top: 280px;
+    font-size: 23px; /* Adjust the font size as needed */
+  }

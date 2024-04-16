@@ -1,0 +1,50 @@
+/* EditScreen.css */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px #007bff, 0 0 20px #007bff, 0 0 30px #007bff;
+  }
+  50% {
+    box-shadow: 0 0 20px #007bff, 0 0 30px #007bff, 0 0 40px #007bff;
+  }
+  100% {
+    box-shadow: 0 0 10px #007bff, 0 0 20px #007bff, 0 0 30px #007bff;
+  }
+}
+
+.edit-product-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.edit-product-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-product-form .form-group {
+  margin-bottom: 10px;
+}
+
+.edit-product-form input[type="text"],
+.edit-product-form input[type="number"],
+.edit-product-form button,
+.edit-product-form input[type="file"] {
+  padding: 5px;
+  font-size: 16px;
+}
+
+.edit-product-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-product-form button:hover {
+  background-color: #0056b3;
+}
+
+.edit-product-form li.selected {
+  animation: glow 1s infinite alternate;
+}

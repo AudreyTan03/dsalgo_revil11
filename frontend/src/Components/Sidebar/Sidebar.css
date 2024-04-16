@@ -1,0 +1,101 @@
+/* Sidebar.css */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  padding-top: 4rem;
+  transition: all 300ms ease;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff; /* Change background color */
+  width: 250px; /* Set sidebar width */
+  z-index: 100; /* Ensure sidebar is above other content */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333; /* Change text color */
+  background-color: #f9f9f9; /* Change background color */
+}
+
+.menu {
+  flex: 1; /* Allow menu to expand to fill remaining space */
+  padding: 1rem;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 3rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s;
+}
+
+.menuItem:hover {
+  cursor: pointer;
+  background-color: #f0f0f0; /* Change background color on hover */
+}
+
+.active {
+  background-color: #e0f3ff; /* Change background color for active item */
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.logo img {
+  width: 3rem; /* Set the width of the logo image */
+  height: 3rem; /* Set the height of the logo image */
+  border-radius: 50%; /* Make the logo image circular */
+  object-fit: cover; /* Ensure the logo image covers its container */
+}
+
+.logo span {
+  color: var(--pink); /* Use the pink color for the text */
+}
+
+
+.bars {
+  position: fixed;
+  top: 62rem;
+  margin-left: 2.5rem;
+  left: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(0, 132, 255);
+  color: #ffffff;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 80%;
+  }
+}

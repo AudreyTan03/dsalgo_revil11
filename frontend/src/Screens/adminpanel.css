@@ -1,0 +1,115 @@
+/* adminpanel.css */
+
+.admin-panel__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh; /* Fill the available height */
+}
+
+.admin-panel__content {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding-top: 0.5px; /* Fill the available width */
+}
+
+.admin-panel__sidebar-container {
+  width: 200px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #273746; /* Darker background color */
+}
+
+.admin-panel__sidebar {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow-y: auto; /* Enable scrolling if content exceeds height */
+}
+
+.admin-panel__sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-panel__sidebar li {
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #ffffff; /* Text color */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.admin-panel__sidebar li:hover {
+  background-color: #34495e; /* Hover background color */
+}
+
+.admin-panel__sidebar li span {
+  margin-left: 10px; /* Spacing between icon and text */
+}
+
+.admin-panel__data-box-container {
+  flex-grow: 1;
+  padding-left: 200px; /* Add padding to match the sidebar width */
+}
+
+.admin-panel__data-box {
+  padding: 20px;
+  width: 100%; /* Fill the available width */
+  height: 100%; /* Fill the height of the container */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-panel__data-box > div::before,
+.admin-panel__data-box > div::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #f4f4f4;
+  z-index: -1;
+}
+
+.admin-panel__data-box > div::before {
+  top: -10px;
+  left: -20px;
+  border-bottom-right-radius: 10px;
+}
+
+.admin-panel__data-box > div::after {
+  bottom: -10px;
+  left: -20px;
+  border-top-right-radius: 10px;
+}
+
+.admin-panel__title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #333333; /* Title color */
+}
+
+
+
+/* //umaakyat userlist ito adjust  */
+/* .admin-panel__sidebar-container {
+  z-index: 1; /* Ensure this is less than the navbar z-index */
+  /* ... other styles ... */
+/* } */ 
+
+/* Add padding-top to your main content to ensure it starts below the navbar */
+/* .admin-panel__content {
+  padding-top: 0.5px; /* Adjust to the height of your navbar */
+  /* ... other styles ... */
+/* } */ 
+
+/* If the sidebar should scroll independently but not overlap the navbar */
+/* .admin-panel__sidebar-container {
+  position: sticky;
+  top: 10px; /* This should be equal to the navbar's height */
+  /* height: calc(100vh - 60px); /* Adjust the 60px to your navbar's height */
+  /* overflow-y: auto; */ 
+/* } */ 

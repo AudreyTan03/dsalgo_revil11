@@ -1,0 +1,105 @@
+/* Use a modern, easy-to-read font */
+.user-list-container {
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  margin: 20px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: #333; /* Dark grey color for better readability */
+}
+
+.user-list-header {
+  background-color: #ffffff; /* A neutral white background */
+  color: #333;
+  font-weight: 600; /* Slightly bolder font for headers */
+  border-bottom: 1px solid #eaeaea; /* Lighter border for a subtle separation */
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 2fr;
+  align-items: center;
+  padding: 15px; /* Increased padding for better spacing */
+}
+
+.user-list-header .header-item {
+  text-align: left;
+}
+
+.user-list-row {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 2fr;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #f5f5f5; /* Subtle border for each row */
+}
+
+.user-list-row .row-item {
+  text-align: left;
+}
+
+.user-list-row:hover {
+  background-color: #f9f9f9; /* Slight hover effect for interaction */
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: start;
+  gap: 10px; /* Add space between buttons */
+}
+
+.edit-button, .delete-button {
+  color: white;
+  border: none;
+  padding: 10px 15px; /* More padding for a larger click area */
+  margin: 0; /* Remove margin */
+  border-radius: 4px; /* Modern, rounded corners */
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.edit-button {
+  background-color: #4CAF50; /* Use a less saturated color for a more professional look */
+}
+
+.delete-button {
+  background-color: #F44336;
+}
+
+.edit-button:hover {
+  background-color: #43A047; /* Darker shade on hover */
+}
+
+.delete-button:hover {
+  background-color: #D32F2F;
+}
+
+@media (max-width: 768px) {
+  .user-list-header, .user-list-row {
+    grid-template-columns: 1fr 2fr 1fr 1fr 2fr;
+  }
+}
+
+/* Fix the header to the top when scrolling */
+.user-list-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Light shadow for depth */
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%; /* Circular status indicators */
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.instructor {
+  background-color: #2ecc71; /* Green for instructors */
+}
+
+.student {
+  background-color: #3498db; /* Blue for students */
+}
