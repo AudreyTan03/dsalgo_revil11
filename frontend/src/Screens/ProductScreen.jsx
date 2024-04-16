@@ -42,6 +42,7 @@ const ProductScreen = () => {
     navigate('/cart');
   };
 
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -79,14 +80,17 @@ const ProductScreen = () => {
           {videos.map((video) => (
             <li key={video.id}>
               {isUserSubscribed ? (
-                <video controls play style={{ width: '25%' }}>
-                  <source src={video.video_file} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                <a
+                  href={`/product/${id}/video/${video.id}`}
+                  style={{ color: 'blue', cursor: 'pointer' }}
+                >
+                  {video.title}
+                </a>
               ) : (
-                <p>You need to subscribe to view this video.</p>
+                <>
+                  <p>You need to subscribe to view this video.</p>
+                </>
               )}
-              <p>{video.title}</p>
             </li>
           ))}
         </ul>

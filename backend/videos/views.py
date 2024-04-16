@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework import status
 from rest_framework.response import Response
 from .models import *
-from .serializers import DeleteVideoSerializer, VideoSerializer, SubscriptionSerializer, UploadVideoSerializer
+from .serializers import DeleteVideoSerializer, QuestionSerializer, VideoSerializer, VideoDetailSerializer, SubscriptionSerializer, UploadVideoSerializer
 from base.models import Order, Product
 
 from rest_framework.decorators import api_view
@@ -73,20 +73,10 @@ def listProductVideos(request, product_id): # lilista lahat ng vids sa isang cou
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_product_video(request, product_id, video_id):
-    user = request.user
     try:
-        video = Video.objects.get(pk=video_id, product_id=product_id)
-        product = video.product
-
-        # Check if the user is subscribed to the product
-        is_subscribed = Subscription.objects.filter(user=user, product=product).exists()
-
-        if is_subscribed:
-            # Assuming you have a serializer to serialize video data
-            serializer = VideoSerializer(video)
-            return Response(serializer.data)
-        else:
-            return Response({"error": "You do not have access to this video because you are not subscribed to the product."}, status=status.HTTP_403_FORBIDDEN)
+        video = get_object_or_404(Video, id=video_id, product_id=product_id)
+        serializer = VideoDetailSerializer(video)
+        return Response(serializer.data)
     except Video.DoesNotExist:
         return Response({'detail': 'Video not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -131,3 +121,39 @@ def orderVideos(request, order_id):
             return Response({'detail': 'No videos found for the specified order'}, status=status.HTTP_404_NOT_FOUND)
     except Order.DoesNotExist:
         return Response({'detail': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['GET'])
+def listQuestionForVid(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    questions = Question.objects.filter(video=video)
+    serializer = QuestionSerializer(questions, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def postQuestion(request, video_id):
+    video = get_object_or_404(Video, pk=video_id)
+    serializer = QuestionSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(video=video, user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def postReply(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if question.video.product.user != request.user:
+        return Response({'error': 'You are not authorized to reply to this question'}, status=status.HTTP_403_FORBIDDEN)
+    serializer = QuestionSerializer(question, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save(reply=request.data['reply'])
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+

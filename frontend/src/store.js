@@ -6,9 +6,10 @@ import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResend
 import { cartReducer } from './reducers/cartReducer';
 import { userChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
 import { orderCreateReducer, orderDetailReducer,  orderListMyReducer, orderPayReducer } from './reducers/orderReducer';
-import {videoListReducer, videoDetailsReducer} from './reducers/videoReducer';
+import {videoListReducer, videoDetailsReducer, videoDetailViewReducer} from './reducers/videoReducer';
 import { userReducer, productReducer, videoReducer, subscriptionReducer } from './reducers/adminReducer';
 import { subscriptionReducers } from './reducers/videoReducer';
+import { postQuestionReducer, postReplyReducer } from './reducers/questionReducer'
 
 
 // Define rootReducer using combineReducers
@@ -27,6 +28,9 @@ const rootReducer = combineReducers({
     userUpdateThemePreference: userUpdateThemePreferenceReducer,
     videoList : videoListReducer,
     videoDetails : videoDetailsReducer,
+    videoDetailViewReducer : videoDetailViewReducer,
+    postQuestion: postQuestionReducer,
+    postReply: postReplyReducer,
     orderCreate: orderCreateReducer,
     orderDetails: orderDetailReducer, 
     orderPay: orderPayReducer,

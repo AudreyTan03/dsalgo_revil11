@@ -42,6 +42,7 @@ import AdminVideoDetails from "./Screens/AdminVideoDetail";
 import SalesStatisticScreen from "./Screens/SalesStatisticScreen";
 import ProductListScreen from "./Screens/ProductListScreen";
 import ProfileWithProductScreen from "./Screens/ProfileWithProductScreen";
+import VideoDetailViewScreen from "./Screens/VideoDetailViewScreen";
 
 function App() {
   // const { isSubscribed } = useSelector((state) => state.userSubscription); // Assuming you have a slice of state that stores subscription status
@@ -94,6 +95,7 @@ function App() {
             element={<OTPVerification />}
           />
           
+          <Route path="/product/:productId/video/:videoId" element={<VideoDetailViewScreen />} />
          <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
 
 
