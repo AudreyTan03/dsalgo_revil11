@@ -46,6 +46,7 @@ import VideoDetailViewScreen from "./Screens/VideoDetailViewScreen";
 import Contact from "./Screens/ContactUsScreen";
 import AdminConcern from "./Screens/AdminConcern";
 import ReviewScreen from "./Screens/ReviewScreen";
+import Admin from "./Screens/Utils/AdminProutes";
 
 
 function App() {
@@ -89,7 +90,6 @@ function App() {
             path="/confirm-changepass/:uid/:token"
             element={<ConfirmChangePass />}
           />
-          <Route path="/concerns" element={<AdminConcern />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/review/:id" element={<ReviewScreen />} />
 
@@ -107,12 +107,13 @@ function App() {
          <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
 
 
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/admin/edit-user/:userId/" element={<EditUsers/>} /> 
-          <Route path="/admin/user-details/:userId/" element={<AdminUserDetails/>} /> 
-          <Route path="/admin/video-details/:videoId/" element={<AdminVideoDetails/>} /> 
-          <Route path="/admin/edit-product/:productId/" element={<EditProduct/>} /> 
-          <Route path="/admin/product-details/:productId" element={<AdminProductDetail />} />
+          <Route path="/admin" element={<Admin><AdminPanel /></Admin>} />
+          <Route path="/admin/edit-user/:userId/" element={<Admin><EditUsers/></Admin>} /> 
+          <Route path="/admin/user-details/:userId/" element={<Admin><AdminUserDetails/></Admin>} /> 
+          <Route path="/admin/video-details/:videoId/" element={<Admin><AdminVideoDetails/></Admin>} /> 
+          <Route path="/admin/edit-product/:productId/" element={<Admin><EditProduct/></Admin>} /> 
+          <Route path="/admin/product-details/:productId" element={<Admin><AdminProductDetail /></Admin>} />
+          <Route path="/concerns" element={<Admin><AdminConcern /></Admin>} />
 
           
 

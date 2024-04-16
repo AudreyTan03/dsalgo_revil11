@@ -35,6 +35,8 @@ urlpatterns = [
     path('post-reviews/', PostReview.as_view(), name="review_product"),
     path('reviews/', views.getReviews, name="review_get"),
     path('reviews/<int:pk>/', views.getReview, name="review_get"),
+    path('review/<int:pk>/delete/', delete_review, name='delete-review'),
+
 
 
 ]         

@@ -35,7 +35,7 @@ function StudentNav() {
   return (
     <nav className={darkMode ? 'navbar dark-mode' : 'navbar'}>
       <div className='navbar-container'>
-        <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
+        <Link to='/studenthomescreen' className='navbar-logo' onClick={closeMobileMenu}>
           Revil student
         </Link>
         <div className='search-container'>

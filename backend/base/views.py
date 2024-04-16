@@ -43,6 +43,23 @@ from .models import Order
 from .serializers import OrderSerializer
 from videos.models import OrderVideo, Subscription, Video
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+from .models import Review
+from .serializers import ReviewSerializer
+
+@api_view(['DELETE'])
+def delete_review(request, pk):
+    try:
+        review = Review.objects.get(pk=pk)
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    review.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
 @api_view(['GET'])
 def getReview(request, pk):
     try:
