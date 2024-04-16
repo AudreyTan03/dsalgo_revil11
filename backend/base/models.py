@@ -87,8 +87,14 @@ class Review(models.Model):
     _id = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return str(self.rating)
-    
+        return f"{self.user.username} - {self.product.name}"
+
+    def save(self, *args, **kwargs):
+        super(Review, self).save(*args, **kwargs)
+        # Update numReviews for the associated product
+        self.product.numReviews = Review.objects.filter(product=self.product).count()
+        self.product.save()
+
 
 
 class Order(models.Model):

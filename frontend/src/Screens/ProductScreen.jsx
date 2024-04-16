@@ -42,6 +42,10 @@ const ProductScreen = () => {
     navigate('/cart');
   };
 
+  const handleViewReviews = () => {
+    navigate(`/review/${id}`); // Redirect to the review page with the product ID
+  };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -72,6 +76,8 @@ const ProductScreen = () => {
 
       <div>
         <button onClick={handleAddToCart}>Add to Cart</button>
+        <button onClick={handleViewReviews}>View Reviews</button>
+
       </div>
 
       <h2>Videos</h2>

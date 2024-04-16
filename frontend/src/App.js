@@ -45,6 +45,7 @@ import ProfileWithProductScreen from "./Screens/ProfileWithProductScreen";
 import VideoDetailViewScreen from "./Screens/VideoDetailViewScreen";
 import Contact from "./Screens/ContactUsScreen";
 import AdminConcern from "./Screens/AdminConcern";
+import ReviewScreen from "./Screens/ReviewScreen";
 
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
           />
           <Route path="/concerns" element={<AdminConcern />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/review/:id" element={<ReviewScreen />} />
 
           <Route path="/products" element={<Protect><ProductHome /></Protect>} exact />
           <Route path="/Stuproducts" element={<Student><StudentProductHome /></Student>} exact />
