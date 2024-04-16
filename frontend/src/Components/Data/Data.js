@@ -22,8 +22,13 @@ export const SidebarData = [
     link: "/customers",
   },
   {
-    icon: UilPackage,
-    heading: 'Courses',
-    link: "/courses",
+    icon: UilUsersAlt,
+    heading: 'Orders',
+    link: "/orders",
   },
+  {
+    icon: UilPackage,
+    heading: "Courses",
+    link: "/courses",
+  }
 ];

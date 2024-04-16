@@ -75,7 +75,27 @@
 }
 
 
+.bars {
+  position: fixed;
+  top: 62rem;
+  margin-left: 2.5rem;
+  left: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(0, 132, 255);
+  color: #ffffff;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-
-
-
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 80%;
+  }
+}
