@@ -14,6 +14,11 @@ class UploadVideoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class VideoDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
+
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,5 +46,11 @@ class DeleteVideoSerializer(serializers.Serializer):
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
+        fields = '__all__'
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
         fields = '__all__'
 

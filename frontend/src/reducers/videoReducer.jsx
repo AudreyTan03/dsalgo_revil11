@@ -11,9 +11,12 @@ import {
   SUBSCRIPTION_SUCCESS,
   SUBSCRIPTION_FAIL,
   UPDATE_USER_INFO,
+  GET_VIDEO_DETAILS_REQUEST,
+  GET_VIDEO_DETAILS_SUCCESS,
+  GET_VIDEO_DETAILS_FAIL,
 } from '../constants/videoConstants';
 
-export const videoListReducer = (state = { videos: [] }, action) => {
+export const videoListReducer = (state = { videos: [] }, action) => { //admin
   switch (action.type) {
     case VIDEO_LIST_REQUEST:
       return { loading: true, videos: [] };
@@ -26,7 +29,7 @@ export const videoListReducer = (state = { videos: [] }, action) => {
   }
 };
 
-export const videoDetailsReducer = (state = { video: {} }, action) => {
+export const videoDetailsReducer = (state = { video: {} }, action) => { //listvids reg
   switch (action.type) {
     case VIDEO_DETAILS_REQUEST:
       return { loading: true, ...state };
@@ -58,3 +61,15 @@ export const subscriptionReducers = (state = { loading: false, subscriptions: {}
   }
 };
 
+export const videoDetailViewReducer = (state = { video: null, loading: false, error: null }, action) => {// regular
+  switch (action.type) {
+    case GET_VIDEO_DETAILS_REQUEST:
+      return { loading: true, video: null, error: null };
+    case GET_VIDEO_DETAILS_SUCCESS:
+      return { loading: false, video: action.payload, error: null };
+    case GET_VIDEO_DETAILS_FAIL:
+      return { loading: false, video: null, error: action.payload };
+    default:
+      return state;
+  }
+};
