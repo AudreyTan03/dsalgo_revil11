@@ -5,7 +5,7 @@ import { BsSearch } from "react-icons/bs";
 import { logout, updateThemePreference } from '../actions/userActions';
 import './Navbar.css';
 
-function Navbar() {
+function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCategoryChange }) {
   const [click, setClick] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,6 +41,10 @@ function Navbar() {
     dispatch(logout());
   };
 
+  const handleCategoryClick = (categoryId) => {
+    onCategoryChange(categoryId);
+    closeMobileMenu();
+  };
   return (
     <>
       <nav className={darkMode ? 'navbar dark-mode' : 'navbar'}>
@@ -78,12 +82,12 @@ function Navbar() {
             </li>
             <li className='nav-item'>
               <Link to='/register' className='nav-links' onClick={closeMobileMenu}>
-                Settings
+                Register
               </Link>
             </li>
             <li className='nav-item'>
               <Link to='/login' className='nav-links' onClick={handleLogout}>
-                Logout
+                Login
               </Link>
             </li>
             {/* Conditionally render admin panel link based on user role */}
@@ -100,16 +104,13 @@ function Navbar() {
       <nav className='secondary-navbar'>
         <div className='navbar-container'>
           <ul className='subject-links'>
-            <li className='nav-item'>
-              <Link to='/math' className='nav-links' onClick={closeMobileMenu}>
-                Math
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/english' className='nav-links' onClick={closeMobileMenu}>
-                English
-              </Link>
-            </li>
+            {categories && categories.map(category => (
+              <li key={category.id} className='nav-item'>
+                <a href="#" className='nav-links' onClick={(e) => { e.preventDefault(); handleCategoryClick(category.id); }}>
+                  {category.name}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </nav>

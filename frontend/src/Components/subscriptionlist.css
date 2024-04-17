@@ -1,0 +1,47 @@
+.subscription-list {
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    margin: 20px;
+    max-width: 100%;
+    color: #333;
+  }
+  
+  .subscription-list__heading {
+    font-weight: bold;
+  }
+  
+  .subscription-list__message {
+    /* styles for messages */
+  }
+  
+  .subscription-list__items {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .subscription-list__item {
+    border-bottom: 1px solid #eaeaea;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .subscription-list__item-info {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .subscription-list__delete-button {
+    color: white;
+    background-color: #F44336;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .subscription-list__delete-button:hover {
+    background-color: #D32F2F;
+  }
+  

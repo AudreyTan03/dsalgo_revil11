@@ -52,47 +52,36 @@ body, html {
     --glow-intensity: 10px; /* Default glow intensity */
   }
 
-.add-to-cart-button {
+  .add-to-cart-button,
+  .view-reviews-button {
+      font-size: .8em;
+      padding: 14px 97px;
+      margin-left: -160px;
+      background-color: rgb(43, 171, 81);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      text-transform: uppercase;
+      position: fixed;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 rgba(0, 123, 255, 0);
+      border-radius: 5px;
+  }
+  
+  .add-to-cart-button:hover,
+  .view-reviews-button:hover {
+      box-shadow: inset 0 0 var(--glow-intensity) var(--glow-color), 0 0 var(--glow-intensity) var(--glow-color);
+  }
+/* .add-to-cart-button {
     margin-top: 374px;
-    font-size: .8em; /* Increase font size */
-    padding: 14px 97px; /* Adjust padding to increase button size */
-    margin-left: -160px;
-    background-color: rgb(43 171 81);
-    color: white; /* Text color */
-    border: none; /* Remove border */
-    cursor: pointer; /* Change cursor on hover */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-    font-family: Arial, sans-serif; /* Change font family if needed */
-    font-weight: bold; /* Make the font bold */
-    text-transform: uppercase; /* Convert text to uppercase */
-    position: fixed; /* Position the button fixed */
-    overflow: hidden; /* Hide overflow to prevent shadow overflow */
-    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
-    border-radius: 5px;
-}
-
-.review-button {
-    margin-top: 320px;
-    font-size: .8em; /* Increase font size */
-    padding: 14px 97px; /* Adjust padding to increase button size */
-    margin-left: -160px;
-    background-color: rgb(43 171 81);
-    color: white; /* Text color */
-    border: none; /* Remove border */
-    cursor: pointer; /* Change cursor on hover */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-    font-family: Arial, sans-serif; /* Change font family if needed */
-    font-weight: bold; /* Make the font bold */
-    text-transform: uppercase; /* Convert text to uppercase */
-    position: fixed; /* Position the button fixed */
-    overflow: hidden; /* Hide overflow to prevent shadow overflow */
-    box-shadow: inset 0 0 0 rgba(0, 123, 255, 0); /* Initial box shadow */
-    border-radius: 5px;
-}
-
-.add-to-cart-button:hover {
-    box-shadow: inset 0 0 var(--glow-intensity) var(--glow-color), 0 0 var(--glow-intensity) var(--glow-color); /* Glow effect on hover */
-}
+} */
+  
+  .view-reviews-button {
+      margin-top: 374px;
+  }
 
 .bigger-button::before {
     content: ''; /* Add content for pseudo-element */
@@ -270,7 +259,7 @@ body, html {
     top: 20px; /* Adjust as needed */
     right: 20px; /* Adjust as needed */
   }
-  
+
   .dropdown-btn {
     width: 40px; /* Adjust the width and height to make it a circle */
     height: 40px; /* Adjust the width and height to make it a circle */
@@ -286,24 +275,26 @@ body, html {
     position: relative;
     margin-top: 280px;
   }
-  
+
   .dropdown-btn:hover {
     background-color: #555; /* Example hover background color */
   }
-  
   .dropdown-content {
     display: none;
-    position: absolute;
-    background-color: #f9f9f9; /* Example background color */
+    position: absolute; /* Change to absolute */
+    background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
-  }
-  
-  .dropdown-container:hover .dropdown-content {
+}
+
+.dropdown-container:hover .dropdown-content {
     display: block;
-  }
-  
+    /* Adjust the position as needed */
+    top: 100%; /* Position below the dropdown button */
+    left: 0; /* Align with the left side of the button */
+}
+
   .dropdown-content button {
     color: black;
     padding: 12px 16px;
@@ -314,11 +305,11 @@ body, html {
     width: 100%;
     text-align: left;
   }
-  
+
   .dropdown-content button:hover {
     background-color: #ddd; /* Example hover background color */
   }
-  
+
   .product-price-left {
     position: absolute;
     top: 20px; /* Same position as the dropdown */
@@ -327,3 +318,111 @@ body, html {
     margin-top: 280px;
     font-size: 23px; /* Adjust the font size as needed */
   }
+
+  .video-sections-container {
+    padding: 20px;
+    /* Adjust the following styles to fit the video sections as you need */
+    margin-left: 10px; /* Space from the left side */
+    margin-bottom: 50px; /* Space from the bottom */
+}
+
+.video-section .section-title {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd; /* A line to separate sections */
+}
+
+.video-section .section-title:hover {
+    background-color: #e9e9e9;
+}
+
+.video-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.video-list li {
+    margin-bottom: 10px; /* Space between videos */
+}
+.gray-section {
+    flex: 1 1;
+    background-color: #1c1e27;
+    padding-top: 180px; /* Adjust this value to decrease or increase the top padding */
+    padding-bottom: 100px; /* Adjust this value to decrease or increase the bottom padding */
+    padding-left: 210px; /* Maintain the original left padding */
+    padding-right: 210px; /* Maintain the original right padding */
+    color: white;
+    width: 100%;
+    position: relative;
+}
+
+
+.video-sections-container {
+    padding: 20px;
+    margin-left: 10px;
+    margin-bottom: 50px;
+    position: relative; /* Updated */
+}
+
+/* CSS File */
+
+.product-screen-container {
+  display: flex;
+  height: 100vh;
+}
+
+.video-sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  overflow-y: auto;
+}
+
+.video-titles {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.video-titles li {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #34495e;
+}
+
+.video-titles li:hover,
+.video-titles li.active {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.video-playback-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.video-container {
+  margin-bottom: 30px;
+}
+
+.video-container h3 {
+  margin-bottom: 10px;
+}
+
+.subscription-cta {
+  background-color: #e74c3c;
+  color: #ffffff;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Other styles */
+/* ... */
+

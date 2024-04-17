@@ -447,6 +447,27 @@ def get_user_products(request):
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
+
+@api_view(['GET'])
+def search(request):
+    query = request.query_params.get('query', '')
+
+    # Search for products by name or description
+    product_results = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+    product_serializer = ProductSerializer(product_results, many=True)
+
+    # Search for users by name
+    user_results = User.objects.filter(name__icontains=query)
+    user_serializer = UserSerializer(user_results, many=True)
+
+    response_data = {
+        'products': product_serializer.data,
+        'users': user_serializer.data
+    }
+
+    return Response(response_data)
+    
+
 # class RatingCreateAPIView(APIView):
 #     permission_classes = [IsAuthenticated]  # Add permission_classes here
     

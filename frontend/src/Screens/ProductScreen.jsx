@@ -1,20 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 import { listVideos, checkSubscription } from '../actions/videoActions';
+import '../Screens/productscreen.css';
 
 const ProductScreen = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const videos = useSelector((state) => state.videoList.videos) || [];
+  const videos = useSelector(state => state.videoList.videos) || [];
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const isUserSubscribed = useSelector((state) => state.Subscription.subscriptions);
-  const userInfo = useSelector((state) => state.userLogin.userInfo);
-  const userId = userInfo.token.id;
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const userInfo = useSelector(state => state.userLogin.userInfo);
+  const userId = userInfo?.token?.id;
+  const isUserSubscribed = useSelector(state => state.Subscription.subscriptions);
+  const [selectedVideoId, setSelectedVideoId] = useState(null);
+  const [userType, setUserType] = useState(null); // State to store user type
+  const videoRefs = useRef(new Map());
+
+  useEffect(() => {
+    const userInfoString = localStorage.getItem('userInfo');
+    if (userInfoString) {
+        const userInfo = JSON.parse(userInfoString);
+        const { user_type } = userInfo;
+        setUserType(user_type);
+    }
+  }, []);
+
+  const handleDeleteProduct = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/products/${id}/delete/`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to delete product. Status: ${response.status}`);
+      }
+      navigate('/'); // Navigate back to the home page or any other appropriate page
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleEditProduct = (productId) => {
+    navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,16 +57,16 @@ const ProductScreen = () => {
         }
         const data = await response.json();
         setProduct(data);
-        setLoading(false);
       } catch (error) {
         setError(error.message);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchProduct();
     dispatch(listVideos(id));
-    dispatch(checkSubscription(userId, id)); // Dispatch checkSubscription for the current product
+    dispatch(checkSubscription(userId, id));
   }, [dispatch, userId, id]);
 
   const handleAddToCart = () => {
@@ -42,10 +74,22 @@ const ProductScreen = () => {
     navigate('/cart');
   };
 
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   const handleViewReviews = () => {
     navigate(`/review/${id}`); // Redirect to the review page with the product ID
   };
 
+  const handleScrollToVideo = (videoId) => {
+    setSelectedVideoId(videoId);
+    videoRefs.current.get(videoId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -60,49 +104,90 @@ const ProductScreen = () => {
   }
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <p>Uploaded by: {product.user_name}</p>
-      {product.preview_video && (
-        <video controls autoPlay style={{ width: '25%' }}>
-          <source src={product.preview_video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      )}
-      <p>{product.description}</p>
-      <p>{product.price}</p>
-      <p>Created at: {product.createdAt}</p>
-      <p>Edited at: {product.editedAt}</p>
-
-      <div>
-        <button onClick={handleAddToCart}>Add to Cart</button>
-        <button onClick={handleViewReviews}>View Reviews</button>
-
-      </div>
-
-      <h2>Videos</h2>
-      {videos.length > 0 ? (
-        <ul>
-          {videos.map((video) => (
-            <li key={video.id}>
-              {isUserSubscribed ? (
-                <a
-                  href={`/product/${id}/video/${video.id}`}
-                  style={{ color: 'blue', cursor: 'pointer' }}
-                >
-                  {video.title}
-                </a>
-              ) : (
-                <>
-                  <p>You need to subscribe to view this video.</p>
-                </>
+    <div className="App">
+      <div className="overlay">
+        {product.preview_video && (
+          <div className="video-capture">
+            <video controls autoPlay style={{ width: '100%', height: '263px', marginTop: "-1px" }}>
+              <source src={product.preview_video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )}
+        <div className="product-price-left">
+          <p style={{ fontWeight: 'bold', fontSize: '1.5em' }}>$: {product.price}</p>
+        </div>
+          {userId !== product.user && (
+            <div className="ratings">
+              <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
+              {(isUserSubscribed || userType === 'admin') && (
+                <button className="view-reviews-button"  onClick={handleViewReviews}>View Reviews</button>
               )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div>No videos found</div>
-      )}
+            </div>
+          )}
+        <div className="dropdown-container">
+          <button className="dropdown-btn" onClick={toggleDropdown}>...</button>
+          {dropdownVisible && (
+            <div className="dropdown-content">
+              <button onClick={handleGoBack}>Go Back</button>
+              {/* Only instructors who posted the product or admin can edit/delete */}
+              {(userId === product.user && userType === 'instructor') || userType === 'admin' ? (
+                <>
+                  <button onClick={handleDeleteProduct}>Delete Product</button>
+                  <button onClick={() => handleEditProduct(product.id)}>Edit Product</button>
+                </>
+              ) : (
+                <p>You do not have permission to edit or delete this product.</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="gray-section">
+        <h1>{product.name}</h1>
+        <p>{product.description}</p>
+        <p>Uploaded by: {product.user_name}</p>
+        <p>Created at: {product.createdAt}</p>
+        <p>Edited at: {product.editedAt}</p>
+      </div>
+      <div className="product-screen-container">
+        <div className="video-sidebar">
+          <ul className="video-titles">
+            {videos.map((video) => (
+              <li
+                key={video.id}
+                className={selectedVideoId === video.id ? 'active' : ''}
+                onClick={() => handleScrollToVideo(video.id)}
+              >
+                {video.title}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <h2>Videos</h2>
+        {videos.length > 0 ? (
+          <ul>
+            {videos.map((video) => (
+              <li key={video.id}>
+                {/* Only instructors who posted the product, admin, or subscribed users can view the video */}
+                {((userId === product.user && userType === 'instructor') || userType === 'admin' || isUserSubscribed) ? (
+                  <video
+                    controls
+                    controlsList="nodownload"
+                    preload="none"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <source src={video.video_file} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                    ) : (
+                    <p className="error-message">You need to subscribe to view this video.</p>
+                    )}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
     </div>
   );
 };

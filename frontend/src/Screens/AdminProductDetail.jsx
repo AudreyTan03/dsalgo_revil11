@@ -1,9 +1,8 @@
-// components/ProductDetails.js
-
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getProductDetails } from '../actions/adminActions';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import './adminproduct.css'
+import { getProductDetails } from '../actions/adminActions';
 
 const AdminProductDetail = () => {
   const dispatch = useDispatch();
@@ -17,42 +16,46 @@ const AdminProductDetail = () => {
   }, [dispatch, productId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="error">Error: {error}</div>;
   }
 
-  console.log("Product in component:", product);
+  const videos = product?.product_videos || [];
 
   return (
-    <div>
+    <div className="admin-product-detail">
       {product && (
-        <div>
-          <h2>{product.name}</h2>
-          <p>ID: {product._id}</p>
-          <p>Price: {product.price}</p>
-          <p>Category: {product.category}</p>
-          <p>Description: {product.description}</p>
-          <p>Number of Reviews: {product.numReviews}</p>
-          <p>Created By: {product.user_name}</p>
-          <video controls>
-            <source src={product.preview_video} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <h3>Videos:</h3>
-          <ul>
-            {product.product_videos.map(video => (
-              <li key={video.id}>
-                <video controls>
-                  <source src={video.video_file} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-                <p>{video.title}</p>
-              </li>
-            ))}
-          </ul>
+        <div className="product-container">
+          <h2 className="product-name">{product.name}</h2>
+          <div className="product-info">
+            <p><strong>ID:</strong> {product._id}</p>
+            <p><strong>Price:</strong> {product.price}</p>
+            <p><strong>Category:</strong> {product.category}</p>
+            <p><strong>Description:</strong> {product.description}</p>
+            <p><strong>Number of Reviews:</strong> {product.numReviews}</p>
+            <p><strong>Created By:</strong> {product.user_name}</p>
+          </div>
+          <div className="videos-container">
+            <video className="preview-video" controls>
+              <source src={product.preview_video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <h3 className="video-heading">Videos:</h3>
+            <ul className="video-list">
+              {videos.map(video => (
+                <li key={video.id} className="video-item">
+                  <video controls>
+                    <source src={video.video_file} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <p className="video-title">{video.title}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </div>

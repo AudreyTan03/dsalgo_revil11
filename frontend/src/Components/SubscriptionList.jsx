@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSubscriptions, deleteSubscription } from '../actions/adminActions';
+import './subscriptionlist.css'
 
 const SubscriptionList = () => {
     const dispatch = useDispatch();
@@ -19,20 +20,20 @@ const SubscriptionList = () => {
     };
 
     return (
-        <div>
-            <h2>Subscription List</h2>
+        <div className="subscription-list">
+            <h2 className="subscription-list__heading">Subscription List</h2>
             {loading ? (
-                <p>Loading subscriptions...</p>
+                <p className="subscription-list__message">Loading subscriptions...</p>
             ) : error ? (
-                <p>Error: {error}</p>
+                <p className="subscription-list__message">Error: {error}</p>
             ) : (
-                <ul>
+                <ul className="subscription-list__items">
                     {subscriptions.map(subscription => (
-                        <li key={subscription.id}>
-                            <span>Subscription ID: {subscription.id}</span>
-                            <span>User ID: {subscription.user}</span>
-                            <span>Product ID: {subscription.product}</span>
-                            <button onClick={() => handleDelete(subscription.id)}>Delete</button>
+                        <li key={subscription.id} className="subscription-list__item">
+                            <span className="subscription-list__item-info">Subscription ID: {subscription.id}</span>
+                            <span className="subscription-list__item-info">User ID: {subscription.user}</span>
+                            <span className="subscription-list__item-info">Product ID: {subscription.product}</span>
+                            <button onClick={() => handleDelete(subscription.id)} className="subscription-list__delete-button">Delete</button>
                         </li>
                     ))}
                 </ul>

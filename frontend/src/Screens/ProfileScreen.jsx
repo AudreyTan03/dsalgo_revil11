@@ -1,5 +1,3 @@
-// ProfileScreen.js
-
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails, updateUserProfile, resetUpdateProfile } from '../actions/userActions';
@@ -7,8 +5,7 @@ import { getMyOrders } from '../actions/orderActions';
 import { Button, Form, Table, Modal } from 'react-bootstrap';
 import StudentNav from '../Components/StudentNav';
 import { Link } from 'react-router-dom';
-import Sidebar from '../Components/Sidebar/Sidebar';
-import MainDash from '../Components/Dashboard/MainDash';
+import './profile.css';
 
 function ProfileScreen() {
     const dispatch = useDispatch();
@@ -54,7 +51,7 @@ function ProfileScreen() {
         formData.append('email', updatedEmail);
         formData.append('bio', updatedBio);
         if (profilePicture) {
-            formData.append('image', profilePicture);
+            formData.append('profilePicture', profilePicture);
         }
         dispatch(updateUserProfile(formData)); // Pass formData directly
         setIsEditing(false);
@@ -69,147 +66,176 @@ function ProfileScreen() {
     };
 
     return (
-        <div>
+        <div className="container-fluid">
             <StudentNav />
-            <MainDash />
-            <h2>Profile</h2>
-            <Form>
-                <Form.Group controlId="name">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" value={user.name} readOnly />
-                </Form.Group>
-                <Form.Group controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" value={user.email} readOnly />
-                </Form.Group>
-                <Form.Group controlId="bio">
-                    <Form.Label>Bio</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
-                </Form.Group>
-                <Button variant="primary" onClick={handleEditProfile}>Edit Profile</Button>
-            </Form>
-            <Modal show={isEditing} onHide={handleCloseEditProfile}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Profile</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+            <div className="row">
+                {/* Sidebar */}
+                <div className="col-md-3 sidebar">
+                    <div className="sidebar-header">
+                        <h3>Profile</h3>
+                    </div>
+                    <ul className="list-unstyled components">
+                    <li>
+                        <Link to="/dashboard">
+                            <i className="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/statistics">
+                            <i className="uil uil-chart"></i>
+                            <span>Statistics</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/productlist">
+                            <i className="fas fa-list"></i>
+                            <span>Product List</span>
+                        </Link>
+                    </li>
+                    </ul>
+                </div>
+                {/* Main Content */}
+                <div className="col-md-9">
+                    <h2>Profile</h2>
                     <Form>
-                        <Form.Group controlId="formName">
+                        <Form.Group controlId="name">
                             <Form.Label>Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter new name"
-                                value={updatedName}
-                                onChange={(e) => setUpdatedName(e.target.value)}
-                            />
+                            <Form.Control type="text" value={user.name} readOnly />
                         </Form.Group>
-                        <Form.Group controlId="formEmail">
+                        <Form.Group controlId="email">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="Enter new email"
-                                value={updatedEmail}
-                                onChange={(e) => setUpdatedEmail(e.target.value)}
-                            />
+                            <Form.Control type="email" value={user.email} readOnly />
                         </Form.Group>
-                        <Form.Group controlId="formBio" className="mt-3">
+                        <Form.Group controlId="bio">
                             <Form.Label>Bio</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                placeholder="Enter new bio"
-                                value={updatedBio}
-                                onChange={(e) => setUpdatedBio(e.target.value)}
-                            />
+                            <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
                         </Form.Group>
-                        <Form.Group controlId="formProfilePicture" className="mt-3">
-                            <Form.Label>Profile Picture</Form.Label>
-                            <Form.Control
-                                type="file"
-                                accept=".jpg, .jpeg, .png" // Limit accepted file types to .jpg, .jpeg, and .png
-                                onChange={(e) => setProfilePicture(e.target.files[0])}
-                                // Add attribute for maximum file size limit
-                                maxSize={5 * 1024 * 1024} // 5MB
-                            />
-                            {profilePicture && (
-                                <img
-                                    src={URL.createObjectURL(profilePicture)}
-                                    alt="Profile"
-                                    style={{
-                                        marginTop: "10px",
-                                        maxWidth: "100%",
-                                        width: "150px",
-                                        height: "150px",
-                                        objectFit: "cover",
-                                    }}
-                                />
-                            )}
-                        </Form.Group>
+                        <Button variant="primary" onClick={handleEditProfile}>Edit Profile</Button>
                     </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseEditProfile}>
-                        Close
+                    <Modal show={isEditing} onHide={handleCloseEditProfile}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Profile</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <Form.Group controlId="formName">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter new name"
+                                        value={updatedName}
+                                        onChange={(e) => setUpdatedName(e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="email"
+                                        placeholder="Enter new email"
+                                        value={updatedEmail}
+                                        onChange={(e) => setUpdatedEmail(e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formBio" className="mt-3">
+                                    <Form.Label>Bio</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        placeholder="Enter new bio"
+                                        value={updatedBio}
+                                        onChange={(e) => setUpdatedBio(e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formProfilePicture" className="mt-3">
+                                    <Form.Label>Profile Picture</Form.Label>
+                                    <Form.Control
+                                        type="file"
+                                        accept=".jpg, .jpeg, .png" // Limit accepted file types to .jpg, .jpeg, and .png
+                                        onChange={(e) => setProfilePicture(e.target.files[0])}
+                                        // Add attribute for maximum file size limit
+                                        maxSize={5 * 1024 * 1024} // 5MB
+                                    />
+                                    {profilePicture && (
+                                        <img
+                                            src={URL.createObjectURL(profilePicture)}
+                                            alt="Profile"
+                                            style={{
+                                                marginTop: "10px",
+                                                maxWidth: "100%",
+                                                width: "150px",
+                                                height: "150px",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    )}
+                                </Form.Group>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseEditProfile}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleProfileUpdate}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                    {loadingUpdate && <div>Updating...</div>}
+                    {errorUpdate && <div>Error: {errorUpdate}</div>}
+                    <Button variant="secondary" onClick={toggleOrdersVisibility} className="my-3">
+                        {showOrders ? 'Hide OrdersHistory' : 'Show OrderHistory'}
                     </Button>
-                    <Button variant="primary" onClick={handleProfileUpdate}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-            {loadingUpdate && <div>Updating...</div>}
-            {errorUpdate && <div>Error: {errorUpdate}</div>}
-            <Button variant="secondary" onClick={toggleOrdersVisibility} className="my-3">
-                {showOrders ? 'Hide OrdersHistory' : 'Show OrderHistory'}
-            </Button>
-            {showOrders && (
-                <>
-                    <h2>My Orders</h2>
-                    {loadingOrders ? (
-                        <div>Loading orders...</div>
-                    ) : errorOrders ? (
-                        <div>Error: {errorOrders}</div>
-                    ) : (
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Date</th>
-                                    <th>Total</th>
-                                    <th>Paid</th>
-                                    <th>Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {orders && orders.map((order) => (
-                                    <tr key={order._id}>
-                                        <td>{order._id}</td>
-                                        <td>{order.createdAt?.substring(0, 10)}</td>
-                                        <td>${order.totalPrice}</td>
-                                        <td>
-                                            {order.isPaid ? (
-                                                order.paidAt?.substring(0, 10) || 'N/A'
-                                            ) : (
-                                                <i className="fas fa-times" style={{ color: "red" }}></i>
-                                            )}
-                                        </td>
-                                        <td>
-                                            <h2>Subscribed Videos</h2>
-                                            <ul>
-                                                {user.subscribedVideos && user.subscribedVideos.map((video) => (
-                                                    <li key={video.id}>
-                                                        <Link to={`videos/${video.id}`}>{video.title}</Link>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
+                    {showOrders && (
+                        <>
+                            <h2>My Orders</h2>
+                            {loadingOrders ? (
+                                <div>Loading orders...</div>
+                            ) : errorOrders ? (
+                                <div>Error: {errorOrders}</div>
+                            ) : (
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Paid</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {orders && orders.map((order) => (
+                                            <tr key={order._id}>
+                                                <td>{order._id}</td>
+                                                <td>{order.createdAt?.substring(0, 10)}</td>
+                                                <td>${order.totalPrice}</td>
+                                                <td>
+                                                    {order.isPaid ? (
+                                                        order.paidAt?.substring(0, 10) || 'N/A'
+                                                    ) : (
+                                                        <i className="fas fa-times" style={{ color: "red" }}></i>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <h2>Subscribed Videos</h2>
+                                                    <ul>
+                                                        {user.subscribedVideos && user.subscribedVideos.map((video) => (
+                                                            <li key={video.id}>
+                                                                <Link to={`videos/${video.id}`}>{video.title}</Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            )}
+                        </>
                     )}
-                </>
-            )}
-            {user.image && <img src={user.image} alt="Profile" />}
+                </div>
+            </div>
         </div>
     );
 }

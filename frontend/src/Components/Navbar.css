@@ -141,6 +141,12 @@
   padding: 0;
   display: flex; /* Ensure subject links are displayed inline */
 }
+.nav-item {
+  margin-right: 10px; /* Adjust spacing between category links */
+}
+.nav-links {
+  white-space: nowrap; /* Prevent category names from wrapping */
+}
 
 .subject-links .nav-item {
   margin-right: 10px; /* Adjust margin between subject links */

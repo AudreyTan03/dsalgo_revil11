@@ -36,7 +36,7 @@ urlpatterns = [
     path('reviews/', views.getReviews, name="review_get"),
     path('reviews/<int:pk>/', views.getReview, name="review_get"),
     path('review/<int:pk>/delete/', delete_review, name='delete-review'),
-
+    path('search/', views.search, name='search'),
 
 
 ]         

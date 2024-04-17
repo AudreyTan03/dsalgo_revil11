@@ -1,7 +1,11 @@
+// VideoList.jsx
+
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getVideos, deleteVideo } from '../actions/adminActions';
 import { Link } from 'react-router-dom';
+import { Card, Button, Container, Row, Col } from 'react-bootstrap';
+import './videolist.css'; // Import custom CSS for additional styling
 
 const VideoList = () => {
     const dispatch = useDispatch();
@@ -18,17 +22,22 @@ const VideoList = () => {
     };
 
     return (
-        <div>
-            <h2>Video List</h2>
-            <ul>
+        <Container className="AdminVid-container mt-5"> {/* Add AdminVid prefix to container */}
+            <h2 className="AdminVid-heading mb-4">Video List</h2> {/* Add AdminVid prefix to heading */}
+            <Row>
                 {videos && videos.map(video => (
-                    <li key={video.id}>
-                        <span>Name: <Link to={`/admin/video-details/${video.id}`} style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>{video.title}</Link></span>
-                        <button onClick={() => handleDelete(video.id)}>Delete</button>
-                    </li>
+                    <Col key={video.id} lg={4} md={6} sm={12} className="AdminVid-col mb-4"> {/* Add AdminVid prefix to col */}
+                        <Card className="AdminVid-card"> {/* Add AdminVid prefix to card */}
+                            <Card.Body>
+                                <Card.Title>{video.title}</Card.Title>
+                                <Link to={`/admin/video-details/${video.id}`} className="AdminVid-btn btn btn-primary mr-2">View Details</Link> {/* Add AdminVid prefix to btn */}
+                                <Button variant="danger" onClick={() => handleDelete(video.id)} className="AdminVid-delete-btn">Delete</Button> {/* Add AdminVid prefix to delete-btn */}
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 ))}
-            </ul>
-        </div>
+            </Row>
+        </Container>
     );
 };
 

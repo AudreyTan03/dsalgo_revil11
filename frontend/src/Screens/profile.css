@@ -1,29 +1,33 @@
-.dashboard-container {
+/* Dashboard Container */
+.profiledashboard-container {
     display: flex;
 }
 
-.sidebar {
-    width: 200px;
-    background-color: #f0f0f0;
+/* Sidebar */
+.profilesidebar {
+    width: 210px;
+    background-color:rgba(0, 0, 0, 0.05);
 }
 
-.sidebar ul {
+.profilesidebar ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.sidebar ul li {
+.profilesidebar ul li {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #ddd;
 }
 
-.main-content {
+/* Main Content */
+.profilemain-content {
     flex: 1;
     padding: 20px;
 }
 
+/* Profile Container */
 .profile-container {
     background-color: #fff;
     padding: 20px;
@@ -31,29 +35,32 @@
     border-radius: 5px;
 }
 
+/* Profile Details */
 .profile-details {
     margin-top: 20px;
 }
 
-.form-group {
+/* Form Group */
+.profile-form-group {
     margin-bottom: 15px;
 }
 
-.form-group label {
+.profile-form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"] {
+.profile-form-group input[type="text"],
+.profile-form-group input[type="email"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-button {
+/* Button */
+.profile-button {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -62,6 +69,72 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.profile-button:hover {
     background-color: #0056b3;
+}
+
+/* Navbar container */
+/* Sidebar links */
+/* Sidebar links */
+/* Sidebar links */
+.profilesidebar ul.list-unstyled.components li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.profilesidebar ul.list-unstyled.components li:hover {
+    background-color: #f8f9fa; /* Change background color on hover */
+}
+
+/* Icon */
+.profilesidebar ul.list-unstyled.components li i {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff; /* Default icon background color */
+    color: #fff;
+    border-radius: 50%;
+}
+
+/* Text */
+.profilesidebar ul.list-unstyled.components li span {
+    flex: 1;
+}
+
+.profilesidebar ul.list-unstyled.components li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    background-color: #ffffff; /* Same as sidebar background color */
+    border-top-left-radius: 10px; /* Adjust to match your desired cut-in edge radius */
+    border-bottom-left-radius: 10px; /* Adjust to match your desired cut-in edge radius */
+}
+
+.profilesidebar ul.list-unstyled.components li::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 100%;
+    background-color: #ffffff; /* Same as sidebar background color */
+    border-top-right-radius: 10px; /* Adjust to match your desired cut-in edge radius */
+    border-bottom-right-radius: 10px; /* Adjust to match your desired cut-in edge radius */
+}
+
+.profilesidebar ul.list-unstyled.components li:last-child {
+    border-bottom: none; /* Remove bottom border for the last item */
 }

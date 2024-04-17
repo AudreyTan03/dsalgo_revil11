@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/productActions';
 import Loader from '../Components/Loader';
 import Message from '../Components/Message';
-import Navbar from '../Components/Navbar'; // Import the Navbar component
+import Navbar from '../Components/Navbar';
 
 function ProductHome() {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ function ProductHome() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/categories/');
+      const response = await fetch('api/categories/');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -33,42 +33,32 @@ function ProductHome() {
     }
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
   };
 
   const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     product.user.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (selectedCategory === '' || product.category === parseInt(selectedCategory))
   );
-  
-  
-  
-  
 
   return (
     <div>
-      <Navbar handleSearch={handleSearch} searchTerm={searchTerm} /> {/* Pass handleSearch and searchTerm as props */}
-      <Form.Group controlId='category'>
-        <Form.Label>Category</Form.Label>
-        <Form.Control as='select' value={selectedCategory} onChange={handleCategoryChange}>
-          <option value=''>All</option>
-          {categories.map(category => (
-            <option key={category.id} value={category.id}>{category.name}</option>
-          ))}
-        </Form.Control>
-      </Form.Group>
+      <Navbar
+        handleSearch={(e) => setSearchTerm(e.target.value)}
+        searchTerm={searchTerm}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategoryChange={handleCategoryChange}
+      />
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
         <div>
-          <h1>Latest Products</h1>
+          <h1>Course Product</h1>
           <Row>
             {filteredProducts.map(product => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>

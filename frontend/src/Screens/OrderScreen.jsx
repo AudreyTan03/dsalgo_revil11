@@ -7,7 +7,7 @@ import Loader from "../Components/Loader";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-// import { subscribeToVideo } from "../actions/videoActions"; // Import subscribeToVideo action creator
+import { subscribeToVideo } from "../actions/videoActions"; // Import subscribeToVideo action creator
 // import { useNavigate } from 'react-router-dom';
 
 function OrderScreen() {
@@ -22,7 +22,8 @@ function OrderScreen() {
   const [sdkReady, setSdkReady] = useState(false);
 
   // Subscribe to video action
-  // const subscribeToVideoAction = useDispatch();
+  const subscribeToVideoAction = useDispatch();
+
   useEffect(() => {
     if (!order || successPay || order._id !== Number(id)) {
       dispatch({ type: ORDER_PAY_RESET });
@@ -33,8 +34,20 @@ function OrderScreen() {
       } else {
         setSdkReady(true);
       }
+    } else if (successPay) {
+      // If payment is successful, trigger the subscription
+      const { orderItems } = order;
+      orderItems.forEach((item) => {
+        dispatch(subscribeToVideoAction(item.product, item.video)); // Dispatch subscription action
+      });
+  
+      // Get the videoId from orderItems or any other source
+      const videoId = orderItems[0].video; // Assuming the first item has the videoId
+  
+      // Navigate to the VideoDetailScreen after successful subscription
+      navigate('/videos/${videoId}');
     }
-  }, [dispatch, id, order, successPay]);
+  }, [dispatch, id, order, successPay, navigate]);
   
 
   // Add PayPal script
@@ -44,7 +57,7 @@ function OrderScreen() {
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.src =
-      "https://www.paypal.com/sdk/js?client-id=AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n&currency=USD";
+      "https://www.paypal.com/sdk/js?client-id=AaFwY5HmruAjblux5Tv2vQ_WvF--dtwwtz_J6evrVwXs60KUK1HLwcSSwp6hyp9zzaikBeJw_iP9HwZf&currency=USD";
     script.async = true;
     script.onload = () => {
       setSdkReady(true);
@@ -54,12 +67,13 @@ function OrderScreen() {
 
   // Handle payment success
   const successPaymentHandler = (paymentResult) => {
+    console.log("Payment result:", paymentResult); // Log payment result
     dispatch(payOrder(id, paymentResult));
   }
 
   // Create PayPal order
   const createOrderHandler = (data, actions) => {
-    console.log(order);
+    console.log("Creating PayPal order:", order); // Log order details
   
     const purchaseUnits = order.orderItems.map(item => ({
       amount: {
@@ -202,7 +216,7 @@ function OrderScreen() {
                         <PayPalScriptProvider
                           options={{
                             "client-id":
-                              "AV82YO2TQFUjwxN66PV4GgBNKnUaiG8zQWNp7RHOwmoZNB_NZHJuC20MRVD_J2RBV4SCZ76n0LehAS6n",
+                              "AaFwY5HmruAjblux5Tv2vQ_WvF--dtwwtz_J6evrVwXs60KUK1HLwcSSwp6hyp9zzaikBeJw_iP9HwZf",
                               merchantId: order.orderItems.map((item) => item.merchant_id)
                           }}
                         >

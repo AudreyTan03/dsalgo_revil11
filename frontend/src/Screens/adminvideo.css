@@ -1,0 +1,46 @@
+.admin-video-box {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .video-container {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .video-details {
+    padding: 20px;
+  }
+  
+  .video-player {
+    width: 100%;
+  }
+  
+  .video-footer {
+    background-color: #f9f9f9;
+    padding: 10px;
+  }
+  
+  .video-title {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  
+  .go-back-link {
+    float: left;
+    margin-top: 5px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .go-back-link:hover {
+    background-color: #2980b9;
+  }
+  
