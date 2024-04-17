@@ -41,7 +41,7 @@ const ReviewScreen = () => {
         product: parseInt(id),
         rating,
         comment,
-        user: userInfo.name,
+        name: userInfo.token.name,  // Include the user's name in the request data
       });
       // Assuming the API returns the newly created review
       const newReview = response.data;
@@ -57,6 +57,12 @@ const ReviewScreen = () => {
     }
   };
 
+  const handleRatingChange = (value) => {
+    if (value >= 1 && value <= 5) {
+      setRating(value);
+    }
+  };
+
   return (
     <div className="review-screen-container">
       <h1>Reviews for Product ID: {id}</h1>
@@ -68,7 +74,7 @@ const ReviewScreen = () => {
               <p>Rating: {Array.from({ length: 5 }, (_, index) => (
                 <span className="star" key={index}>{index < review.rating ? '★' : '☆'}</span>
               ))}</p>
-              <p>Comment: {review.comment}</p>
+              <p>Comment by {review.name}: {review.comment}</p>
             </li>
           ))}
         </ul>
@@ -81,7 +87,7 @@ const ReviewScreen = () => {
           min="1"
           max="5"
           value={rating}
-          onChange={(e) => setRating(parseInt(e.target.value))}
+          onChange={(e) => handleRatingChange(parseInt(e.target.value))}
         />
       </label>
       <label>

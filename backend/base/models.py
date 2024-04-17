@@ -78,12 +78,14 @@ class Product(models.Model):
         # Call the parent class's delete method to delete the Product instance
         super(Product, self).delete(*args, **kwargs)
 
+from django.db.models import Avg
+
 class Review(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null = True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null = True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
-    rating = models.DecimalField(max_digits = 7, decimal_places = 2, null=True, blank=True)
-    comment = models.TextField(null = True, blank = True)
+    rating = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
     _id = models.AutoField(primary_key=True)
 
     def __str__(self):
@@ -93,6 +95,9 @@ class Review(models.Model):
         super(Review, self).save(*args, **kwargs)
         # Update numReviews for the associated product
         self.product.numReviews = Review.objects.filter(product=self.product).count()
+        # Update average rating for the associated product
+        average_rating = Review.objects.filter(product=self.product).aggregate(Avg('rating'))['rating__avg']
+        self.product.rating = round(average_rating, 2) if average_rating else 0.00
         self.product.save()
 
 
