@@ -37,9 +37,9 @@ function RegisterScreen() {
   };
 
   return (
-    <div className="inputContainer" style={{ maxWidth: '100%', padding: '0 15px' }}>  
-     <Row style={{ position: 'relative', top: '-20px', bottom: '-20px' }}>
-        <Col className='video' md={6} style={{ position: 'relative' }}>
+    <div className="" style={{ maxWidth: '100%', height:'100vh', paddingLeft:'1rem', background:'#ebe8df' }}>  
+     <Row>
+        <Col className='video' md={6} style={{height:'98vh'}}>
           <video src="/Images/Gifforcode.mp4" autoPlay muted loop></video>
           
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '10px', borderRadius: '5px' }}>
@@ -47,8 +47,9 @@ function RegisterScreen() {
           </div>
         </Col>
         <Col md={6}>
-          <h1>Register</h1>
           <Form onSubmit={submitHandler}>
+            <br />
+          <h1 style={{fontSize:'3rem', marginLeft:'18rem', marginBottom:'-2rem'}}>Register</h1>
             <div className='userInputContainer'>
               <Form.Group controlId='name'>
                 <Form.Label>Name</Form.Label>
@@ -106,16 +107,14 @@ function RegisterScreen() {
                 </Form.Control>
               </Form.Group>
             </div>
-            <Button type='submit' variant='primary'>
+            <Button style={{marginLeft:'24rem'}} type='submit' variant='primary'>
               Register
             </Button>
           </Form>
           <Row className='py-3'>
             <Col>
               Already registered? <Link to='/login'>Sign In</Link>
-            </Col>
-            <Col>
-              <Button variant='link' onClick={handleGoBack}>
+              <Button style={{marginLeft:'2rem', color:'#333333'}} variant='link' onClick={handleGoBack}>
                 Go Back
               </Button>
             </Col>
