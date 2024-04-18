@@ -41,15 +41,15 @@ function LoginScreen() {
     }
 
     return (
-        <div className="inputContainer">
+        <div className="" style={{ maxWidth: '100%', height:'100vh', paddingLeft:'1rem', background:'#ebe8df' }}>
             <Row>
-                <Col className='video' md={6}>
+                <Col className='video' style={{height:'98vh'}} md={6}>
                     <video src="/Images/Gifforcode.mp4" autoPlay muted loop></video>
                 </Col>
                 <Col md={6} style={{ paddingTop: '20px' }}>
-                    <FormContainer>
-                        <h1>Sign In</h1>
-                        <p className='ms-60'>WELCOME BACK!</p>
+                    <div>
+                        <h1 style={{fontSize:'3rem', marginLeft:'18rem', marginBottom:'-2rem'}}>Sign In</h1>
+                        <h4 style={{marginLeft:'17.7rem', marginTop:'2rem'}} className=''>WELCOME BACK!</h4>
                         {error && <Message variant='danger'>{error}</Message>}
                         {loading && <Loader />}
                         <Form onSubmit={submitHandler}>
@@ -77,24 +77,22 @@ function LoginScreen() {
                                 </Form.Group>
                             </div>
 
-                            <Button type='submit' variant='primary'>
+                            <Button style={{marginLeft:'24rem'}}a type='submit' variant='primary'>
                                 Sign In
                             </Button>
                         </Form>
                         <Row className='py-3'>
-                            <Col>
-                                <Link to='/register'>Register</Link>
-                            </Col>
-                            <Col>
-                                <Button variant='link' onClick={handleRequestPasswordChange}>
+                            <Col style={{marginLeft:'10rem'}}>
+                                <Button style={{marginLeft:'2rem', color:'#333333'}} variant='link' to='/register'>Register</Button> 
+                                <Button style={{marginLeft:'2rem', color:'#333333'}} variant='link' onClick={handleRequestPasswordChange}>
                                     Forgot password?
                                 </Button>
-                            </Col>
-                        </Row>
-                        <Button variant='link' onClick={goBack}>
+                        <Button style={{marginLeft:'2rem', color:'#333333'}} variant='link' onClick={goBack}>
                             Go Back
                         </Button>
-                    </FormContainer>
+                            </Col>
+                        </Row>
+                    </div>
                 </Col>
             </Row>
         </div>

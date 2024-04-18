@@ -312,9 +312,8 @@ body{
 }
 
 .video {
-    margin-top: 0;
+    margin-top: 0.4rem;
     position: relative;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
     overflow: hidden;
     border-radius: 20px; /* Adjust the value as needed */
 }

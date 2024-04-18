@@ -17,25 +17,12 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
 
   console.log('userInfo:', userInfo);
 
-  const handleThemeChange = (theme) => {
-    dispatch(updateThemePreference(theme));
-    setDarkMode(prevDarkMode => !prevDarkMode);
-  };
-
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
-
-  const toggleDarkMode = () => {
-    setDarkMode(prevDarkMode => !prevDarkMode);
-  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
-  useEffect(() => {
-    // Add logic to handle dark mode styles
-  }, [darkMode]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -49,7 +36,7 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
     <>
       <nav className={darkMode ? 'navbar dark-mode' : 'navbar'}>
         <div className='navbar-container'>
-          <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
+          <Link style={{marginRight:'1rem'}} to='/' className='navbar-logo' onClick={closeMobileMenu}>
             Revil
           </Link>
           <div className='search-container'>
@@ -62,15 +49,11 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
             />
             <BsSearch className='search-icon' />
           </div>
-          <div className={darkMode ? 'dark-mode-toggle dark' : 'dark-mode-toggle light'} onClick={toggleDarkMode}></div>
-          <button onClick={() => handleThemeChange(darkMode ? 'light' : 'dark')}>
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
+            {/* <li className='nav-item'>
               <Link to='/cart' className='nav-links' onClick={closeMobileMenu}>
                 CartItems
               </Link>
@@ -79,7 +62,7 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
               <Link to='/products' className='nav-links' onClick={closeMobileMenu}>
                 Products
               </Link>
-            </li>
+            </li> */}
             <li className='nav-item'>
               <Link to='/register' className='nav-links' onClick={closeMobileMenu}>
                 Register
