@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 import { listVideos, checkSubscription } from '../actions/videoActions';
-import '../Screens/ProductScreen.css';
+import '../Screens/productscreen.css';
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -24,9 +24,9 @@ const ProductScreen = () => {
   useEffect(() => {
     const userInfoString = localStorage.getItem('userInfo');
     if (userInfoString) {
-        const userInfo = JSON.parse(userInfoString);
-        const { user_type } = userInfo;
-        setUserType(user_type);
+      const userInfo = JSON.parse(userInfoString);
+      const { user_type } = userInfo;
+      setUserType(user_type);
     }
   }, []);
 
@@ -43,7 +43,6 @@ const ProductScreen = () => {
       setError(error.message);
     }
   };
-
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -65,7 +64,6 @@ const ProductScreen = () => {
     dispatch(listVideos(id));
     dispatch(checkSubscription(userId, id)); // Dispatch checkSubscription for the current product
   }, [dispatch, userId, id]);
-
 
   const handleEditProduct = (productId) => {
     navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
@@ -119,14 +117,14 @@ const ProductScreen = () => {
         <div className="product-price-left">
           <p style={{ fontWeight: 'bold', fontSize: '1.5em' }}>$: {product.price}</p>
         </div>
-          {userId !== product.user && (
-            <div className="ratings">
-              <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
-              {(isUserSubscribed || userType === 'admin') && (
-                <button className="view-reviews-button"  onClick={handleViewReviews}>View Reviews</button>
-              )}
-            </div>
-          )}
+        {userId !== product.user && (
+          <div className="ratings">
+            <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
+            {(isUserSubscribed || userType === 'admin') && (
+              <button className="view-reviews-button" onClick={handleViewReviews}>View Reviews</button>
+            )}
+          </div>
+        )}
         <div className="dropdown-container">
           <button className="dropdown-btn" onClick={toggleDropdown}>...</button>
           {dropdownVisible && (
@@ -182,9 +180,9 @@ const ProductScreen = () => {
                     <source src={video.video_file} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                    ) : (
-                    <p className="error-message">You need to subscribe to view this video.</p>
-                    )}
+                ) : (
+                  <p className="error-message">You need to subscribe to view this video.</p>
+                )}
               </li>
             ))}
           </ul>
