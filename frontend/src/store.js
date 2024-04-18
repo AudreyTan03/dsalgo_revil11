@@ -26,6 +26,7 @@ import {
 } from './reducers/orderReducer';
 import { videoListReducer, videoDetailsReducer } from './reducers/videoReducer';
 import { userReducer, productReducer, videoReducer, subscriptionReducer } from './reducers/adminReducer';
+import { subscriptionReducers } from './reducers/videoReducer';
 
 // Define rootReducer using combineReducers
 const rootReducer = combineReducers({
@@ -47,13 +48,14 @@ const rootReducer = combineReducers({
   orderDetails: orderDetailReducer,
   orderPay: orderPayReducer,
   orderListMy: orderListMyReducer,
-  Subscription: subscriptionReducer,
+  Subscription: subscriptionReducers,
   search: searchReducer,
   // admin stuff
   userReducer: userReducer,
   productReducer: productReducer,
   videoReducer: videoReducer,
   userProfileWithProducts: userProfileWithProductsReducer,
+  subscriptionReducer: subscriptionReducer,
 });
 
 // Retrieve cartItems and userInfo from localStorage

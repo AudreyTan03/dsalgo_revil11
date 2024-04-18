@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { UPLOAD_REQUEST, UPLOAD_SUCCESS, UPLOAD_FAILURE } from '../constants/uploadConstants';
 
+
+const instance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/',
+  });
+  
 export const uploadProduct = (formData) => async (dispatch, getState) => {
     try {
         dispatch({ type: UPLOAD_REQUEST });
@@ -14,7 +19,7 @@ export const uploadProduct = (formData) => async (dispatch, getState) => {
             },
         };
 
-        const { data } = await axios.post('http://localhost:8000/api/post-product/', formData, config);
+        const { data } = await instance.post('api/post-product/', formData, config);
 
         dispatch({ type: UPLOAD_SUCCESS, payload: data });
     } catch (error) {

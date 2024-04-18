@@ -15,8 +15,8 @@ const ProductScreen = () => {
   const [error, setError] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const userInfo = useSelector(state => state.userLogin.userInfo);
-  const userId = userInfo?.token?.id;
-  const isUserSubscribed = useSelector(state => state.Subscription.subscriptions);
+  const userId = userInfo.token.id;
+  const isUserSubscribed = useSelector((state) => state.Subscription.subscriptions);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [userType, setUserType] = useState(null); // State to store user type
   const videoRefs = useRef(new Map());
@@ -44,9 +44,6 @@ const ProductScreen = () => {
     }
   };
 
-  const handleEditProduct = (productId) => {
-    navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
-  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -57,17 +54,22 @@ const ProductScreen = () => {
         }
         const data = await response.json();
         setProduct(data);
+        setLoading(false);
       } catch (error) {
         setError(error.message);
-      } finally {
         setLoading(false);
       }
     };
 
     fetchProduct();
     dispatch(listVideos(id));
-    dispatch(checkSubscription(userId, id));
+    dispatch(checkSubscription(userId, id)); // Dispatch checkSubscription for the current product
   }, [dispatch, userId, id]);
+
+
+  const handleEditProduct = (productId) => {
+    navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
+  };
 
   const handleAddToCart = () => {
     dispatch(addToCart(id, 1));
