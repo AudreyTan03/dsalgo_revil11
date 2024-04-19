@@ -7,8 +7,7 @@ import Loader from "../Components/Loader";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { subscribeToVideo } from "../actions/videoActions"; // Import subscribeToVideo action creator
-// import { useNavigate } from 'react-router-dom';
+import { subscribeToVideo } from "../actions/videoActions";
 
 function OrderScreen() {
   const { id } = useParams();
@@ -21,72 +20,53 @@ function OrderScreen() {
   const { loading: loadingPay, success: successPay, error: errorPay } = orderPay;
   const [sdkReady, setSdkReady] = useState(false);
 
-  // Subscribe to video action
   const subscribeToVideoAction = useDispatch();
 
   useEffect(() => {
     if (!order || successPay || order._id !== Number(id)) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrderDetails(id));
-    } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPayPalScript();
-      } else {
-        setSdkReady(true);
-      }
-    } else if (successPay) {
-      // If payment is successful, trigger the subscription
-      const { orderItems } = order;
-      orderItems.forEach((item) => {
-        dispatch(subscribeToVideoAction(item.product, item.video)); // Dispatch subscription action
-      });
-  
-      // Get the videoId from orderItems or any other source
-      const videoId = orderItems[0].video; // Assuming the first item has the videoId
-  
-      // Navigate to the VideoDetailScreen after successful subscription
-      navigate('/videos/${videoId}');
     }
-  }, [dispatch, id, order, successPay, navigate]);
-  
+  }, [dispatch, id, order, successPay]);
 
-  // Add PayPal script
-  const addPayPalScript = () => {
-    console.log("addPaypalMerchant ID:", order.orderItems.map(item => item.merchant_id)); // Log merchant ID
-
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src =
-      "https://www.paypal.com/sdk/js?client-id=AaFwY5HmruAjblux5Tv2vQ_WvF--dtwwtz_J6evrVwXs60KUK1HLwcSSwp6hyp9zzaikBeJw_iP9HwZf&currency=USD";
-    script.async = true;
-    script.onload = () => {
-      setSdkReady(true);
+  useEffect(() => {
+    const addPayPalScript = () => {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src =
+        "https://www.paypal.com/sdk/js?client-id=AaFwY5HmruAjblux5Tv2vQ_WvF--dtwwtz_J6evrVwXs60KUK1HLwcSSwp6hyp9zzaikBeJw_iP9HwZf&currency=USD";
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
     };
-    document.body.appendChild(script);
-  };
 
-  // Handle payment success
+    addPayPalScript();
+
+    return () => {
+      // Clean up function to remove the PayPal script from the DOM
+      document.body.removeChild(document.body.lastChild);
+    };
+  }, []);
+
   const successPaymentHandler = (paymentResult) => {
-    console.log("Payment result:", paymentResult); // Log payment result
     dispatch(payOrder(id, paymentResult));
   }
 
-  // Create PayPal order
   const createOrderHandler = (data, actions) => {
-    console.log("Creating PayPal order:", order); // Log order details
-  
     const purchaseUnits = order.orderItems.map(item => ({
       amount: {
         currency_code: "USD",
-        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)), // Include item price and tax price in the value
+        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)),
         breakdown: {
-          item_total: { // Add item_total field
+          item_total: {
             currency_code: "USD",
-            value: Number((Number(item.price) * item.qty).toFixed(2)) // Calculate total value of items in this purchase unit
+            value: Number((Number(item.price) * item.qty).toFixed(2))
           },
           tax_total: {
             currency_code: "USD",
-            value: Number(item.taxPrice).toFixed(2) // Include tax total
+            value: Number(item.taxPrice).toFixed(2)
           }
         }
       },
@@ -96,12 +76,12 @@ function OrderScreen() {
       payee: {
         merchant_id: item.merchant_id
       },
-      items: [{ // Define items array
+      items: [{
         name: item.name,
         quantity: item.qty,
-        unit_amount: { // Specify the unit amount for the item
+        unit_amount: {
           currency_code: "USD",
-          value: Number(item.price).toFixed(2) // Only include item price
+          value: Number(item.price).toFixed(2)
         },
       }]
     }));
@@ -111,22 +91,17 @@ function OrderScreen() {
     });
   };
   
-  
-
-  // Handle approval
   const onApproveHandler = (data, actions) => {
     return actions.order.capture().then(function (details) {
       successPaymentHandler({ id: details.id, status: details.status, update_time: details.update_time });
     });
   };
 
-  // Log any errors during payment
   useEffect(() => {
     if (errorPay) {
       console.error("Payment error:", errorPay);
     }
   }, [errorPay]);
-
 
   return (
     <>
@@ -217,7 +192,6 @@ function OrderScreen() {
                           options={{
                             "client-id":
                               "AaFwY5HmruAjblux5Tv2vQ_WvF--dtwwtz_J6evrVwXs60KUK1HLwcSSwp6hyp9zzaikBeJw_iP9HwZf",
-                              merchantId: order.orderItems.map((item) => item.merchant_id)
                           }}
                         >
                           <PayPalButtons
@@ -225,7 +199,6 @@ function OrderScreen() {
                             onApprove={onApproveHandler}
                             style={{ layout: "vertical" }}
                             onSuccess={successPaymentHandler}
-                            
                           />
                         </PayPalScriptProvider>
                       )}

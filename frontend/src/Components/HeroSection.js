@@ -29,7 +29,6 @@ function HeroSection() {
             GET STARTED
           </Button>
         </div> 
-        <Footer />
       </div>
     </>
   );

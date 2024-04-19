@@ -49,7 +49,8 @@ import Contact from "./Screens/ContactUsScreen";
 import AdminConcern from "./Screens/AdminConcern";
 import ReviewScreen from "./Screens/ReviewScreen";
 import Admin from "./Screens/Utils/AdminProutes";
-
+import Footer from "./Components/Footer";
+import About from "./Components/AboutUs";
 
 function App() {
   // const { isSubscribed } = useSelector((state) => state.userSubscription); // Assuming you have a slice of state that stores subscription status
@@ -70,6 +71,8 @@ function App() {
         <Routes>
           <Route path="/HeroSection" element={<HeroSection />} />
           <Route path="/delete" element={<Protect><DeleteScreen /></Protect>} />
+          <Route path="/footer" element={<Footer />} />
+          <Route path="/about" element={<About />} />
 
           <Route path="/studenthomescreen" element={<Student><StudentHomeScreen /></Student>} />
           <Route path="/edit/:id" element={<Protect><EditScreen /></Protect>} />
@@ -109,13 +112,13 @@ function App() {
          <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
 
 
-          <Route path="/admin" element={<Admin><AdminPanel /></Admin>} />
-          <Route path="/admin/edit-user/:userId/" element={<Admin><EditUsers/></Admin>} /> 
-          <Route path="/admin/user-details/:userId/" element={<Admin><AdminUserDetails/></Admin>} /> 
-          <Route path="/admin/video-details/:videoId/" element={<Admin><AdminVideoDetails/></Admin>} /> 
-          <Route path="/admin/edit-product/:productId/" element={<Admin><EditProduct/></Admin>} /> 
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/edit-user/:userId/" element={<EditUsers/>} /> 
+          <Route path="/admin/user-details/:userId/" element={<AdminUserDetails/>} /> 
+          <Route path="/admin/video-details/:videoId/" element={<AdminVideoDetails/>} /> 
+          <Route path="/admin/edit-product/:productId/" element={<EditProduct/>} /> 
           <Route path="/admin/product-details/:productId" element={<Admin><AdminProductDetail /></Admin>} />
-          <Route path="/concerns" element={<Admin><AdminConcern /></Admin>} />
+          <Route path="/concerns" element={<AdminConcern />} />
 
           
 

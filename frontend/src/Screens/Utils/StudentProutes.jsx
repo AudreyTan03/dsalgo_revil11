@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 
-const ProtectedRoutes = ({ children }) => {
+const StudentRoutes = ({ children }) => {
     const userInfo = useSelector((state) => state.userLogin.userInfo); // Access userInfo from Redux state
     console.log('Redux userInfo:', userInfo);
 
@@ -19,8 +19,10 @@ const ProtectedRoutes = ({ children }) => {
     console.log('User type:', userType);
     console.log('Redirecting to:', userType === 'instructor' ? 'instructor page' : 'student page');
 
-    return <Navigate to="/homeScreen" />;
-    
+
+    window.history.back();
+
+    return null;
 };
 
-export default ProtectedRoutes;
+export default StudentRoutes;

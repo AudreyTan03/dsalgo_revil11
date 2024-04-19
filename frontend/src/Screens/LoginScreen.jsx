@@ -37,7 +37,7 @@ function LoginScreen() {
     }, [navigate, userInfo]);
 
     const goBack = () => {
-        navigate(-1); // Go back to the previous page
+        window.location.href = '/herosection';
     }
 
     return (

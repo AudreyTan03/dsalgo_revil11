@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+// Create an Axios instance
+const instance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/', // Set the base URL without "https"
+});
+
 const EditProduct = () => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -11,7 +16,7 @@ const EditProduct = () => {
 
   useEffect(() => {
     // Fetch all products
-    axios.get('http://127.0.0.1:8000/api/products/')
+    instance.get('api/products/')
       .then(response => {
         const userProducts = response.data.filter(product => product.user === userId);
         setProducts(userProducts); // Set state with filtered products
@@ -20,7 +25,6 @@ const EditProduct = () => {
         console.error('Error fetching products:', error);
       });
   }, [userId]);
-  
 
   const handleSelectProduct = productId => {
     setSelectedProduct(null);
@@ -60,7 +64,7 @@ const EditProduct = () => {
         formData.append('video', videoFile);
       }
 
-      const response = await axios.patch(`http://127.0.0.1:8000/api/products/${selectedProduct._id}/edit/`, formData, {
+      const response = await instance.patch(`api/products/${selectedProduct._id}/edit/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

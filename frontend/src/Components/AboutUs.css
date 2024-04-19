@@ -1,0 +1,141 @@
+style.css
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: 'Space Grotesk', sans-serif;
+	text-decoration: none;
+}
+.team{
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	background: radial-gradient(#281c3e,#0f051d);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+.team-content{
+	width: 100%;
+	max-width: 1350px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, auto));
+	align-items: center;
+	gap: 2rem;
+	text-align: center;
+	margin-top: 4rem;
+}
+.team-content img{
+	width: 100%;
+	height: auto;
+	border-radius: 15px;
+	margin-bottom: 15px;
+}
+.center h1{
+	color: #fff;
+	font-size: 4rem;
+	text-align: center;
+}
+.box{
+	padding: 16px;
+	background: #1b1229;
+	border-radius: 15px;
+	transition: all .38s ease;
+}
+.box h3{
+	font-size: 23px;
+	font-weight: 600;
+	color: #fff;
+	margin-bottom: 8px;
+}
+.box h5{
+	font-size: 15px;
+	font-weight: 600;
+	color: #b7b4bb;
+	margin-bottom: 15px;
+	letter-spacing: 2px;
+}
+.icons i{
+	display: inline-block;
+	color: #fff;
+	font-size: 20px;
+	margin: 0 8px;
+	transition: all .38s ease;
+}
+.icons i:hover{
+	transform: scale(1.2);
+}
+.box:hover{
+	transform: translateY(-10px);
+	cursor: pointer;
+}
+
+@media(max-width: 1240px){
+	.team{
+		width: 100%;
+		height: auto;
+		padding: 90px 2%;
+	}
+	.center h1{
+		font-size: 3.2rem;
+	}
+}
+.message-bubble {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border-radius: 10px;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .box:hover .message-bubble {
+    display: block;
+  }
+  
+  .message-bubble::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    border-top-color: #333;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+
+.team-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%; /* Make the images round */
+  object-fit: cover; /* Ensure the image covers the entire space */
+  margin-bottom: 10px; /* Add some spacing between images */
+}
+
+.box:nth-child(1):hover {
+    box-shadow: 0 0 10px red;
+  }
+  
+  .box:nth-child(2):hover {
+    box-shadow: 0 0 10px blue;
+  }
+  
+  .box:nth-child(3):hover {
+    box-shadow: 0 0 10px green;
+  }
+  
+  .box:nth-child(4):hover {
+    box-shadow: 0 0 10px yellow;
+  }
+  
+  .box:nth-child(5):hover {
+    box-shadow: 0 0 10px pink;
+  }
+  
