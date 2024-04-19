@@ -147,3 +147,75 @@
 .profilesidebar ul.list-unstyled.components li:last-child {
     border-bottom: none; /* Remove bottom border for the last item */
 }
+
+/* Styles for the sidebar menu */
+.sbar-menu {
+    background-color: #ffffff;
+    color: #fff;
+    height: 100%;
+    width: 250px; /* Set initial width for the sidebar */
+    position: fixed;
+    top: 20;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 30px;
+    /* border-right: #333 solid 1px; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Add box shadow */
+}
+
+.sbar-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sbar-menu ul li {
+    padding: 10px;
+}
+
+.sbar-menu ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+
+/* Styles for the hamburger icon */
+.sbar-menu .hamburger {
+    display: none; /* Hide by default */
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+    .sbar-menu {
+        width: 60px; /* Collapse the sidebar */
+    }
+
+    .sbar-menu ul li {
+        text-align: center;
+    }
+
+    .sbar-menu ul li span {
+        display: none; /* Hide the text */
+    }
+
+    .sbar-menu .hamburger {
+        display: block; /* Show the hamburger icon */
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .sbar-menu .hamburger i {
+        color: #fff;
+        font-size: 20px;
+    }
+
+    /* Hide the sidebar when collapsed */
+    .sbar-menu.collapsed {
+        width: 0;
+    }
+
+    /* Shift the content to the right when sidebar is collapsed */
+    .content {
+        margin-left: 0;
+    }
+}

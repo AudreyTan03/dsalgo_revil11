@@ -1,8 +1,11 @@
+// ProductHome.js
+
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import Product from '../Components/Product';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/productActions';
+import { search } from '../actions/productActions';
 import Loader from '../Components/Loader';
 import Message from '../Components/Message';
 import Navbar from '../Components/Navbar';
@@ -12,6 +15,9 @@ function ProductHome() {
   const productList = useSelector(state => state.productList);
   const { error, loading, products } = productList;
 
+  const searchResults = useSelector(state => state.searchResults);
+  const { loading: searchLoading, results, error: searchError } = searchResults;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categories, setCategories] = useState([]);
@@ -20,6 +26,12 @@ function ProductHome() {
     dispatch(listProducts());
     fetchCategories();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (searchTerm.trim() !== '') {
+      dispatch(search(searchTerm));
+    }
+  }, [dispatch, searchTerm]);
 
   const fetchCategories = async () => {
     try {
@@ -37,11 +49,9 @@ function ProductHome() {
     setSelectedCategory(categoryId);
   };
 
-  const filteredProducts = products.filter(product =>
-    (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     product.user.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
+  const filteredProducts = searchTerm.trim() === '' ? products.filter(product =>
     (selectedCategory === '' || product.category === parseInt(selectedCategory))
-  );
+  ) : results;
 
   return (
     <div>
@@ -52,10 +62,10 @@ function ProductHome() {
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
-      {loading ? (
+      {searchLoading ? (
         <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
+      ) : searchError ? (
+        <Message variant="danger">{searchError}</Message>
       ) : (
         <div>
           <h1>Course Product</h1>

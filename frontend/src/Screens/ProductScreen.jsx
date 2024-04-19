@@ -69,6 +69,8 @@ const ProductScreen = () => {
     navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
   };
 
+  
+
   const handleAddToCart = () => {
     dispatch(addToCart(id, 1));
     navigate('/cart');

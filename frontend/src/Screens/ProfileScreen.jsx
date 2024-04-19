@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails, updateUserProfile, resetUpdateProfile } from '../actions/userActions';
 import { getMyOrders } from '../actions/orderActions';
-import { Button, Form, Table, Modal } from 'react-bootstrap';
+import { Button, Form, Table, Row, Col, Pagination } from 'react-bootstrap';
 import StudentNav from '../Components/StudentNav';
-import { Link } from 'react-router-dom';
-import Sidebar from '../Components/Sidebar/Sidebar';
-import MainDash from '../Components/Dashboard/MainDash';
+import { Link, useLocation } from 'react-router-dom';
+import './profile.css';
 
 function ProfileScreen() {
     const dispatch = useDispatch();
-    const [showOrders, setShowOrders] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [showProfileDetails, setShowProfileDetails] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ordersPerPage = 5; // Display only 5 orders per page
+
     const userDetails = useSelector((state) => state.userDetails);
     const { loading: loadingDetails, error: errorDetails, user } = userDetails;
 
@@ -26,13 +28,12 @@ function ProfileScreen() {
     const [updatedBio, setUpdatedBio] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
 
-    const toggleOrdersVisibility = () => {
-        setShowOrders(!showOrders);
-    };
+    const location = useLocation();
 
     useEffect(() => {
         dispatch(getUserDetails());
-    }, [dispatch]);
+        setShowProfileDetails(location.pathname === '/profile');
+    }, [dispatch, location.pathname]);
 
     useEffect(() => {
         if (!user || successUpdate) {
@@ -47,14 +48,14 @@ function ProfileScreen() {
 
     const handleProfileUpdate = (e) => {
         e.preventDefault();
-        const formData = new FormData(); // Construct formData for multipart/form-data submission
+        const formData = new FormData();
         formData.append('name', updatedName);
         formData.append('email', updatedEmail);
         formData.append('bio', updatedBio);
         if (profilePicture) {
-            formData.append('image', profilePicture);
+            formData.append('profilePicture', profilePicture);
         }
-        dispatch(updateUserProfile(formData)); // Pass formData directly
+        dispatch(updateUserProfile(formData));
         setIsEditing(false);
     };
 
@@ -66,101 +67,80 @@ function ProfileScreen() {
         setIsEditing(false);
     };
 
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    // Calculate current orders based on the current page
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    const currentOrders = orders && orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
     return (
-        <div>
+        <div className="container-fluid">
             <StudentNav />
-            <MainDash />
-            <h2>Profile</h2>
-            <Form>
-                <Form.Group controlId="name">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" value={user.name} readOnly />
-                </Form.Group>
-                <Form.Group controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" value={user.email} readOnly />
-                </Form.Group>
-                <Form.Group controlId="bio">
-                    <Form.Label>Bio</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
-                </Form.Group>
-                <Button variant="primary" onClick={handleEditProfile}>Edit Profile</Button>
-            </Form>
-            <Modal show={isEditing} onHide={handleCloseEditProfile}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Profile</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="formName">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter new name"
-                                value={updatedName}
-                                onChange={(e) => setUpdatedName(e.target.value)}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formEmail">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="Enter new email"
-                                value={updatedEmail}
-                                onChange={(e) => setUpdatedEmail(e.target.value)}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formBio" className="mt-3">
-                            <Form.Label>Bio</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                placeholder="Enter new bio"
-                                value={updatedBio}
-                                onChange={(e) => setUpdatedBio(e.target.value)}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formProfilePicture" className="mt-3">
-                            <Form.Label>Profile Picture</Form.Label>
-                            <Form.Control
-                                type="file"
-                                accept=".jpg, .jpeg, .png" // Limit accepted file types to .jpg, .jpeg, and .png
-                                onChange={(e) => setProfilePicture(e.target.files[0])}
-                                // Add attribute for maximum file size limit
-                                maxSize={5 * 1024 * 1024} // 5MB
-                            />
-                            {profilePicture && (
-                                <img
-                                    src={URL.createObjectURL(profilePicture)}
-                                    alt="Profile"
-                                    style={{
-                                        marginTop: "10px",
-                                        maxWidth: "100%",
-                                        width: "150px",
-                                        height: "150px",
-                                        objectFit: "cover",
-                                    }}
-                                />
-                            )}
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseEditProfile}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleProfileUpdate}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-            {loadingUpdate && <div>Updating...</div>}
-            {errorUpdate && <div>Error: {errorUpdate}</div>}
-            <Button variant="secondary" onClick={toggleOrdersVisibility} className="my-3">
-                {showOrders ? 'Hide OrdersHistory' : 'Show OrderHistory'}
-            </Button>
-            {showOrders && (
-                <>
+            <Row>
+                {/* Sidebar */}
+                <Col md={3} className="sidebar">
+                    <div className="sidebar-header">
+                        {/* <h3>Profile</h3> */}
+                    </div>
+                    <div className="sbar-menu">
+                    <ul>
+                        <li>
+                            <Link to="/profile">
+                                <i className="fa fa-home"></i>
+                                <span>‎ ‎ ‎ Dashboard</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/statistics">
+                                <i className="fas fa-chart-bar"></i>
+                                <span>‎ ‎ ‎ Statistics</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/productlist">
+                                <i className="fa fa-th-list"></i>
+                                <span>‎ ‎ ‎ Product List</span>
+                            </Link>
+                        </li>
+                    </ul>
+                    </div>
+                    {/* Add scroll to sidebar */}
+                    <div className="sidebar-content">
+                        {/* Content here */}
+                    </div>
+                </Col>
+                {/* Main Content */}
+                <Col md={9}>
+                    <h2>Profile</h2>
+                    {showProfileDetails && (
+                        <Row>
+                            <Col md={12}>
+                                <div className="profile-container">
+                                    {user.image && (
+                                        <img src={user.image} alt="Profile" className="profile-image" />
+                                    )}
+                                    <div className="profile-details">
+                                        <Form>
+                                            <Form.Group controlId="name">
+                                                <Form.Label>Name</Form.Label>
+                                                <Form.Control type="text" value={user.name} readOnly />
+                                            </Form.Group>
+                                            <Form.Group controlId="email">
+                                                <Form.Label>Email</Form.Label>
+                                                <Form.Control type="email" value={user.email} readOnly />
+                                            </Form.Group>
+                                            <Form.Group controlId="bio">
+                                                <Form.Label>Bio</Form.Label>
+                                                <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
+                                            </Form.Group>
+                                        </Form>
+                                        <Button variant="primary" onClick={handleEditProfile}>Edit Profile</Button>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    )}
                     <h2>My Orders</h2>
                     {loadingOrders ? (
                         <div>Loading orders...</div>
@@ -178,7 +158,7 @@ function ProfileScreen() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders && orders.map((order) => (
+                                {currentOrders && currentOrders.map((order) => (
                                     <tr key={order._id}>
                                         <td>{order._id}</td>
                                         <td>{order.createdAt?.substring(0, 10)}</td>
@@ -205,9 +185,18 @@ function ProfileScreen() {
                             </tbody>
                         </Table>
                     )}
-                </>
-            )}
-            {user.image && <img src={user.image} alt="Profile" />}
+                    {/* Paginator */}
+                    <div className="d-flex justify-content-center">
+                        <Pagination>
+                            {[...Array(Math.ceil((orders && orders.length || 0) / ordersPerPage)).keys()].map((number) => (
+                                <Pagination.Item key={number + 1} onClick={() => paginate(number + 1)}>
+                                    {number + 1}
+                                </Pagination.Item>
+                            ))}
+                        </Pagination>
+                    </div>
+                </Col>
+            </Row>
         </div>
     );
 }
