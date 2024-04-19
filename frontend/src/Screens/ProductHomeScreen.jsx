@@ -15,7 +15,7 @@ function ProductHome() {
   const productList = useSelector(state => state.productList);
   const { error, loading, products } = productList;
 
-  const searchResults = useSelector(state => state.searchResults);
+  const searchResults = useSelector(state => state.searchResults || {});
   const { loading: searchLoading, results, error: searchError } = searchResults;
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,7 +35,7 @@ function ProductHome() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('api/categories/');
+      const response = await fetch('https://revill01-e38d1bc729a5.herokuapp.com/api/categories/');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);

@@ -16,7 +16,7 @@ const ReviewScreen = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/reviews/?product=${id}`);
+        const response = await fetch(`https://revill01-e38d1bc729a5.herokuapp.com/api/reviews/?product=${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch reviews. Status: ${response.status}`);
         }
@@ -37,7 +37,7 @@ const ReviewScreen = () => {
     try {
       setSubmitting(true);
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const response = await axios.post('http://127.0.0.1:8000/api/post-reviews/', {
+      const response = await axios.post('https://revill01-e38d1bc729a5.herokuapp.com/api/post-reviews/', {
         product: parseInt(id),
         rating,
         comment,

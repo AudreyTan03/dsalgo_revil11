@@ -17,6 +17,10 @@ import {
 } from '../constants/orderConstants';
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
 
+const instance = axios.create({
+  baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Replace this with your API base URL
+});
+
 export const createOrder = (order) => async (dispatch, getState) => {
     try {
         dispatch({ type: ORDER_CREATE_REQUEST });
@@ -30,7 +34,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token.access}`,
             },
         };
-        const { data } = await axios.post('api/add/', order, config);
+        const { data } = await instance.post('api/add/', order, config);
         dispatch({
             type: ORDER_CREATE_SUCCESS,
             payload: data,
@@ -66,7 +70,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
           },
       };
 
-      const { data } = await axios.get(`/api/order/${id}/`, config);
+      const { data } = await instance.get(`api/order/${id}/`, config);
       console.log("API Response:", data); // Log the API response
 
       dispatch({
@@ -100,7 +104,7 @@ export const getMyOrders = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token.access}`, // Ensure this is "Bearer <token>"
       },
     };
-    const { data } = await axios.get(`/api/orders/myorders/`, config);
+    const { data } = await instance.get(`api/orders/myorders/`, config);
     dispatch({
       type: ORDER_LIST_MY_SUCCESS,
       payload: data,
@@ -118,9 +122,7 @@ export const getMyOrders = () => async (dispatch, getState) => {
 
   
   
-  const instance = axios.create({
-    baseURL: "http://127.0.0.1:8000",
-  })
+
    
   export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
     try {

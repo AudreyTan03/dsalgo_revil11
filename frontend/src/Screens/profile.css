@@ -9,6 +9,20 @@
     background-color: rgba(0, 0, 0, 0.05);
 }
 
+.container-fluid{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 88.5vh;
+}
+
+.container-flui{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-right: .02rem;
+    height: 88.5vh;
+    padding-bottom: 2rem;
+}
+
 .profilesidebar ul {
     list-style-type: none;
     padding: 0;
@@ -31,17 +45,17 @@
 .profile-container {
     display: flex; /* Use flexbox to arrange items horizontally */
     align-items: center; /* Center items vertically */
-    background-color: #fff;
     padding: 20px;
 }
 
 /* Profile Image */
 .profile-image {
     border-radius: 50%;
-    overflow: hidden;
+    background-color: red;
     width: 200px;
     height: 200px;
     margin-right: 20px; /* Add margin to separate image from details */
+    margin-top: -6rem;
 }
 
 /* Profile Details */
@@ -157,7 +171,6 @@
     position: fixed;
     top: 20;
     left: 0;
-    overflow-x: hidden;
     padding-top: 30px;
     /* border-right: #333 solid 1px; */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Add box shadow */

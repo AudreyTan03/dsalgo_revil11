@@ -11,11 +11,15 @@ import {
     SEARCH_FAIL,
 } from '../constants/productConstants';
 
+const instance = axios.create({
+    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Replace this with your API base URL
+  });
+
 // Action creator for searching
 export const search = (query) => async (dispatch) => {
     try {
         dispatch({ type: SEARCH_REQUEST });
-        const { data } = await axios.get(`api/search/?query=${query}`);
+        const { data } = await instance.get(`api/search/?query=${query}`);
         dispatch({ type: SEARCH_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: SEARCH_FAIL, payload: 
@@ -30,7 +34,7 @@ export const search = (query) => async (dispatch) => {
 export const listProducts = () => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_LIST_REQUEST });
-        const { data } = await axios.get('http://127.0.0.1:8000/api/products/');
+        const { data } = await instance.get('api/products/');
         dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: PRODUCT_LIST_FAIL, payload: 
@@ -44,7 +48,7 @@ export const listProducts = () => async (dispatch) => {
 export const listProductDetails = (id) => async (dispatch) => {
     try {
         dispatch({ type: PRODUCT_DETAILS_REQUEST });
-        const { data } = await axios.get(`http://127.0.0.1:8000/api/products/${id}`);
+        const { data } = await instance.get(`api/products/${id}`);
         dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: PRODUCT_DETAILS_FAIL, payload: 

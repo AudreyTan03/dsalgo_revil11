@@ -1,10 +1,14 @@
 import axios from 'axios';
 import { CART_ADD_ITEM, CART_REMOVE_ITEM } from '../constants/cartConstants';
 
+const instance = axios.create({
+    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Replace this with your API base URL
+ });
+
 // Action creator to add an item to the cart
 export const addToCart = (id, qty) => async (dispatch, getState) => {
     try {
-        const { data } = await axios.get(`http://127.0.0.1:8000/api/products/${id}`);
+        const { data } = await instance.get(`api/products/${id}`);
 
         dispatch({
             type: CART_ADD_ITEM,

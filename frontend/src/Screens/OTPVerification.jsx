@@ -122,7 +122,7 @@ function OTPVerification() {
         <div className="otp-verification-container">
             <div className="outer-otp-container">
                 <h1 className="otp-text">OTP Verification</h1>
-                <p className="otp-text">Enter OTP</p>
+                <p className="otp-text" style={{marginLeft:'9rem'}}>Enter OTP</p>
                 <form onSubmit={handleSubmit}>
                     <div className="otp-container">
                         {[...Array(6)].map((_, index) => (
@@ -137,10 +137,11 @@ function OTPVerification() {
                             />
                         ))}
                     </div>
-                    <button type="submit" disabled={otp.length !== 6}>
+                    <br />
+                    <button style={{padding:'0.5rem 1.5rem', borderRadius:'0.3rem', marginLeft:'3rem'}} type="submit" disabled={otp.length !== 6}>
                         Submit
                     </button>
-                    <button onClick={handleResendOtp} disabled={!canResend || resendLoading}>
+                    <button style={{padding:'0.5rem 1.5rem', borderRadius:'0.3rem', marginLeft:'1rem'}} onClick={handleResendOtp} disabled={!canResend || resendLoading}>
                         {canResend ? 'Resend OTP' : `Resend OTP (${minutes}:${seconds < 10 ? '0' : ''}${seconds})`}
                     </button>
                 </form>

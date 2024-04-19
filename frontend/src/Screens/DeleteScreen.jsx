@@ -12,7 +12,7 @@ const DeleteScreen = () => {
     const userId = JSON.parse(localStorage.getItem('userInfo')).token.id;
 
     // Fetch all products
-    axios.get('http://127.0.0.1:8000/api/products/')
+    axios.get('https://revill01-e38d1bc729a5.herokuapp.com/api/products/')
       .then(response => {
         const userProducts = response.data.filter(product => product.user === userId);
         setProducts(userProducts); // Set state with filtered products
@@ -37,7 +37,7 @@ const DeleteScreen = () => {
     try {
       setShowConfirmationModal(false);
       for (const productId of selectedProducts) {
-        await axios.delete(`/api/products/${productId}/delete/`);
+        await axios.delete(`https://revill01-e38d1bc729a5.herokuapp.com/api/products/${productId}/delete/`);
       }
       setProducts(products.filter((product) => !selectedProducts.includes(product._id)));
       setSelectedProducts([]);

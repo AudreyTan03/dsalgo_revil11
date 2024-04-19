@@ -1,7 +1,8 @@
 .review-screen-container {
-    max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 25rem;
+    height: 88vh;
+    overflow-y: scroll;
   }
   
   .review-screen-container h1 {

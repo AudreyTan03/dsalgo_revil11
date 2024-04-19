@@ -3,7 +3,7 @@ import '../App.css';
 import { Button } from './Button';
 import './herosection.css';
 import Footer from './Footer';
-// import Navbar from './Navbar'; // Import Navbar component
+import { useSelector } from 'react-redux'; // Import useSelector to access Redux state
 
 function HeroSection() {
   const backgroundImageStyle = {
@@ -13,6 +13,10 @@ function HeroSection() {
     backgroundRepeat: 'no-repeat',
   };
 
+  // Access userLogin state from Redux store
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   return (
     <>
       {/* <Navbar /> Add Navbar component */}
@@ -21,13 +25,16 @@ function HeroSection() {
         <h1>Develop New Skills without Limits</h1>
         <p>With the world's best teaching site.</p>
         <div className='hero-btns'>
-          <Button
-            className='btns'
-            buttonStyle='btn--outline'
-            buttonSize='btn--large'
-          >
-            GET STARTED
-          </Button>
+          {/* Render the button only if there's no logged-in user */}
+          {!userInfo && (
+            <Button
+              className='btns'
+              buttonStyle='btn--outline'
+              buttonSize='btn--large'
+            >
+              GET STARTED
+            </Button>
+          )}
         </div> 
       </div>
     </>

@@ -1,0 +1,1 @@
+web: gunicorn revil01.wsgi

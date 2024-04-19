@@ -35,7 +35,7 @@ function ProductHome() {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <div>
+        <div style={{overflow:'scroll', height:'90vh', padding:'2rem'}}>
           <h1>Latest Products</h1>
           <Row>
             {filteredProducts.map(product => (

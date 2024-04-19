@@ -17,7 +17,9 @@ import {
   UPDATE_USER_INFO,
 } from '../constants/videoConstants';
 
-
+const instance = axios.create({
+  baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/',
+});
 
 export const listVideos = (productId) => async (dispatch, getState) => { //admin
   try {
@@ -61,7 +63,7 @@ export const getVideoDetails = (videoId) => async (dispatch) => { // listvid but
   try {
     dispatch({ type: VIDEO_DETAILS_REQUEST });
 
-    const { data } = await axios.get(`api/videos/${videoId}/`);
+    const { data } = await instance.get(`api/videos/${videoId}/`);
 
     dispatch({
       type: VIDEO_DETAILS_SUCCESS,
@@ -78,9 +80,7 @@ export const getVideoDetails = (videoId) => async (dispatch) => { // listvid but
   }
 };
 
-const instance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/',
-});
+
 
 export const videoDetailView = (id, videoId) => async (dispatch, getState) => { // regulardetailview
   try {

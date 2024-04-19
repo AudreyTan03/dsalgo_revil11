@@ -7,7 +7,7 @@ const SentMessages = () => {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/get-contact/');
+                const response = await axios.get('https://revill01-e38d1bc729a5.herokuapp.com/api/get-contact/');
                 setMessages(response.data);
             } catch (error) {
                 console.error('Failed to fetch messages: ', error);
@@ -19,7 +19,7 @@ const SentMessages = () => {
 
     const handleReplySubmit = async (messageId, reply) => {
         try {
-            await axios.post(`http://127.0.0.1:8000/api/reply-to-message/${messageId}/`, { reply });
+            await axios.post(`https://revill01-e38d1bc729a5.herokuapp.com/api/reply-to-message/${messageId}/`, { reply });
             alert('Reply sent successfully');
             // Optionally, you can update the state or UI to indicate that the reply was sent
         } catch (error) {

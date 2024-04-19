@@ -40,6 +40,10 @@ import {
     USER_FETCH_PROFILE_WITH_PRODUCTS_FAIL,
 } from '../constants/userConstants';
 
+const instance = axios.create({
+    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/',
+  });
+
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
     try {
       dispatch({ type: USER_REGISTER_REQUEST });
@@ -48,8 +52,8 @@ export const register = (name, email, password, userType, confirmPassword) => as
           'Content-Type': 'application/json',
         },
       };
-      const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/users/register/',
+      const { data } = await instance.post(
+        'api/users/register/',
         { name, email, password, password2: confirmPassword, user_type: userType }, // Include confirmPassword as password2
         config
       );
@@ -85,8 +89,8 @@ export const VerifyOtp = (user_id, otp_id, otp_code) => async (dispatch) => {
                 "Content-Type": "application/json",
             },
         };
-        const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/verify-otp/',
+        const { data } = await instance.post(
+            'api/verify-otp/',
             { user_id: user_id, otp_id: otp_id, otp_code: otp_code }, // Corrected object key names
             config
         );
@@ -122,7 +126,7 @@ export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
         //     throw new Error("User ID or OTP ID is missing.");
         // }
 
-        const { data } = await axios.post(
+        const { data } = await instance.post(
             "/api/resend-otp/",
             { user_id, otp_id },
             config
@@ -173,9 +177,7 @@ export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
 //   };
 
 
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/'
-})
+
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -237,7 +239,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
         };
   
         console.log('Access Token:', userInfo.token.access);
-        const { data } = await axios.get('api/profile/', config);
+        const { data } = await instance.get('api/profile/', config);
         console.log('Response Data:', data);
   
         dispatch({
@@ -259,7 +261,7 @@ export const updateThemePreference = (theme) => async (dispatch) => {
       dispatch({ type: THEME_UPDATE_REQUEST });
   
       // Send a request to update the theme preference
-      const { data } = await axios.put('api/update-theme/', { theme });
+      const { data } = await instance.put('api/update-theme/', { theme });
   
       dispatch({ type: THEME_UPDATE_SUCCESS, payload: data });
     } catch (error) {
@@ -294,7 +296,7 @@ export const resetUpdateProfile = () => (dispatch) => {
         },
       };
   
-      const { data } = await axios.put('api/profile/update/', formData, config);
+      const { data } = await instance.put('api/profile/update/', formData, config);
   
       dispatch({
         type: USER_UPDATE_PROFILE_SUCCESS,
@@ -332,8 +334,8 @@ export const changePassword = (password, password2, token) => async (dispatch) =
                 'Content-Type': 'application/json',
             },
         };
-        const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/changepassword/',
+        const { data } = await instance.post(
+            'api/changepassword/',
             { password, password2 },
             config
         );
@@ -364,8 +366,8 @@ export const requestResetPassword = (email) => async (dispatch) => {
         };
 
         // Send POST request to backend to request password reset
-        const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/users/resetpassword-email/',
+        const { data } = await instance.post(
+            `api/users/resetpassword-email/`,
             { email },
             config
         );
@@ -394,8 +396,8 @@ export const confirmChangePassword = (password, password2, uid, token) => async 
                 'Content-Type': 'application/json',
             },
         };
-        const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/users/reset-password/${uid}/${token}`,
+        const { data } = await instance.post(
+            `api/users/reset-password/${uid}/${token}`,
             { password, password2 },
             config
         );

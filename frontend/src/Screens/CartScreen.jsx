@@ -5,6 +5,7 @@ import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import Message from '../Components/Message';
 import { addToCart, removeFromCart } from '../actions/cartActions';
 import { FaTrash } from 'react-icons/fa';
+import StudentNav from '../Components/StudentNav';
 
 function CartScreen() {
     const { id } = useParams();
@@ -33,7 +34,9 @@ function CartScreen() {
     }
 
     return (
-        <Row>
+        <div>
+        <StudentNav />
+        <Row style={{overflowY:'scroll', height:'89vh', padding:'2rem', overflowX:'hidden', width:'100.7vw'}}>
             <Col md={8}>
                 <h1>Course List</h1>
                 {cartItems.length === 0 ? (
@@ -93,8 +96,8 @@ function CartScreen() {
                 )}
             </Col>
 
-            <Col md={4}>
-                <Card>
+            <Col md={4} style={{position:'fixed', right:'0'}}>
+                <Card style={{padding:'4rem 2rem', borderRadius:'1rem', width:'30rem'}}>
                     <ListGroup variant='flush'>
                         <ListGroup.Item>
                             <h2>
@@ -106,7 +109,7 @@ function CartScreen() {
                                 .toFixed(2)}
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            <Row>
+                            <Row style={{marginTop:'10rem'}}>
                                 <Button
                                     type='button'
                                     className='btn-block'
@@ -121,6 +124,7 @@ function CartScreen() {
                 </Card>
             </Col>
         </Row>
+    </div>    
     );
 }
 

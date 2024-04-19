@@ -5,6 +5,10 @@ import {
     UPDATE_PRODUCT_FAILURE
 } from '../constants/editConstants';
 
+const instance = axios.create({
+    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Replace this with your API base URL
+  });
+
 export const updateProductRequest = () => ({
     type: UPDATE_PRODUCT_REQUEST
 });
@@ -23,7 +27,7 @@ export const updateProduct = (productId, formData) => {
     return async (dispatch) => {
         dispatch(updateProductRequest());
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/api/products/${productId}/edit/`, formData, {
+            const response = await instance.put(`api/products/${productId}/edit/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

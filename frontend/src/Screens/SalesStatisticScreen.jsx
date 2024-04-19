@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+// import { listUserProductQuestions } from '../actions/questionActions';
+import { listUserProductQuestions } from '../actions/questionAction';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -27,6 +30,17 @@ ChartJS.register(
 );
 
 function SalesStatisticScreen() {
+  const dispatch = useDispatch();
+
+  const { userInfo } = useSelector(state => state.userLogin);
+
+  const userProductQuestions = useSelector(state => state.listUserProductQuestionsReducer);
+  const [productId, setProductId] = useState(null);
+  const [videoId, setVideoId] = useState(null);
+  const [reply, setReply] = useState('');
+ 
+
+
   const [salesData, setSalesData] = useState({
     total_sales: 0,
     total_revenue: 0,
@@ -35,11 +49,9 @@ function SalesStatisticScreen() {
     users: [],
   });
 
-  const { userInfo } = useSelector(state => state.userLogin);
-
   const fetchSalesData = () => {
     $.ajax({
-      url: 'api/sales-statistics/',
+      url: 'https://revill01-e38d1bc729a5.herokuapp.com/api/sales-statistics/',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -60,13 +72,46 @@ function SalesStatisticScreen() {
     });
   };
 
+
+  const handleReplySubmit = (questionId, productId, video) => {
+    console.log('Product ID:', productId);
+    console.log('Video:', video);
+    
+    $.ajax({
+      url: `https://revill01-e38d1bc729a5.herokuapp.com/api/products/${productId}/videos/${video}/questions/${questionId}/reply/`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userInfo.token.access}`,
+      },
+      data: JSON.stringify({ reply }),
+      success: function (data) {
+        // Reload the page
+        window.location.reload();
+      },
+      error: function (error) {
+        console.error('Failed to submit reply', error);
+      }
+    });
+  };
+
+
   useEffect(() => {
     if (userInfo) {
       fetchSalesData();
-      const intervalId = setInterval(fetchSalesData, 5000); // Polling every 5 seconds
+      const intervalId = setInterval(() => {
+        fetchSalesData(); // Fetch sales data periodically
+      }, 5000); // Polling every 5 seconds
       return () => clearInterval(intervalId);
     }
   }, [userInfo]);
+
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(listUserProductQuestions());
+    }
+  }, [dispatch, userInfo]);
 
   const chartStyles = {
     padding: '10px',
@@ -167,9 +212,12 @@ function SalesStatisticScreen() {
       fill: false,
     }]
   };
+  
+  console.log("userProductQuestion: ", userProductQuestions)
+
 
   return (
-    <div style={{ color: 'white' }}>
+    <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 20px)', padding: '10px' }}>
       <h2>Sales Statistics</h2>
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
         <div style={{ ...chartStyles, width: '300px', textAlign: 'center' }}>
@@ -206,6 +254,35 @@ function SalesStatisticScreen() {
             </ul>
           </div>
         ))}
+      </div>
+      <div style={{ color: 'white' }}>
+        <h3 style={{ color: '#333', marginBottom: '10px' }}>Questions:</h3>
+        {userProductQuestions.questions.length > 0 ? (
+          userProductQuestions.questions.map(question => (
+            <div key={question.id}>
+              <p style={{ color: 'black' }}>In Product: {question.product_name ? question.product_name : 'N/A'}</p>
+              <p style={{ color: 'black' }}>In Video: {question.video_title ? question.video_title : 'N/A'}</p>
+              <p style={{ color: 'black' }}>Asked by: {question.user_details && question.user_details.name ? question.user_details.name : 'N/A'}</p>
+              <p style={{ color: 'black' }}>Question: {question.question}</p>
+              {question.reply ? (
+                <p style={{ color: 'black' }}>Reply: {question.reply}</p>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Type your reply here"
+                    value={reply}
+                    onChange={(e) => setReply(e.target.value)}
+                    style={{ marginRight: '10px' }}
+                  />
+                  <button onClick={() => handleReplySubmit(question.id, question.product_id, question.video)}>Reply</button>
+                </>
+              )}
+            </div>
+          ))
+        ) : (
+          <p style={{ color: 'black' }}>No questions found.</p>
+        )}
       </div>
     </div>
   );

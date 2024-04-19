@@ -73,11 +73,11 @@ const UploadScreen = () => {
 
     // If uploadSuccess is true, navigate to '/products'
     if (uploadSuccess) {
-        return <Navigate to="/products" />;
+        return <Navigate to="/productlist" />;
     }
 
     return (
-        <div className="upload-screen">
+        <div className="upload-screen" style={{marginTop:'6rem'}}>
             <h2>Upload Product</h2>
             <form onSubmit={handleSubmit}>
                 <div>

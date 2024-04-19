@@ -51,6 +51,10 @@ import {
     GET_USER_DETAILS_FAIL,
 } from '../constants/adminConstants';
 
+const instance = axios.create({
+    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Replace this with your API base URL
+  });
+
 export const getUsers = () => {
     return async (dispatch, getState) => {
         try {
@@ -61,7 +65,7 @@ export const getUsers = () => {
                 },
             };
             dispatch({ type: GET_USERS_REQUEST });
-            const response = await axios.get('/api/admin/users/', config);
+            const response = await instance.get('api/admin/users/', config);
             dispatch({ type: GET_USERS_SUCCESS, payload: response.data });
         } catch (error) {
             dispatch({ type: GET_USERS_FAIL, payload: error.message });
@@ -79,7 +83,7 @@ export const getUserDetails = (userId) => {
                 },
             };
             dispatch({ type: GET_USER_DETAILS_REQUEST });
-            const response = await axios.get(`/api/admin/users/${userId}/`, config);
+            const response = await instance.get(`api/admin/users/${userId}/`, config);
             dispatch({ type: GET_USER_DETAILS_SUCCESS, payload: response.data });
         } catch (error) {
             dispatch({ type: GET_USER_DETAILS_FAIL, payload: error.message });
@@ -97,7 +101,7 @@ export const editUser = (userId, userData) => {
                 },
             };
             dispatch({ type: EDIT_USER_REQUEST });
-            const response = await axios.put(`/api/admin/users/${userId}/`, userData, config);
+            const response = await instance.put(`/api/admin/users/${userId}/`, userData, config);
             dispatch({ type: EDIT_USER_SUCCESS, payload: { userId, userData: response.data } });
             // Dispatch a success message or perform any additional actions if needed
         } catch (error) {
@@ -117,7 +121,7 @@ export const deleteUser = (userId) => {
                 },
             };
             dispatch({ type: DELETE_USER_REQUEST });
-            await axios.delete(`/api/admin/users/${userId}/`, config);
+            await instance.delete(`/api/admin/users/${userId}/`, config);
             dispatch({ type: DELETE_USER_SUCCESS, payload: userId });
         } catch (error) {
             dispatch({ type: DELETE_USER_FAIL, payload: error.message });
