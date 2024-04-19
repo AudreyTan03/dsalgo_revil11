@@ -8,17 +8,18 @@ const ProtectedRoutes = ({ children }) => {
     const userType = userInfo ? userInfo.user_type : null;
     const token = userInfo ? userInfo.token : null;
 
-
     if (token && userType === "instructor") {
-
-
         return children;
     }
+
     console.log('Token from local storage:', localStorage.getItem("token.access"));
     console.log('User type:', userType);
     console.log('Redirecting to:', userType === 'instructor' ? 'instructor page' : 'student page');
 
-    return <Navigate to="/Studenthomescreen" />;
+    // Go back to the previous page
+    window.history.back();
+
+    return null;
 };
 
 export default ProtectedRoutes;

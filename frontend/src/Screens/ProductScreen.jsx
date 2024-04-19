@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 import { listVideos, checkSubscription } from '../actions/videoActions';
-import '../Screens/productscreen.css';
+import '../Screens/ProductScreen.css';
 
 const ProductScreen = () => {
   const { id } = useParams();

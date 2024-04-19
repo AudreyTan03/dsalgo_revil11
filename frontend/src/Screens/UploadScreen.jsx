@@ -42,7 +42,6 @@ const UploadScreen = () => {
         formData.append('image', imageFile);
         formData.append('description', description);
         formData.append('price', price);
-        formData.append('countInStock', countInStock);
         
         if (previewVideoFile) {
             formData.append('preview_video', previewVideoFile);
@@ -118,10 +117,7 @@ const UploadScreen = () => {
                     />
                     {price < 0 && <p className="error-message">Price cannot be negative</p>}
                 </div>
-                <div>
-                    <label htmlFor="countInStock">Count in Stock:</label>
-                    <input type="number" id="countInStock" value={countInStock} onChange={(e) => handleTextChange(e, setCountInStock)} required />
-                </div>
+                
                 <div>
                     <label htmlFor="preview_video">Preview Video:</label>
                     <input type="file" id="preview_video" onChange={handlePreviewVideoChange} accept=".mp4" />

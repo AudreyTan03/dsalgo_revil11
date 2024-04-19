@@ -1,29 +1,18 @@
-import { Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
-const ProtectedRoutes = ({ children }) => {
-    const userInfo = useSelector((state) => state.userLogin.userInfo); // Access userInfo from Redux state
+const AdminProtectedRoutes = ({ children }) => {
+    const userInfo = useSelector((state) => state.userLogin.userInfo); 
     console.log('Redux userInfo:', userInfo);
 
-    const userType = userInfo ? userInfo.user_type : null;
-    const isAdmin = userInfo ? userInfo.isAdmin : null;
-    const token = userInfo ? userInfo.token : null;
+    const isAdmin = userInfo ? userInfo.user_type === 'admin' : false;
 
-    if (token) {
-        if (isAdmin) {
-            return <Navigate to="/adminPage" />;
-        } else if (userType === "student") {
-            return children;
-        } else if (userType === "instructor") {
-            return <Navigate to="/instructorPage" />;
-        }
+    if (isAdmin) {
+        return children;
     }
 
-    console.log('Token from local storage:', localStorage.getItem("token.access"));
-    console.log('User type:', userType);
-    console.log('Redirecting to:', userType === 'instructor' ? 'instructor page' : 'student page');
-
-    return <Navigate to="/homeScreen" />;
+    console.log('Redirecting to:', isAdmin ? 'admin page' : 'student page');
+    window.history.back();
+    return null; // or return a message if needed
 };
 
-export default ProtectedRoutes;
+export default AdminProtectedRoutes;

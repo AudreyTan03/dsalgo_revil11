@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom'; // Import useLocation hook
 import { useDispatch, useSelector } from 'react-redux';
 import { BsSearch } from "react-icons/bs";
-import { logout, updateThemePreference } from '../actions/userActions';
+import { logout } from '../actions/userActions';
 import './Navbar.css';
 
 function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCategoryChange }) {
@@ -14,8 +14,6 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  console.log('userInfo:', userInfo);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -32,6 +30,7 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
     onCategoryChange(categoryId);
     closeMobileMenu();
   };
+
   return (
     <>
       <nav className={darkMode ? 'navbar dark-mode' : 'navbar'}>
@@ -53,33 +52,44 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            {/* <li className='nav-item'>
-              <Link to='/cart' className='nav-links' onClick={closeMobileMenu}>
-                CartItems
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/products' className='nav-links' onClick={closeMobileMenu}>
-                Products
-              </Link>
-            </li> */}
-            <li className='nav-item'>
-              <Link to='/register' className='nav-links' onClick={closeMobileMenu}>
-                Register
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/login' className='nav-links' onClick={handleLogout}>
-                Login
-              </Link>
-            </li>
-            {/* Conditionally render admin panel link based on user role */}
-            {userInfo && userInfo.isAdmin && ( // Check if userInfo exists and user is admin
-              <li className='nav-item'>
-                <Link to='/admin' className='nav-links' onClick={closeMobileMenu}>
-                  Admin Panel
-                </Link>
-              </li>
+            {userInfo ? (
+              <>
+                <li className='nav-item'>
+                  <Link to='/cart' className='nav-links' onClick={closeMobileMenu}>
+                    CartItems
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link to='/products' className='nav-links' onClick={closeMobileMenu}>
+                    Products
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link to='/login' className='nav-links' onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </li>
+                {userInfo.isAdmin && (
+                  <li className='nav-item'>
+                    <Link to='/admin' className='nav-links' onClick={closeMobileMenu}>
+                      Admin Panel
+                    </Link>
+                  </li>
+                )}
+              </>
+            ) : (
+              <>
+                <li className='nav-item'>
+                  <Link to='/register' className='nav-links' onClick={closeMobileMenu}>
+                    Register
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link to='/login' className='nav-links' onClick={closeMobileMenu}>
+                    Login
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
         </div>

@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'user',
     'videos',
+    'storages',
 ]
-
 
 
 MIDDLEWARE = [

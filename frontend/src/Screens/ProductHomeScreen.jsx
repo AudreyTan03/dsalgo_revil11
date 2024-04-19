@@ -37,7 +37,7 @@ function ProductHome() {
     setSelectedCategory(categoryId);
   };
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products && products.filter(product =>
     (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
      product.user.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (selectedCategory === '' || product.category === parseInt(selectedCategory))
@@ -60,7 +60,7 @@ function ProductHome() {
         <div>
           <h1>Course Product</h1>
           <Row>
-            {filteredProducts.map(product => (
+            {filteredProducts && filteredProducts.map(product => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
                 <Product product={product} />
               </Col>
