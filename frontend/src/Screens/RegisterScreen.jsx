@@ -25,7 +25,7 @@ function RegisterScreen() {
   
       // Redirect to OTP verification screen
       const { user_id, otp_id } = response; // Ensure that user_id and otp_id are correctly returned from the register action
-      navigate(`/verify-otp/user_id/${user_id}/otp/${otp_id}`); // Redirect to OTP verification screen with user_id and otp_id
+      navigate(`https://revilll101-27f25f7438c4.herokuapp.com/verify-otp/user_id/${user_id}/otp/${otp_id}`); // Redirect to OTP verification screen with user_id and otp_id
     } catch (error) {
       console.error('Error during registration:', error.message);
       // Handle other errors, e.g., display a generic error message

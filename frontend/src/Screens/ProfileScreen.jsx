@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails, updateUserProfile, resetUpdateProfile } from '../actions/userActions';
 import { getMyOrders } from '../actions/orderActions';
-import { Button, Form, Table, Row, Col, Pagination } from 'react-bootstrap';
+import { Button, Form, Table, Row, Col, Pagination, Modal } from 'react-bootstrap'; // Added Modal from react-bootstrap
 import StudentNav from '../Components/StudentNav';
 import { Link, useLocation } from 'react-router-dom';
 import './profile.css';
@@ -61,6 +61,10 @@ function ProfileScreen() {
 
     const handleEditProfile = () => {
         setIsEditing(true);
+        setUpdatedName(user.name); // Populate the form fields with current user data
+        setUpdatedEmail(user.email); // Populate the form fields with current user data
+        setUpdatedBio(user.bio || ''); // Populate the form fields with current user data
+        setProfilePicture(null); // Clear the profile picture state
     };
 
     const handleCloseEditProfile = () => {
@@ -84,26 +88,26 @@ function ProfileScreen() {
                         {/* <h3>Profile</h3> */}
                     </div>
                     <div className="sbar-menu">
-                    <ul>
-                        <li>
-                            <Link to="/profile">
-                                <i className="fa fa-home"></i>
-                                <span>‎ ‎ ‎ Dashboard</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/statistics">
-                                <i className="fas fa-chart-bar"></i>
-                                <span>‎ ‎ ‎ Statistics</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/productlist">
-                                <i className="fa fa-th-list"></i>
-                                <span>‎ ‎ ‎ Product List</span>
-                            </Link>
-                        </li>
-                    </ul>
+                        <ul>
+                            <li>
+                                <Link to="/profile">
+                                    <i className="fa fa-home"></i>
+                                    <span>‎ ‎ ‎ Dashboard</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/statistics">
+                                    <i className="fas fa-chart-bar"></i>
+                                    <span>‎ ‎ ‎ Statistics</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/productlist">
+                                    <i className="fa fa-th-list"></i>
+                                    <span>‎ ‎ ‎ Product List</span>
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                     {/* Add scroll to sidebar */}
                     <div className="sidebar-content">
@@ -126,10 +130,6 @@ function ProfileScreen() {
                                                 <Form.Label>Name</Form.Label>
                                                 <Form.Control type="text" value={user.name} readOnly />
                                             </Form.Group>
-                                            <Form.Group controlId="email">
-                                                <Form.Label>Email</Form.Label>
-                                                <Form.Control type="email" value={user.email} readOnly />
-                                            </Form.Group>
                                             <Form.Group controlId="bio">
                                                 <Form.Label>Bio</Form.Label>
                                                 <Form.Control as="textarea" rows={3} value={user.bio} readOnly />
@@ -141,6 +141,65 @@ function ProfileScreen() {
                             </Col>
                         </Row>
                     )}
+                    <Modal show={isEditing} onHide={handleCloseEditProfile}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Profile</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <Form.Group controlId="formName">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter new name"
+                                        value={updatedName}
+                                        onChange={(e) => setUpdatedName(e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formBio" className="mt-3">
+                                    <Form.Label>Bio</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        placeholder="Enter new bio"
+                                        value={updatedBio}
+                                        onChange={(e) => setUpdatedBio(e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formProfilePicture" className="mt-3">
+                                    <Form.Label>Profile Picture</Form.Label>
+                                    <Form.Control
+                                        type="file"
+                                        accept=".jpg, .jpeg, .png" // Limit accepted file types to .jpg, .jpeg, and .png
+                                        onChange={(e) => setProfilePicture(e.target.files[0])}
+                                        // Add attribute for maximum file size limit
+                                        maxSize={5 * 1024 * 1024} // 5MB
+                                    />
+                                    {profilePicture && (
+                                        <img
+                                            src={URL.createObjectURL(profilePicture)}
+                                            alt="Profile"
+                                            style={{
+                                                marginTop: "10px",
+                                                maxWidth: "100%",
+                                                width: "150px",
+                                                height: "150px",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    )}
+                                </Form.Group>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseEditProfile}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleProfileUpdate}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                     <h2>My Orders</h2>
                     {loadingOrders ? (
                         <div>Loading orders...</div>

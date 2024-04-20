@@ -32,7 +32,7 @@ const ProductScreen = () => {
 
   const handleDeleteProduct = async () => {
     try {
-      const response = await fetch(`https://revill01-e38d1bc729a5.herokuapp.com/api/products/${id}/delete/`, {
+      const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/products/${id}/delete/`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -47,7 +47,7 @@ const ProductScreen = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`https://revill01-e38d1bc729a5.herokuapp.com/api/products/${id}`);
+        const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/products/${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch product. Status: ${response.status}`);
         }

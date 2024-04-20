@@ -41,7 +41,7 @@ import {
 } from '../constants/userConstants';
 
 const instance = axios.create({
-    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/',
+    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/',
   });
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
@@ -127,7 +127,7 @@ export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
         // }
 
         const { data } = await instance.post(
-            "/api/resend-otp/",
+            "api/resend-otp/",
             { user_id, otp_id },
             config
         );

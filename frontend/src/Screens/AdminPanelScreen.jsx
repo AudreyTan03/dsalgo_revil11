@@ -7,6 +7,7 @@ import ProductList from '../Components/ProductList';
 import VideoList from '../Components/VideoList';
 import SubscriptionList from '../Components/SubscriptionList';
 import Navbar from '../Components/Navbar';
+import AdminConcern from './AdminConcern';
 
 const AdminPanel = () => {
   const [selectedList, setSelectedList] = useState('UserList');
@@ -26,6 +27,8 @@ const AdminPanel = () => {
         return <VideoList />;
       case 'SubscriptionList':
         return <SubscriptionList />;
+        case 'ConcernList':
+        return <AdminConcern />;
       default:
         return null;
     }
@@ -50,6 +53,9 @@ const AdminPanel = () => {
                 </li>
                 <li onClick={() => handleListChange('SubscriptionList')}>
                   <FontAwesomeIcon icon={faClipboardList} /> <span>Subscription List</span>
+                </li>
+                <li onClick={() => handleListChange('ConcernList')}>
+                  <FontAwesomeIcon icon={faClipboardList} /> <span>Concerns</span>
                 </li>
               </ul>
             </div>

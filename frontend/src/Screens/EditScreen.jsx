@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Create an Axios instance
-const instance = axios.create({
-    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Set the base URL without "https"
-});
 
 const EditProduct = () => {
   const [products, setProducts] = useState([]);
@@ -13,6 +10,10 @@ const EditProduct = () => {
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const userId = JSON.parse(localStorage.getItem('userInfo')).token.id; // Define userId here
+
+  const instance = axios.create({
+    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Set the base URL without "https"
+});
 
   useEffect(() => {
     // Fetch all products

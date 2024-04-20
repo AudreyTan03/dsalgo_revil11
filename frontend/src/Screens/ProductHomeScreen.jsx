@@ -1,11 +1,8 @@
-// ProductHome.js
-
 import React, { useState, useEffect } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
 import Product from '../Components/Product';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/productActions';
-import { search } from '../actions/productActions';
 import Loader from '../Components/Loader';
 import Message from '../Components/Message';
 import Navbar from '../Components/Navbar';
@@ -14,9 +11,6 @@ function ProductHome() {
   const dispatch = useDispatch();
   const productList = useSelector(state => state.productList);
   const { error, loading, products } = productList;
-
-  const searchResults = useSelector(state => state.searchResults || {});
-  const { loading: searchLoading, results, error: searchError } = searchResults;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -27,15 +21,9 @@ function ProductHome() {
     fetchCategories();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (searchTerm.trim() !== '') {
-      dispatch(search(searchTerm));
-    }
-  }, [dispatch, searchTerm]);
-
   const fetchCategories = async () => {
     try {
-      const response = await fetch('https://revill01-e38d1bc729a5.herokuapp.com/api/categories/');
+      const response = await fetch('https://revilll101-27f25f7438c4.herokuapp.com/api/categories/');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -49,12 +37,11 @@ function ProductHome() {
     setSelectedCategory(categoryId);
   };
 
-  const filteredProducts = products && products.filter(product =>
+  const filteredProducts = products.filter(product =>
     (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
      product.user.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (selectedCategory === '' || product.category === parseInt(selectedCategory))
-  ) ? results : null;
-  
+  );
 
   return (
     <div>
@@ -65,15 +52,15 @@ function ProductHome() {
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
-      {searchLoading ? (
+      {loading ? (
         <Loader />
-      ) : searchError ? (
-        <Message variant="danger">{searchError}</Message>
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
       ) : (
         <div>
           <h1>Course Product</h1>
           <Row>
-            {filteredProducts && filteredProducts.map(product => (
+            {filteredProducts.map(product => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
                 <Product product={product} />
               </Col>

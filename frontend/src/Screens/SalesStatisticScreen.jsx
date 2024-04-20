@@ -51,7 +51,7 @@ function SalesStatisticScreen() {
 
   const fetchSalesData = () => {
     $.ajax({
-      url: 'https://revill01-e38d1bc729a5.herokuapp.com/api/sales-statistics/',
+      url: 'https://revilll101-27f25f7438c4.herokuapp.com/api/sales-statistics/',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ function SalesStatisticScreen() {
     console.log('Video:', video);
     
     $.ajax({
-      url: `https://revill01-e38d1bc729a5.herokuapp.com/api/products/${productId}/videos/${video}/questions/${questionId}/reply/`,
+      url: `https://revilll101-27f25f7438c4.herokuapp.com/api/products/${productId}/videos/${video}/questions/${questionId}/reply/`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

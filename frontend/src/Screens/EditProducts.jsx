@@ -11,7 +11,7 @@ const EditProduct = () => {
 
   useEffect(() => {
     // Fetch all products
-    axios.get('https://revill01-e38d1bc729a5.herokuapp.com/api/products/')
+    axios.get('https://revilll101-27f25f7438c4.herokuapp.com/api/products/')
       .then(response => {
         const userProducts = response.data.filter(product => product.user === userId);
         setProducts(userProducts); // Set state with filtered products

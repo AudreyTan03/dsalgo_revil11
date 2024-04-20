@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const SentMessages = () => {
+const instance = axios.create({
+    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Set the base URL without "https"
+});
+
+const AdminConcern = () => {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await axios.get('https://revill01-e38d1bc729a5.herokuapp.com/api/get-contact/');
+                const response = await instance.get('api/get-contact/');
                 setMessages(response.data);
             } catch (error) {
                 console.error('Failed to fetch messages: ', error);
@@ -19,7 +23,7 @@ const SentMessages = () => {
 
     const handleReplySubmit = async (messageId, reply) => {
         try {
-            await axios.post(`https://revill01-e38d1bc729a5.herokuapp.com/api/reply-to-message/${messageId}/`, { reply });
+            await instance.post(`api/reply-to-message/${messageId}/`, { reply });
             alert('Reply sent successfully');
             // Optionally, you can update the state or UI to indicate that the reply was sent
         } catch (error) {
@@ -66,4 +70,4 @@ const ReplyForm = ({ messageId, onReplySubmit }) => {
     );
 };
 
-export default SentMessages;
+export default AdminConcern;

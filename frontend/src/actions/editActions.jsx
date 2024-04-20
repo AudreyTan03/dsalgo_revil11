@@ -6,7 +6,7 @@ import {
 } from '../constants/editConstants';
 
 const instance = axios.create({
-    baseURL: 'https://revill01-e38d1bc729a5.herokuapp.com/', // Replace this with your API base URL
+    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Replace this with your API base URL
   });
 
 export const updateProductRequest = () => ({
