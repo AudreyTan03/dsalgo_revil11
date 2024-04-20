@@ -3,7 +3,7 @@ import { UPLOAD_REQUEST, UPLOAD_SUCCESS, UPLOAD_FAILURE } from '../constants/upl
 
 
 const instance = axios.create({
-    baseURL: 'https://revilcpe201-6018f6621dc2.herokuapp.com/',
+    baseURL: 'https://revill201-ced7a4551b4a.herokuapp.com/',
   });
   
 export const uploadProduct = (formData) => async (dispatch, getState) => {

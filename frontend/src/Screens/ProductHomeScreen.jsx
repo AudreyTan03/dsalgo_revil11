@@ -23,7 +23,7 @@ function ProductHome() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('https://revilcpe201-6018f6621dc2.herokuapp.com/api/categories/');
+      const response = await fetch('https://revill201-ced7a4551b4a.herokuapp.com/api/categories/');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);

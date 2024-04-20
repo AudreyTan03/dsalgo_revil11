@@ -18,7 +18,7 @@ import {
 } from '../constants/videoConstants';
 
 const instance = axios.create({
-  baseURL: 'https://revilcpe201-6018f6621dc2.herokuapp.com/',
+  baseURL: 'https://revill201-ced7a4551b4a.herokuapp.com/',
 });
 
 export const listVideos = (productId) => async (dispatch, getState) => { //admin
