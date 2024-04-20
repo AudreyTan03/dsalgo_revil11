@@ -18,7 +18,7 @@ import {
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
 
 const instance = axios.create({
-  baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Replace this with your API base URL
+  baseURL: 'https://revilcpe201-6018f6621dc2.herokuapp.com/', // Replace this with your API base URL
 });
 
 export const createOrder = (order) => async (dispatch, getState) => {

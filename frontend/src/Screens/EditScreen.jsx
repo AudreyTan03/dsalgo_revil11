@@ -12,7 +12,7 @@ const EditProduct = () => {
   const userId = JSON.parse(localStorage.getItem('userInfo')).token.id; // Define userId here
 
   const instance = axios.create({
-    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Set the base URL without "https"
+    baseURL: 'https://revilcpe201-6018f6621dc2.herokuapp.com/', // Set the base URL without "https"
 });
 
   useEffect(() => {
