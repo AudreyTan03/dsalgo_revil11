@@ -41,7 +41,7 @@ import {
 } from '../constants/userConstants';
 
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/',
   });
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
