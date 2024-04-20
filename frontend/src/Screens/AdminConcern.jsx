@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Set the base URL without "https"
+    baseURL: 'http://127.0.0.1:8000/', // Set the base URL without "https"
 });
 
 const AdminConcern = () => {

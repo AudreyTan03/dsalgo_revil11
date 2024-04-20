@@ -17,7 +17,7 @@ import {
 } from '../constants/questionConstants';   
 
 const instance = axios.create({
-    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Replace this with your API base URL
+    baseURL: 'http://127.0.0.1:8000/', // Replace this with your API base URL
   });
   
 
