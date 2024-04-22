@@ -32,7 +32,7 @@ const ProductScreen = () => {
 
   const handleDeleteProduct = async () => {
     try {
-      const response = await fetch(`https://revill201-ced7a4551b4a.herokuapp.com/api/products/${id}/delete/`, {
+      const response = await fetch(`http://127.0.0.1:8000/api/products/${id}/delete/`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -47,7 +47,7 @@ const ProductScreen = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`https://revill201-ced7a4551b4a.herokuapp.com/api/products/${id}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/products/${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch product. Status: ${response.status}`);
         }
@@ -65,10 +65,9 @@ const ProductScreen = () => {
     dispatch(checkSubscription(userId, id)); // Dispatch checkSubscription for the current product
   }, [dispatch, userId, id]);
 
-  const handleEditProduct = (productId) => {
-    navigate(`/edit/${productId}`, { state: { productId } }); // Pass the product ID
+  const handleEditProduct = () => {
+    navigate(`/edit/${id}`, { state: { productId: id } }); // Pass the product ID
   };
-
   
 
   const handleAddToCart = () => {
@@ -119,12 +118,14 @@ const ProductScreen = () => {
         <div className="product-price-left">
           <p style={{ fontWeight: 'bold', fontSize: '1.5em' }}>$: {product.price}</p>
         </div>
-        {userId !== product.user && (
+        {userId !== product.user && !isUserSubscribed && ( // Only render the button if the user is not the product owner and is not subscribed
           <div className="ratings">
             <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
-            {(isUserSubscribed || userType === 'admin') && (
-              <button className="view-reviews-button" onClick={handleViewReviews}>View Reviews</button>
-            )}
+          </div>
+        )}
+        {isUserSubscribed && (
+          <div className="view-reviews-container">
+            <button className="view-reviews-button" onClick={handleViewReviews}>View Reviews</button>
           </div>
         )}
         <div className="dropdown-container">
@@ -133,7 +134,7 @@ const ProductScreen = () => {
             <div className="dropdown-content">
               <button onClick={handleGoBack}>Go Back</button>
               {/* Only instructors who posted the product or admin can edit/delete */}
-              {(userId === product.user && userType === 'instructor') || userType === 'admin' ? (
+              {(userId === product.user ) || userType === 'admin' ? (
                 <>
                   <button onClick={handleDeleteProduct}>Delete Product</button>
                   <button onClick={() => handleEditProduct(product.id)}>Edit Product</button>
@@ -166,29 +167,27 @@ const ProductScreen = () => {
             ))}
           </ul>
         </div>
-        <h2>Videos</h2>
-        {videos.length > 0 ? (
-          <ul>
-            {videos.map((video) => (
-              <li key={video.id}>
-                {/* Only instructors who posted the product, admin, or subscribed users can view the video */}
-                {((userId === product.user && userType === 'instructor') || userType === 'admin' || isUserSubscribed) ? (
-                  <video
-                    controls
-                    controlsList="nodownload"
-                    preload="none"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <source src={video.video_file} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <p className="error-message">You need to subscribe to view this video.</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        <div className="video-playback-area" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          {videos.map((video) => (
+            <div key={video.id} style={{ display: selectedVideoId === video.id ? 'block' : 'none' }}>
+              {/* Render only if the video ID matches the selectedVideoId */}
+              {((userId === product.user && userType === 'instructor') || userType === 'admin' || isUserSubscribed) ? (
+                <a
+                  href={`/product/${id}/video/${video.id}`}
+                  style={{ color: 'blue', cursor: 'pointer' }}
+                >
+                  {video.title}
+                </a>  
+              ) : (
+                <div className="row">
+                  <div className="col">
+                    <p className="text-danger">You need to subscribe to view this video.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

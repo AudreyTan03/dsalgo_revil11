@@ -1,5 +1,5 @@
 import { CART_ADD_ITEM, CART_CLEAR_ITEMS, CART_REMOVE_ITEM, CART_SAVE_METHOD, CART_UPDATE_SUBSCRIPTION } from '../constants/cartConstants';
-
+import { USER_LOGOUT } from '../constants/userConstants'
 export const cartReducer = (state = { cartItems: [], paymentMethod: '' }, action) => {
     switch (action.type) {
         case CART_ADD_ITEM:
@@ -40,6 +40,11 @@ export const cartReducer = (state = { cartItems: [], paymentMethod: '' }, action
                 cartItems: state.cartItems.map(item =>
                     item.product === id ? { ...item, isSubscribed } : item
                 )
+            };
+            case USER_LOGOUT:
+            return {
+                ...state,
+                cartItems: []
             };
         default:
             return state;

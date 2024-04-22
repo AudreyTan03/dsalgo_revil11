@@ -83,37 +83,60 @@ function ProfileScreen() {
             <StudentNav />
             <Row>
                 {/* Sidebar */}
-                <Col md={3} className="sidebar">
-                    <div className="sidebar-header">
-                        {/* <h3>Profile</h3> */}
-                    </div>
-                    <div className="sbar-menu">
-                        <ul>
-                            <li>
-                                <Link to="/profile">
-                                    <i className="fa fa-home"></i>
-                                    <span>‎ ‎ ‎ Dashboard</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/statistics">
-                                    <i className="fas fa-chart-bar"></i>
-                                    <span>‎ ‎ ‎ Statistics</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/productlist">
-                                    <i className="fa fa-th-list"></i>
-                                    <span>‎ ‎ ‎ Product List</span>
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                    {/* Add scroll to sidebar */}
-                    <div className="sidebar-content">
-                        {/* Content here */}
-                    </div>
-                </Col>
+                {user && user.user_type === 'instructor' && (
+                    <Col md={3} className="sidebar">
+                        <div className="sidebar-header">
+                            {/* <h3>Profile</h3> */}
+                        </div>
+                        <div className="sbar-menu">
+                            <ul>
+                                <li>
+                                    <Link to="/profile">
+                                        <i className="fa fa-home"></i>
+                                        <span>‎ ‎ ‎ Dashboard</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/statistics">
+                                        <i className="fas fa-chart-bar"></i>
+                                        <span>‎ ‎ ‎ Statistics</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/productlist">
+                                        <i className="fa fa-th-list"></i>
+                                        <span>‎ ‎ ‎ Product List</span>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                        {/* Add scroll to sidebar */}
+                        <div className="sidebar-content">
+                            {/* Content here */}
+                        </div>
+                    </Col>
+                )}
+                {user && user.user_type !== 'instructor' && (
+                    <Col md={3} className="sidebar">
+                        <div className="sidebar-header">
+                            {/* <h3>Profile</h3> */}
+                        </div>
+                        <div className="sbar-menu">
+                            <ul>
+                                <li>
+                                    <Link to="/profile">
+                                        <i className="fa fa-home"></i>
+                                        <span>‎ ‎ ‎ Dashboard</span>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                        {/* Add scroll to sidebar */}
+                        <div className="sidebar-content">
+                            {/* Content here */}
+                        </div>
+                    </Col>
+                )}
                 {/* Main Content */}
                 <Col md={9}>
                     <h2>Profile</h2>

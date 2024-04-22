@@ -10,6 +10,7 @@ import {videoListReducer, videoDetailsReducer, videoDetailViewReducer} from './r
 import { userReducer, productReducer, videoReducer, subscriptionReducer } from './reducers/adminReducer';
 import { subscriptionReducers } from './reducers/videoReducer';
 import { postQuestionReducer, postReplyReducer, listQuestionsReducer, listUserProductQuestionsReducer } from './reducers/questionReducer'
+import {updateProductReducer} from './reducers/updateProductReducer';
 
 
 // Define rootReducer using combineReducers
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
     orderPay: orderPayReducer,
     orderListMy: orderListMyReducer,
     Subscription: subscriptionReducers,
+    updateProduct:updateProductReducer,
     // admin shit
     userReducer: userReducer,
     productReducer: productReducer,

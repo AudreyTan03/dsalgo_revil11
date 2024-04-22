@@ -49,6 +49,8 @@ from rest_framework import status
 
 from .models import Review
 from .serializers import ReviewSerializer
+from user.models import Profile
+
 
 @api_view(['DELETE'])
 def delete_review(request, pk):
@@ -92,11 +94,14 @@ def create_review(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProductPatchView(generics.UpdateAPIView):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    def get_object(self):
+        product_id = self.kwargs.get('pk')  # Get the product ID from URL parameters
+        return Product.objects.get(pk=product_id)
+
     def patch(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = self.get_object()  # This gets the product instance based on the ID in the URL
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -285,53 +290,50 @@ def getProduct(request, pk):
     
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user = request.user
     data = request.data
     orderItems = data.get('orderItems', [])
 
+    print("Request received in addOrderItems:", request.data)  # Log the request data
+
     if not orderItems:
         return Response({'detail': 'No Order Items'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Create order
-        with transaction.atomic():  # Use atomic transaction to ensure data consistency
+        with transaction.atomic():
+            order = Order.objects.create(
+                user=user,
+                paymentMethod=data.get('paymentMethod'),
+                totalPrice=data.get('totalPrice', 0)
+            )
             for item in orderItems:
-                product_id = item['product']
-                product = Product.objects.select_for_update().get(_id=product_id)  # Lock the product row for update
-
-                # Create order with associated product
-                order = Order.objects.create(
-                    user=user,
-                    paymentMethod=data.get('paymentMethod'),
-                    taxPrice=data.get('taxPrice', 0),
-                    totalPrice=data.get('totalPrice', 0)
-                )
-                order_item = order.order_items.create(
-                    product=product,
-                    user=product.user,
-                    name=product.name,
-                    qty=item['qty'],
-                    price=item['price'],
-                    image=product.image.url
-                )
-                Subscription.objects.create(user=user, product=product)
-                product.countInStock -= order_item.qty
-                product.save()
-                
-                # Create a Sale instance for this order item
-                Sale.objects.create(user=product.user, order_item=order_item)
-                videos = Video.objects.filter(product=product)
-
-                # Associate each video with the order
-                for video in videos:
-                    OrderVideo.objects.create(order=order, video=video)
-        serializer = OrderSerializer(order)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                try:
+                    product = Product.objects.get(_id=item['product'])
+                    merchant_profile = Profile.objects.get(user=product.user)
+                    order_item = order.order_items.create(
+                        product=product,
+                        merchant_id=merchant_profile.merchant_id,
+                        name=product.name,
+                        user=product.user,
+                        qty=item['qty'],
+                        price=item['price'],
+                        image=product.image.url
+                    )
+                    Sale.objects.create(user=product.user, order_item=order_item)
+                    print("Found product:", product)  # Log the found product
+                except Product.DoesNotExist:
+                    print("Product not found")  # Log if product is not found
+                    return Response({'detail': f'Product with id {item["product"]} does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            
+            serializer = OrderSerializer(order)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception as e:
+        print("Error occurred in addOrderItems:", e)  # Log the error
         return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -388,12 +390,36 @@ def getMyOrders(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateOrderToPaid(request, pk):
-    order = Order.objects.get(_id=pk)
-    order.isPaid = True
-    order.paidAt = datetime.now()
-    order.save()
+    try:
+        with transaction.atomic():
+            order = Order.objects.select_for_update().get(_id=pk)
+            if not order.isPaid:
+                order.isPaid = True
+                order.paidAt = datetime.now()
+                order.save()
 
-    return Response({'detail': 'Order was paid'})
+                # Perform additional actions only if the order was successfully marked as paid
+                for order_item in order.order_items.all():
+                    product = order_item.product
+
+                    # Create sale instance per product
+                    Sale.objects.create(user=product.user, order_item=order_item)
+
+                    product.countInStock -= order_item.qty
+                    product.save()
+
+                # Kada product sa oerder item massusb
+                for order_item in order.order_items.all():
+                    product = order_item.product
+                    Subscription.objects.create(user=order.user, product=product)
+
+                return Response({'detail': 'Order was paid'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'detail': 'Order is already paid'}, status=status.HTTP_400_BAD_REQUEST)
+    except Order.DoesNotExist:
+        return Response({'detail': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])

@@ -41,7 +41,7 @@ import {
 } from '../constants/userConstants';
 
 const instance = axios.create({
-    baseURL: 'https://revill201-ced7a4551b4a.herokuapp.com/',
+    baseURL: 'http://127.0.0.1:8000/',
   });
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
@@ -323,6 +323,8 @@ export const resetUpdateProfile = () => (dispatch) => {
 
 export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('cartItems');
+
     dispatch({ type: USER_LOGOUT });
 };
 

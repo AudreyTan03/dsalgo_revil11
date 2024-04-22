@@ -29,14 +29,22 @@ class ReviewSerializer(serializers.ModelSerializer):
 #     # Add more validations as needed (e.g., file size)
 
 class ProductSerializer(serializers.ModelSerializer):
-    user_name = serializers.SerializerMethodField(read_only=True)
+    username = serializers.SerializerMethodField(readonly=True)
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = '__all'
 
     def get_user_name(self, obj):
         return obj.user.name if obj.user else 'Unknown'
+
+    def update(self, instance, validated_data):
+        image = validated_data.get('image', None)
+        if image == None:
+            # If image field is set to None, remove it from the validated data
+            validated_data.pop('image', None)
+        return super().update(instance, validated_data) 
+
 
     # def validate_image(self, value):
     #     validate_image(value)
@@ -80,7 +88,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = serializers.SerializerMethodField(read_only=True)
     user = serializers.SerializerMethodField(read_only=True)
-    product = serializers.SerializerMethodField(read_only=True)
     # id=serializers.SerializerMethodField(source='_id',read_only=True)
 
     class Meta:
@@ -98,8 +105,9 @@ class OrderSerializer(serializers.ModelSerializer):
         return serializer.data
     
     def get_product(self, obj):
-        product = obj.product
-        serializer = ProductSerializer(product)  # Assuming you have a ProductSerializer
+        products = obj.order_items.all().values('product')  # Get all product IDs associated with the order
+        product_data = Product.objects.filter(pk__in=products)
+        serializer = ProductSerializer(product_data, many=True)  # Serialize product data
         return serializer.data
 
     
@@ -107,5 +115,3 @@ class OrderSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Rating
 #         fields = '__all__'
-
-

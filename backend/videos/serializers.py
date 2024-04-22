@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from user.serializers import *
 
 
 class AdminVideoSerializer(serializers.ModelSerializer):
@@ -50,7 +51,27 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
+    video = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user_details = UserSerializer(source='user', read_only=True)  # Add this field to get the user's details
+
+
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = '_all_'
+
+
+
+class StatisticsQuestionSerializer(serializers.ModelSerializer):
+    video = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user_details = UserSerializer(source='user', read_only=True)  # Add this field to get the user's details
+    video_title = serializers.CharField(source='video.title', read_only=True)
+    product_name = serializers.CharField(source='video.product.name', read_only=True)
+    product_id = serializers.PrimaryKeyRelatedField(source='video.product._id', read_only=True)  # Add product_id field
+
+
+    class Meta:
+        model = Question
+        fields = ['id', 'video', 'user', 'user_details', 'video_title', 'product_name', 'product_id', 'question', 'reply', 'createdAt']
 

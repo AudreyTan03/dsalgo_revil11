@@ -7,7 +7,6 @@ import Loader from "../Components/Loader";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { subscribeToVideo } from "../actions/videoActions";
 
 function OrderScreen() {
   const { id } = useParams();
@@ -20,7 +19,6 @@ function OrderScreen() {
   const { loading: loadingPay, success: successPay, error: errorPay } = orderPay;
   const [sdkReady, setSdkReady] = useState(false);
 
-  const subscribeToVideoAction = useDispatch();
 
   useEffect(() => {
     if (!order || successPay || order._id !== Number(id)) {
@@ -58,16 +56,12 @@ function OrderScreen() {
     const purchaseUnits = order.orderItems.map(item => ({
       amount: {
         currency_code: "USD",
-        value: Number((Number(item.price) + Number(item.taxPrice)).toFixed(2)),
+        value: Number(item.price * item.qty).toFixed(2),
         breakdown: {
           item_total: {
             currency_code: "USD",
-            value: Number((Number(item.price) * item.qty).toFixed(2))
+            value: Number(item.price * item.qty).toFixed(2)
           },
-          tax_total: {
-            currency_code: "USD",
-            value: Number(item.taxPrice).toFixed(2)
-          }
         }
       },
       
@@ -90,6 +84,7 @@ function OrderScreen() {
       purchase_units: purchaseUnits
     });
   };
+
   
   const onApproveHandler = (data, actions) => {
     return actions.order.capture().then(function (details) {
@@ -192,6 +187,7 @@ function OrderScreen() {
                           options={{
                             "client-id":
                               "AaFwY5HmruAjblux5Tv2vQ_WvF--dtwwtz_J6evrVwXs60KUK1HLwcSSwp6hyp9zzaikBeJw_iP9HwZf",
+                              merchantId: order.orderItems.map((item) => item.merchant_id)
                           }}
                         >
                           <PayPalButtons

@@ -12,12 +12,13 @@ const ProtectedRoutes = ({ children }) => {
         return children;
     }
 
+    // Redirect to student page if user is not an instructor
+    if (token && userType !== "instructor") {
+        return <Navigate to="/studenthomescreen" />;
+    }
+
     console.log('Token from local storage:', localStorage.getItem("token.access"));
     console.log('User type:', userType);
-    console.log('Redirecting to:', userType === 'instructor' ? 'instructor page' : 'student page');
-
-    // Go back to the previous page
-    window.history.back();
 
     return null;
 };

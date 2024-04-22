@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { videoDetailView } from '../actions/videoActions';
-import { postQuestion, postReply, listQuestions } from '../actions/questionActions';
+import { postQuestion, postReply, listQuestions } from '../actions/questionAction';
 import Loader from '../Components/Loader'; // Import Loader component
+import './videodetailview.css';
 
-const VideoDetailViewScreen = () => {
+const VideoDetailView = () => {
   const { productId, videoId } = useParams();
   const dispatch = useDispatch();
   const [questionText, setQuestionText] = useState('');
   const [replyText, setReplyText] = useState('');
   const video = useSelector((state) => state.videoDetailViewReducer.video);
   const userInfo = useSelector((state) => state.userLogin.userInfo);
-  const userId = JSON.parse(localStorage.getItem('userInfo')).token.id; 
+  const userId = JSON.parse(localStorage.getItem('userInfo')).token.id;
   const questionsState = useSelector((state) => state.listQuestionsReducer);
 
   useEffect(() => {
@@ -33,13 +34,11 @@ const VideoDetailViewScreen = () => {
     dispatch(postQuestion(productId, videoId, { question: questionText }));
     setQuestionText('');
     window.location.reload(); // Reload the page after submitting a question
-
   };
 
   const handleReplySubmit = (questionId, replyText) => {
     dispatch(postReply(productId, videoId, questionId, { reply: replyText }));
     window.location.reload(); // Reload the page after submitting a question
-
   };
 
   return (
@@ -50,7 +49,7 @@ const VideoDetailViewScreen = () => {
           <p>Title: {video.title}</p>
           <p>Description: {video.description}</p>
           <p>Product User: {video.product_user}</p>
-          <video controls autoPlay style={{ width: '50%' }}>
+          <video controls autoPlay >
             <source src={video.video_file} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
@@ -58,7 +57,7 @@ const VideoDetailViewScreen = () => {
       ) : (
         <Loader /> // Replace LoadingSpinner with Loader component
       )}
-  
+
       {/* Conditionally render the submit question button */}
       {userId !== video?.product_user && (
         <div>
@@ -70,7 +69,7 @@ const VideoDetailViewScreen = () => {
           />
         </div>
       )}
-  
+
       <h2>Questions</h2>
       {questionsState.loading ? (
         <Loader /> // Replace LoadingSpinner with Loader component
@@ -92,14 +91,18 @@ const VideoDetailViewScreen = () => {
                 {console.log('Comparison result:', userInfo.id === video?.product_user)}
                 {video && userId && video.product_user && userId === video.product_user ? (
                   <div>
-                    <textarea
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Enter your reply..."
-                    />
-                    <button onClick={() => handleReplySubmit(question.id, replyText)}>
-                      Submit Reply
-                    </button>
+                    {!question.reply && ( // Only render if there is no reply
+                      <>
+                        <textarea
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          placeholder="Enter your reply..."
+                        />
+                        <button onClick={() => handleReplySubmit(question.id, replyText)}>
+                          Submit Reply
+                        </button>
+                      </>
+                    )}
                   </div>
                 ) : null}
                 {/* Display replies */}
@@ -111,8 +114,6 @@ const VideoDetailViewScreen = () => {
       )}
     </div>
   );
-  
-}
+};
 
-export default VideoDetailViewScreen;
-
+export default VideoDetailView;

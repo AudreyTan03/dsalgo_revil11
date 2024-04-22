@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getVideoDetails } from '../actions/videoActions';
 import Message from '../Components/Message';
 import Loader from '../Components/Loader';
+import './videodetailview.css';
 
 const VideoDetailScreen = ({ videoId }) => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const VideoDetailScreen = ({ videoId }) => {
           <h1>{video.title}</h1>
           {/* Check subscription status before rendering the video */}
           {isSubscribed ? (
-            <video controls autoPlay style={{ width: '50%' }}>
+            <video controls autoPlay style={{ width: '10%' }}>
               <source src={video.video_file} type="video/mp4" />
               Your browser does not support the video tag.
             </video>

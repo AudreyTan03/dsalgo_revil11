@@ -1,33 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProduct } from '../actions/editActions'; // Import the updateProduct action
 
 const EditProduct = () => {
-  const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [editProductId, setEditProductId] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+  });
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
-  const userId = JSON.parse(localStorage.getItem('userInfo')).token.id; // Define userId here
+  const { id } = useParams(); // Get the product ID from the URL
+  const navigate = useNavigate(); // Initialize the navigate function
+  const dispatch = useDispatch(); // Initialize the dispatch function
 
-  useEffect(() => {
-    // Fetch all products
-    axios.get('https://revill201-ced7a4551b4a.herokuapp.com/api/products/')
-      .then(response => {
-        const userProducts = response.data.filter(product => product.user === userId);
-        setProducts(userProducts); // Set state with filtered products
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-      });
-  }, [userId]);
-  
-
-  const handleSelectProduct = productId => {
-    setSelectedProduct(null);
-    setEditProductId(productId);
-    const product = products.find(product => product._id === productId);
-    setSelectedProduct(product);
-  };
+  // Redux state
+  const { loading, error } = useSelector(state => state.updateProduct);
 
   const handleFileChange = (e, fileType) => {
     const file = e.target.files[0];
@@ -39,77 +28,64 @@ const EditProduct = () => {
   };
 
   const handleChange = e => {
-    setSelectedProduct({
-      ...selectedProduct,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-
-    try {
-      let formData = new FormData();
-      formData.append('name', selectedProduct.name);
-      formData.append('description', selectedProduct.description);
-      formData.append('price', selectedProduct.price);
-      if (imageFile) {
-        formData.append('image', imageFile);
-      }
-      if (videoFile) {
-        formData.append('video', videoFile);
-      }
-
-      const response = await axios.patch(`http://127.0.0.1:8000/api/products/${selectedProduct._id}/edit/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log('Product updated:', response.data);
-      // Optionally, you can redirect or show a success message here
-
-    } catch (error) {
-      console.error('Error updating product:', error);
+  
+    // Create form data
+    const updatedFormData = new FormData();
+    updatedFormData.append('name', formData.name);
+    updatedFormData.append('description', formData.description);
+    updatedFormData.append('price', formData.price);
+    if (imageFile !== null) {
+      updatedFormData.append('image', imageFile);
+    }
+    if (videoFile !== null) {
+      updatedFormData.append('video', videoFile);
+    }
+  
+    // Dispatch updateProduct action
+    dispatch(updateProduct(id, updatedFormData));
+  
+    // Redirect to the previous page if update is successful
+    if (!loading && !error) {
+      navigate(-1);
     }
   };
 
   return (
     <div>
       <h2>Edit Product</h2>
-      <ul>
-        {products.map(product => (
-          <li key={product._id}>
-            <input type="checkbox" checked={editProductId === product._id} onChange={() => handleSelectProduct(product._id)} />
-            {product.name} - Last Edited: {product.editedAt}
-          </li>
-        ))}
-      </ul>
-      {selectedProduct && (
-        <form onSubmit={handleSubmit}>
-          <label>
-            Name:
-            <input type="text" name="name" value={selectedProduct.name} onChange={handleChange} />
-          </label>
-          <label>
-            Description:
-            <textarea name="description" value={selectedProduct.description} onChange={handleChange} />
-          </label>
-          <label>
-            Price:
-            <input type="number" name="price" value={selectedProduct.price} onChange={handleChange} />
-          </label>
-          <label>
-            Image:
-            <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'image')} />
-          </label>
-          <label>
-            Video:
-            <input type="file" accept="video/*" onChange={e => handleFileChange(e, 'video')} />
-          </label>
-          <button type="submit">Update Product</button>
-        </form>
-      )}
+      <form onSubmit={handleSubmit}>
+        <label>
+          Name:
+          <input type="text" name="name" value={formData.name} onChange={handleChange} />
+        </label>
+        <label>
+          Description:
+          <textarea name="description" value={formData.description} onChange={handleChange} />
+        </label>
+        <label>
+          Price:
+          <input type="number" name="price" value={formData.price} onChange={handleChange} />
+        </label>
+        <label>
+          Image:
+          <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'image')} />
+        </label>
+        <label>
+          Preview Video:
+          <input type="file" accept="video/*" onChange={e => handleFileChange(e, 'video')} />
+        </label>
+        <button type="submit" disabled={loading}>Update Product</button>
+        {loading && <p>Loading...</p>}
+        {error && <p>Error: {error}</p>}
+      </form>
     </div>
   );
 };

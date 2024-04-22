@@ -41,7 +41,7 @@ const VideoDetailViewScreen = () => { // Detailview sa card shit
       <h1>Video Details</h1>
       <p>Title: {video.title}</p>
       <p>Description: {video.description}</p>
-      <video controls autoPlay style={{ width: '50%' }}>
+      <video controls autoPlay style={{ width: '20%' }}>
         <source src={video.video_file} type="video/mp4" />
         Your browser does not support the video tag.
       </video>

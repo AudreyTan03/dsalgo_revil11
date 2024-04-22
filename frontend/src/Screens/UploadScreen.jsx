@@ -73,7 +73,7 @@ const UploadScreen = () => {
 
     // If uploadSuccess is true, navigate to '/products'
     if (uploadSuccess) {
-        return <Navigate to="/productlist" />;
+        return <Navigate to="/products" />;
     }
 
     return (

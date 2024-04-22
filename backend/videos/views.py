@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework import status
 from rest_framework.response import Response
 from .models import *
-from .serializers import DeleteVideoSerializer, QuestionSerializer, VideoSerializer, VideoDetailSerializer, SubscriptionSerializer, UploadVideoSerializer
+from .serializers import DeleteVideoSerializer, QuestionSerializer, StatisticsQuestionSerializer, VideoSerializer, VideoDetailSerializer, SubscriptionSerializer, UploadVideoSerializer
 from base.models import Order, Product
 
 from rest_framework.decorators import api_view
@@ -125,8 +125,9 @@ def orderVideos(request, order_id):
 
 
 @api_view(['GET'])
-def listQuestionForVid(request, video_id):
-    video = get_object_or_404(Video, pk=video_id)
+def listQuestionForVid(request, product_id, video_id):
+    product = get_object_or_404(Product, pk=product_id)
+    video = get_object_or_404(Video, pk=video_id, product=product)
     questions = Question.objects.filter(video=video)
     serializer = QuestionSerializer(questions, many=True)
     return Response(serializer.data)
@@ -135,9 +136,11 @@ def listQuestionForVid(request, video_id):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def postQuestion(request, video_id):
-    video = get_object_or_404(Video, pk=video_id)
-    serializer = QuestionSerializer(data=request.data)
+def postQuestion(request, video_id, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    video = get_object_or_404(Video, pk=video_id, product=product)
+
+    serializer = QuestionSerializer(data={**request.data, 'video': video.id, 'user': request.user.id})
     if serializer.is_valid():
         serializer.save(video=video, user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -146,8 +149,8 @@ def postQuestion(request, video_id):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def postReply(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+def postReply(request, product_id, video_id, question_id):
+    question = get_object_or_404(Question, pk=question_id, video__product_id=product_id, video_id=video_id)
     if question.video.product.user != request.user:
         return Response({'error': 'You are not authorized to reply to this question'}, status=status.HTTP_403_FORBIDDEN)
     serializer = QuestionSerializer(question, data=request.data, partial=True)
@@ -156,4 +159,11 @@ def postReply(request, question_id):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@api_view(['GET'])
+def userProductQuestions(request):
+    user = request.user
+    user_products = Product.objects.filter(user=user)
+    videos = Video.objects.filter(product__in=user_products)
+    questions = Question.objects.filter(video__in=videos)
+    serializer = StatisticsQuestionSerializer(questions, many=True)
+    return Response(serializer.data)

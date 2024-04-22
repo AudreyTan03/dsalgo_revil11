@@ -2,7 +2,7 @@ import axios from 'axios';
 import { CART_ADD_ITEM, CART_REMOVE_ITEM } from '../constants/cartConstants';
 
 const instance = axios.create({
-    baseURL: 'https://revill201-ced7a4551b4a.herokuapp.com/', // Replace this with your API base URL
+    baseURL: 'http://127.0.0.1:8000/', // Replace this with your API base URL
  });
 
 // Action creator to add an item to the cart

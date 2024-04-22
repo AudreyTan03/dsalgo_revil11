@@ -104,25 +104,25 @@ class Review(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='orders')
+    # product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='orders')
     paymentMethod = models.CharField(max_length=200, null=True, blank=True)
-    taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    # taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     # shippingPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)  -> tangaling muna for now
     totalPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     isPaid = models.BooleanField(default=False)
     paidAt = models.DateTimeField(null=True, blank=True)
-    isDelivered = models.BooleanField(default=False)
-    deliveredAt = models.DateTimeField(null=True, blank=True)
+    # isDelivered = models.BooleanField(default=False)
+    # deliveredAt = models.DateTimeField(null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True)
 
     
-    def save(self, *args, **kwargs):
-        with transaction.atomic():
-            super().save(*args, **kwargs)  # Save the order first
-            if self.isPaid and self.product is not None:  # Check if the product exists
-                self.product.isPaid = True
-                self.product.save()
+    # def save(self, *args, **kwargs):
+    #     with transaction.atomic():
+    #         super().save(*args, **kwargs)  # Save the order first
+    #         if self.isPaid and self.product is not None:  # Check if the product exists
+    #             self.product.isPaid = True
+    #             self.product.save()
 
     def __str__(self):
         return str(self.createdAt)
@@ -139,7 +139,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)  
     _id = models.AutoField(primary_key=True)
     merchant_id = models.CharField(max_length=100, null=True)  
-    taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    # taxPrice = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"OrderItem - {self.name}"

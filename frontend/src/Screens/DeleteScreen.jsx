@@ -37,7 +37,7 @@ const DeleteScreen = () => {
     try {
       setShowConfirmationModal(false);
       for (const productId of selectedProducts) {
-        await axios.delete(`https://revill201-ced7a4551b4a.herokuapp.com/api/products/${productId}/delete/`);
+        await axios.delete(`http://127.0.0.1:8000/api/products/${productId}/delete/`);
       }
       setProducts(products.filter((product) => !selectedProducts.includes(product._id)));
       setSelectedProducts([]);

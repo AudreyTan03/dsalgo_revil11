@@ -6,35 +6,21 @@ import {
 } from '../constants/editConstants';
 
 const instance = axios.create({
-    baseURL: 'https://revill201-ced7a4551b4a.herokuapp.com/', // Replace this with your API base URL
+    baseURL: 'http://127.0.0.1:8000/', // Replace this with your API base URL
   });
 
-export const updateProductRequest = () => ({
-    type: UPDATE_PRODUCT_REQUEST
-});
-
-export const updateProductSuccess = (product) => ({
-    type: UPDATE_PRODUCT_SUCCESS,
-    payload: product
-});
-
-export const updateProductFailure = (error) => ({
-    type: UPDATE_PRODUCT_FAILURE,
-    payload: error
-});
-
-export const updateProduct = (productId, formData) => {
+  export const updateProduct = (productId, formData) => {
     return async (dispatch) => {
-        dispatch(updateProductRequest());
+        dispatch({ type: UPDATE_PRODUCT_REQUEST });
         try {
-            const response = await instance.put(`api/products/${productId}/edit/`, formData, {
+            const response = await instance.patch(`api/products/${productId}/edit/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            dispatch(updateProductSuccess(response.data));
+            dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: response.data });
         } catch (error) {
-            dispatch(updateProductFailure(error.message));
+            dispatch({ type: UPDATE_PRODUCT_FAILURE, payload: error.message });
         }
     };
 };
