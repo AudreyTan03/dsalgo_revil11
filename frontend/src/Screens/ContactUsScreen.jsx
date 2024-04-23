@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const instance = axios.create({
-    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Set the base URL without "https"
+    baseURL: 'https://revil24-15f5d0b1bcb1.herokuapp.com/', // Set the base URL without "https"
 });
 
 const ContactForm = () => {

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/userActions';
 import './Navbar.css';
-import { BsSearch } from "react-icons/bs";
 
 function StudentNav({ handleSearch, searchTerm, categories, selectedCategory, onCategoryChange }) {
   const [click, setClick] = useState(false);
@@ -52,14 +51,7 @@ function StudentNav({ handleSearch, searchTerm, categories, selectedCategory, on
             {logoText}
           </Link>
           <div style={{marginLeft:'1rem'}} className='search-container'>
-            <input
-              type='text'
-              placeholder='Search...'
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className='search-input'
-            />
-            <BsSearch className='search-icon' />
+            
           </div>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />

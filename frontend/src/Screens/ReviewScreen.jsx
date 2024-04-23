@@ -16,13 +16,13 @@ const ReviewScreen = () => {
 
 
   const instance = axios.create({
-    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/', // Replace this with your API base URL
+    baseURL: 'https://revil24-15f5d0b1bcb1.herokuapp.com/', // Replace this with your API base URL
   });
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/reviews/?product=${id}`);
+        const response = await fetch(`https://revil24-15f5d0b1bcb1.herokuapp.com/api/reviews/?product=${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch reviews. Status: ${response.status}`);
         }
@@ -47,7 +47,7 @@ const ReviewScreen = () => {
     try {
       setSubmitting(true);
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const response = await instance.post('https://revilll101-27f25f7438c4.herokuapp.com/api/post-reviews/', {
+      const response = await instance.post('https://revil24-15f5d0b1bcb1.herokuapp.com/api/post-reviews/', {
         product: parseInt(id),
         rating,
         comment,

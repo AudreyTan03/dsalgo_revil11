@@ -39,14 +39,8 @@ function Navbar({ handleSearch, searchTerm, categories, selectedCategory, onCate
             Revil
           </Link>
           <div className='search-container'>
-            <input
-              type='text'
-              placeholder='Search...'
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className='search-input'
-            />
-            <BsSearch className='search-icon' />
+          
+           
           </div>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />

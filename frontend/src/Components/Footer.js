@@ -25,7 +25,7 @@ const Footer = () => {
       }}>
         <Link to="/contact" style={{ color: 'white', textDecoration: 'none' }}>Contact Us</Link>
         <Link to="/about" style={{ color: 'white', textDecoration: 'none' }}>About Us</Link>
-        <p>Privacy and Policy</p>
+        {/* <p>Privacy and Policy</p> */}
       </div>
     </footer>
   );

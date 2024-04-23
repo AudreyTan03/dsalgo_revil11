@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "proxy": "https://revilll101-27f25f7438c4.herokuapp.com/",
+  "proxy": "https://revil24-15f5d0b1bcb1.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -10,7 +10,7 @@ const TeamSection = () => {
 
       <div className="team-content">
         <div className="box">
-          <img className="team-image" src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t39.30808-6/280335042_5237223923060030_2893206534581469479_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeF6Jma2aJaXVyqTxWS8ME9M9M341iWN9gP0zfjWJY32AxrEGMG2xqhcIu0F0We6tNcRhURzJr2OiKr5le7cfoiz&_nc_ohc=p-QjKNs5f0cAb4J2f9m&_nc_ht=scontent.fmnl4-1.fna&oh=00_AfAeg19Ff9MrCvzhAG42TEk9NJeaVMr1Zzi_jJBtRMsDDw&oe=66274491" alt="Team Member 1" />
+          <img className="team-image" src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t39.30808-6/339926183_895019308465630_328920798800034617_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFkgBVh9IAFxLJPzNYFWVq-eUsGjJuwE_N5SwaMm7AT8w6ib1fa8Br_Ww4101Nb9ON8eCcnZ1InGKDNR7x5g6dM&_nc_ohc=rvgQQF07PmcAb41P8T8&_nc_ht=scontent.fmnl4-1.fna&oh=00_AfBq6RXCaAlL6-llgrDZcsAI-5dSZzDBcCgslb8sqv3oaQ&oe=662DB466" alt="Team Member 1" />
           <h3>Kian</h3>
           {/* <h5>Artist</h5> */}
           <div className="icons">

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadProduct } from '../actions/uploadAction';
 import { Navigate } from 'react-router-dom'; // Import Navigate component
 import './UploadScreen.css';
-
 
 const UploadScreen = () => {
     const dispatch = useDispatch();
@@ -18,6 +17,18 @@ const UploadScreen = () => {
     const [previewVideoFile, setPreviewVideoFile] = useState(null);
     const [uploadedVideos, setUploadedVideos] = useState([]);
     const [uploadSuccess, setUploadSuccess] = useState(false); // State to track upload success
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const response = await fetch('https://revil24-15f5d0b1bcb1.herokuapp.com/api/categories/');
+            const data = await response.json();
+            setCategories(data);
+        };
+
+        fetchCategories();
+    }, []);
 
     const handleInputChange = (e, setState) => {
         const file = e.target.files[0];
@@ -42,6 +53,7 @@ const UploadScreen = () => {
         formData.append('image', imageFile);
         formData.append('description', description);
         formData.append('price', price);
+        formData.append('category', selectedCategory);
         
         if (previewVideoFile) {
             formData.append('preview_video', previewVideoFile);
@@ -72,8 +84,8 @@ const UploadScreen = () => {
     };
 
     // If uploadSuccess is true, navigate to '/products'
-    if (uploadSuccess) {
-        return <Navigate to="/products" />;
+    if (uploadSuccess) {    
+        return <Navigate to="/productlist" />;
     }
 
     return (
@@ -117,7 +129,17 @@ const UploadScreen = () => {
                     />
                     {price < 0 && <p className="error-message">Price cannot be negative</p>}
                 </div>
-                
+                <div>
+                    <label htmlFor="category">Category:</label>
+                    <select id="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} required>
+                        <option value="">Select a category</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 <div>
                     <label htmlFor="preview_video">Preview Video:</label>
                     <input type="file" id="preview_video" onChange={handlePreviewVideoChange} accept=".mp4" />

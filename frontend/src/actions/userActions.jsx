@@ -41,7 +41,7 @@ import {
 } from '../constants/userConstants';
 
 const instance = axios.create({
-    baseURL: 'https://revilll101-27f25f7438c4.herokuapp.com/',
+    baseURL: 'https://revil24-15f5d0b1bcb1.herokuapp.com/',
   });
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
@@ -159,7 +159,7 @@ export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
 //         },
 //       };
   
-//       const { data } = await axios.post('https://revilll101-27f25f7438c4.herokuapp.com/api/resend-otp/', { user_id, otp_id }, config);
+//       const { data } = await axios.post('https://revil24-15f5d0b1bcb1.herokuapp.com/api/resend-otp/', { user_id, otp_id }, config);
   
 //       dispatch({
 //         type: USER_RESEND_OTP_SUCCESS,
