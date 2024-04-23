@@ -10,7 +10,7 @@ import {videoListReducer, videoDetailsReducer, videoDetailViewReducer} from './r
 import { userReducer, productReducer, videoReducer, subscriptionReducer } from './reducers/adminReducer';
 import { subscriptionReducers } from './reducers/videoReducer';
 import { postQuestionReducer, postReplyReducer, listQuestionsReducer, listUserProductQuestionsReducer } from './reducers/questionReducer'
-import {updateProductReducer} from './reducers/updateProductReducer';
+import updateProductReducer from './reducers/updateProductReducer';
 
 
 // Define rootReducer using combineReducers

@@ -29,11 +29,30 @@ class ReviewSerializer(serializers.ModelSerializer):
 #     # Add more validations as needed (e.g., file size)
 
 class ProductSerializer(serializers.ModelSerializer):
-    username = serializers.SerializerMethodField(readonly=True)
+    user_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Product
-        fields = '__all'
+        fields = '__all__'
+
+    def get_user_name(self, obj):
+        return obj.user.name if obj.user else 'Unknown'
+
+    # def validate_image(self, value):
+    #     validate_image(value)
+    #     return value
+    
+    # def validate_preview_video(self, value):
+    #     validate_video(value)
+    #     return value
+
+
+class EditProductSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = '__all__'
 
     def get_user_name(self, obj):
         return obj.user.name if obj.user else 'Unknown'
@@ -43,7 +62,7 @@ class ProductSerializer(serializers.ModelSerializer):
         if image == None:
             # If image field is set to None, remove it from the validated data
             validated_data.pop('image', None)
-        return super().update(instance, validated_data) 
+        return super().update(instance, validated_data)
 
 
     # def validate_image(self, value):

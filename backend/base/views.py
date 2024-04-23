@@ -94,7 +94,7 @@ def create_review(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProductPatchView(generics.UpdateAPIView):
-    serializer_class = ProductSerializer
+    serializer_class = EditProductSerializer
 
     def get_object(self):
         product_id = self.kwargs.get('pk')  # Get the product ID from URL parameters

@@ -69,6 +69,9 @@ const ProductScreen = () => {
     navigate(`/edit/${id}`, { state: { productId: id } }); // Pass the product ID
   };
   
+  const handleNavigateToUserProfile = (userId) => {
+    navigate(`/profile/${userId}`);
+  };
 
   const handleAddToCart = () => {
     dispatch(addToCart(id, 1));
@@ -149,7 +152,14 @@ const ProductScreen = () => {
       <div className="gray-section">
         <h1>{product.name}</h1>
         <p>{product.description}</p>
-        <p>Uploaded by: {product.user_name}</p>
+        <p>Uploaded by: 
+            <span 
+              style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              onClick={() => handleNavigateToUserProfile(product.user)}
+            >
+              {product.user_name}
+            </span>
+        </p>
         <p>Created at: {product.createdAt}</p>
         <p>Edited at: {product.editedAt}</p>
       </div>

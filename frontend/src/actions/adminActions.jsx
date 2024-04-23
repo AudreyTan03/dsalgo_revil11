@@ -121,7 +121,7 @@ export const deleteUser = (userId) => {
                 },
             };
             dispatch({ type: DELETE_USER_REQUEST });
-            await instance.delete(`/api/admin/users/${userId}/`, config);
+            await instance.delete(`api/admin/users/${userId}/`, config);
             dispatch({ type: DELETE_USER_SUCCESS, payload: userId });
         } catch (error) {
             dispatch({ type: DELETE_USER_FAIL, payload: error.message });
@@ -147,7 +147,7 @@ export const getProducts = () => {
                 },
             };
             dispatch({ type: GET_PRODUCTS_REQUEST });
-            const response = await axios.get('/api/admin/products/', config);
+            const response = await axios.get('api/admin/products/', config);
             console.log("Response data:", response.data); // Log the response data
             dispatch({ type: GET_PRODUCTS_SUCCESS, payload: response.data });
         } catch (error) {
@@ -166,7 +166,7 @@ export const getProductDetails = (productId) => {
           },
         };
         dispatch({ type: GET_PRODUCT_DETAILS_REQUEST });
-        const response = await axios.get(`/api/admin/products/${productId}/`, config);
+        const response = await axios.get(`api/admin/products/${productId}/`, config);
         const productDetails = { ...response.data, user_name: response.data.user_name };
 
         dispatch({ type: GET_PRODUCT_DETAILS_SUCCESS, payload: productDetails });
@@ -188,7 +188,7 @@ export const editProduct = (productId, productData) => {
                 },
             };
             dispatch({ type: EDIT_PRODUCT_REQUEST });
-            const response = await axios.put(`/api/admin/products/${productId}/`, productData, config);
+            const response = await axios.put(`api/admin/products/${productId}/`, productData, config);
             console.log("Response data:", response.data); // Log the response data
             dispatch({ type: EDIT_PRODUCT_SUCCESS, payload: { productId, productData: response.data } });
         } catch (error) {
@@ -207,7 +207,7 @@ export const deleteProduct = (productId) => {
                 },
             };
             dispatch({ type: DELETE_PRODUCT_REQUEST });
-            await axios.delete(`/api/admin/products/${productId}/`, config);
+            await axios.delete(`api/admin/products/${productId}/`, config);
             dispatch({ type: DELETE_PRODUCT_SUCCESS, payload: productId });
         } catch (error) {
             dispatch({ type: DELETE_PRODUCT_FAIL, payload: error.message });
@@ -233,7 +233,7 @@ export const getVideos = () => {
                 },
             };
             dispatch({ type: GET_VIDEOS_REQUEST });
-            const response = await axios.get('/api/admin/videos/', config);
+            const response = await axios.get('api/admin/videos/', config);
             dispatch({ type: GET_VIDEOS_SUCCESS, payload: response.data });
         } catch (error) {
             dispatch({ type: GET_VIDEOS_FAIL, payload: error.message });
@@ -254,7 +254,7 @@ export const getVideoDetails = (videoId) => {
             console.log('Request Headers:', config.headers);
 
             dispatch({ type: GET_VIDEO_DETAILS_REQUEST });
-            const response = await axios.get(`/api/admin/videos/${videoId}/`, config);
+            const response = await axios.get(`api/admin/videos/${videoId}/`, config);
             dispatch({ type: GET_VIDEO_DETAILS_SUCCESS, payload: response.data });
         } catch (error) {
             dispatch({ type: GET_VIDEO_DETAILS_FAIL, payload: error.message });
@@ -273,7 +273,7 @@ export const deleteVideo = (videoId) => {
                 },
             };
             dispatch({ type: DELETE_VIDEO_REQUEST });
-            await axios.delete(`/api/admin/videos/${videoId}/`, config);
+            await axios.delete(`api/admin/videos/${videoId}/`, config);
             dispatch({ type: DELETE_VIDEO_SUCCESS, payload: videoId });
         } catch (error) {
             dispatch({ type: DELETE_VIDEO_FAIL, payload: error.message });
@@ -296,7 +296,7 @@ export const getSubscriptions = () => {
                 },
             };
             dispatch({ type: GET_SUBSCRIPTIONS_REQUEST });
-            const response = await axios.get('/api/admin/subscriptions/', config);
+            const response = await axios.get('api/admin/subscriptions/', config);
             dispatch({ type: GET_SUBSCRIPTIONS_SUCCESS, payload: response.data });
         } catch (error) {
             dispatch({ type: GET_SUBSCRIPTIONS_FAIL, payload: error.message });
@@ -315,7 +315,7 @@ export const deleteSubscription = (subscriptionId) => {
                 },
             };
             dispatch({ type: DELETE_SUBSCRIPTION_REQUEST });
-            await axios.delete(`/api/admin/subscriptions/${subscriptionId}/`, config);
+            await axios.delete(`api/admin/subscriptions/${subscriptionId}/`, config);
             dispatch({ type: DELETE_SUBSCRIPTION_SUCCESS, payload: subscriptionId });
         } catch (error) {
             dispatch({ type: DELETE_SUBSCRIPTION_FAIL, payload: error.message });
