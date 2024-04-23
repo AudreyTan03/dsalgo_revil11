@@ -31,7 +31,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import BasePermission
 from rest_framework.permissions import IsAuthenticated
 from .models import Product
-from .serializers import ProductSerializer, UploadProductSerializer
+from .serializers import ProductSerializer, UploadProductSerializer, OrderSerializer
 from datetime import datetime
 from django.db.models import Count, Sum
 from videos.serializers import UploadVideoSerializer
@@ -40,7 +40,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Order
-from .serializers import OrderSerializer
+# from .serializers import OrderSerializer
+from .serializers import UserSerializer
 from videos.models import OrderVideo, Subscription, Video
 
 from rest_framework.decorators import api_view

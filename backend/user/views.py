@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import DestroyAPIView
 # from backend.user.models import User
 from user.serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserPasswordResetSerializer, UserRegistrationSerializers, UserLoginSerializer, UserProfileSerializer
 from django.contrib.auth import authenticate
@@ -323,4 +324,9 @@ def reply_to_message(request, message_id):
     # Serialize the updated message and return it in the response
     serializer = ContactMessageSerializer(message)
     return Response(serializer.data)
+
+
+class ContactMessageDeleteAPIView(DestroyAPIView):
+    queryset = ContactMessage.objects.all()
+    serializer_class = ContactMessageSerializer
 

@@ -20,6 +20,10 @@ function PaymentScreen() {
     dispatch(savePaymentMethod(paymentMethod));
     navigate("/placeorder");
   };
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   return (
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
@@ -39,6 +43,7 @@ function PaymentScreen() {
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">Continue</Button>
+        <button onClick={handleGoBack}>Go Back</button>
       </Form>
     </FormContainer>
   );

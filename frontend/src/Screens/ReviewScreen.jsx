@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ReviewScreen.css'; // Import the CSS file
 
@@ -9,9 +9,15 @@ const ReviewScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [rating, setRating] = useState(0);
+  const navigate = useNavigate();
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+
+
+  const instance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/', // Replace this with your API base URL
+  });
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -33,11 +39,15 @@ const ReviewScreen = () => {
     fetchReviews();
   }, [id]);
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   const submitReview = async () => {
     try {
       setSubmitting(true);
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const response = await axios.post('http://127.0.0.1:8000/api/post-reviews/', {
+      const response = await instance.post('http://127.0.0.1:8000/api/post-reviews/', {
         product: parseInt(id),
         rating,
         comment,
@@ -69,8 +79,8 @@ const ReviewScreen = () => {
       {productReviews.length === 0 && <p>No reviews found for this product.</p>}
       {productReviews.length > 0 && (
         <ul>
-          {productReviews.map((review) => (
-            <li key={review.id}>
+          {productReviews.map((review, index) => (
+            <li key={index}>
               <p>Rating: {Array.from({ length: 5 }, (_, index) => (
                 <span className="star" key={index}>{index < review.rating ? '★' : '☆'}</span>
               ))}</p>
@@ -99,6 +109,7 @@ const ReviewScreen = () => {
       </label>
       {submitError && <div>Error submitting review: {submitError}</div>}
       <button onClick={submitReview} disabled={submitting || rating === 0 || comment.trim() === ''}>Submit Review</button>
+      <button onClick={handleGoBack}>Go Back</button>
     </div>
   );
 };

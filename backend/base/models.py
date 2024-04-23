@@ -55,28 +55,14 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name or 'Unnamed Product'
-    
+
+
     def get_videos(self):
         return self.videos.all()
 
 
-    def delete_files(self):
-        # Delete the image file
-        if self.image:
-            storage, path = self.image.storage, self.image.path
-            storage.delete(path)
-
-        # Delete the video file
-        if self.preview_video:
-            storage, path = self.preview_video.storage, self.preview_video.path
-            storage.delete(path)
-
-    def delete(self, *args, **kwargs):
-        # Delete associated files
-        self.delete_files()
-
-        # Call the parent class's delete method to delete the Product instance
-        super(Product, self).delete(*args, **kwargs)
+    class Meta:
+        verbose_name_plural = 'Products'
 
 from django.db.models import Avg
 

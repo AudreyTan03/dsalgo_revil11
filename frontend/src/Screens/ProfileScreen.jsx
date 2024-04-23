@@ -30,6 +30,8 @@ function ProfileScreen() {
 
     const location = useLocation();
 
+    
+
     useEffect(() => {
         dispatch(getUserDetails());
         setShowProfileDetails(location.pathname === '/profile');
@@ -53,7 +55,7 @@ function ProfileScreen() {
         formData.append('email', updatedEmail);
         formData.append('bio', updatedBio);
         if (profilePicture) {
-            formData.append('profilePicture', profilePicture);
+            formData.append('image', profilePicture);
         }
         dispatch(updateUserProfile(formData));
         setIsEditing(false);

@@ -13,6 +13,7 @@ urlpatterns = [
     path('profile/', views.userProfile, name='profile'),
     path('profile/update/', updateProfile, name='update_profile'),
     path('update-theme/', views.updateTheme, name='update_theme_preference'), 
+    
     # path('users/', UserProfileView.as_view(), name='users-profiles'),
     path('users/register/', views.registerUser, name='register'),
     path('users/changepassword/', UserChangePasswordView.as_view(), name='changepassword'), # -> URL WAS CHANGED FROM changepass to users/changepass
@@ -27,7 +28,7 @@ urlpatterns = [
     path('admin/products/', adminpanelProducts.as_view(), name='admin_panel_products'),
     path('admin/products/<int:product_id>/', adminpanelProducts.as_view(), name='admin_panel_product_detail'),
     path('admin/products/<int:product_id>/delete/', adminpanelProducts.as_view(), name='admin_delete_product'),
-
+    path('delete-message/<int:pk>/', ContactMessageDeleteAPIView.as_view(), name='delete_contact_message'),
 
     path('admin/videos/', adminpanelVideos.as_view(), name='admin_panel_videos'),
     path('admin/videos/<int:video_id>/', adminpanelVideos.as_view(), name='admin_panel_video_detail'),

@@ -19,6 +19,9 @@ function OrderScreen() {
   const { loading: loadingPay, success: successPay, error: errorPay } = orderPay;
   const [sdkReady, setSdkReady] = useState(false);
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (!order || successPay || order._id !== Number(id)) {
@@ -145,11 +148,13 @@ function OrderScreen() {
                                 {item.name}
                               </Link>
                             </Col>
+                            
                             <Col md={4}>
                               {item.qty} X ${item.price} = $
                               {(item.qty * item.price).toFixed(2)}
                             </Col>
                           </Row>
+                          <button onClick={handleGoBack}>Go Back</button>
                         </ListGroup.Item>
                       ))}
                     </ListGroup>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, deleteProduct } from '../actions/adminActions';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,6 +20,18 @@ const ProductList = () => {
     }
   };
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(5);
+
+  // Get current products
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  // Change page
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
   return (
     <div className="AdminProduct-list-container">
       <div className="AdminProduct-list-header">
@@ -29,7 +41,7 @@ const ProductList = () => {
         <div className="AdminProduct-header-item">Delete</div>
       </div>
       <ul className="AdminProduct-list">
-        {products.map(product => (
+        {currentProducts.map(product => (
           <li key={product._id} className="AdminProduct-list-item">
             <span>{product._id}</span>
             <span>
@@ -40,6 +52,20 @@ const ProductList = () => {
           </li>
         ))}
       </ul>
+      {/* Pagination */}
+      <div className="pagination">
+        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        {Array.from({ length: Math.ceil(products.length / productsPerPage) }, (_, index) => (
+          <button key={index} onClick={() => paginate(index + 1)} className={currentPage === index + 1 ? 'active' : ''}>
+            {index + 1}
+          </button>
+        ))}
+        <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(products.length / productsPerPage)}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };

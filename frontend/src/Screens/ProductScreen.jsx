@@ -90,6 +90,11 @@ const ProductScreen = () => {
     navigate(`/review/${id}`); // Redirect to the review page with the product ID
   };
 
+  const handleFeedback = () => {
+    navigate(`/feedback/${id}`);
+  };
+  
+
   const handleScrollToVideo = (videoId) => {
     setSelectedVideoId(videoId);
     videoRefs.current.get(videoId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -124,6 +129,7 @@ const ProductScreen = () => {
         {userId !== product.user && !isUserSubscribed && ( // Only render the button if the user is not the product owner and is not subscribed
           <div className="ratings">
             <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
+            <button className="" onClick={handleFeedback}>feedbacks</button>
           </div>
         )}
         {isUserSubscribed && (
@@ -137,7 +143,7 @@ const ProductScreen = () => {
             <div className="dropdown-content">
               <button onClick={handleGoBack}>Go Back</button>
               {/* Only instructors who posted the product or admin can edit/delete */}
-              {(userId === product.user ) || userType === 'admin' ? (
+              {(userId === product.user ) ||  userInfo.isAdmin ? (
                 <>
                   <button onClick={handleDeleteProduct}>Delete Product</button>
                   <button onClick={() => handleEditProduct(product.id)}>Edit Product</button>
@@ -152,14 +158,7 @@ const ProductScreen = () => {
       <div className="gray-section">
         <h1>{product.name}</h1>
         <p>{product.description}</p>
-        <p>Uploaded by: 
-            <span 
-              style={{ cursor: 'pointer', textDecoration: 'underline' }}
-              onClick={() => handleNavigateToUserProfile(product.user)}
-            >
-              {product.user_name}
-            </span>
-        </p>
+        <p>Uploaded by: {product.user_name}</p>
         <p>Created at: {product.createdAt}</p>
         <p>Edited at: {product.editedAt}</p>
       </div>
@@ -181,7 +180,7 @@ const ProductScreen = () => {
           {videos.map((video) => (
             <div key={video.id} style={{ display: selectedVideoId === video.id ? 'block' : 'none' }}>
               {/* Render only if the video ID matches the selectedVideoId */}
-              {((userId === product.user && userType === 'instructor') || userType === 'admin' || isUserSubscribed) ? (
+              {((userId === product.user && userType === 'instructor') || userInfo.isAdmin || isUserSubscribed) ? (
                 <a
                   href={`/product/${id}/video/${video.id}`}
                   style={{ color: 'blue', cursor: 'pointer' }}

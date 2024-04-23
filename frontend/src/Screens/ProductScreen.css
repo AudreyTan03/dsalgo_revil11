@@ -52,8 +52,7 @@ body, html {
     --glow-intensity: 10px; /* Default glow intensity */
   }
 
-  .add-to-cart-button,
-  .view-reviews-button {
+  .add-to-cart-button {
       font-size: .8em;
       padding: 14px 97px;
       margin-left: -160px;
@@ -82,7 +81,7 @@ body, html {
 } */
   
   .view-reviews-button {
-      margin-top: 374px;
+      margin-top: 100px;
   }
 
 .bigger-button::before {

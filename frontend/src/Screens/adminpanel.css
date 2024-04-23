@@ -41,4 +41,5 @@
 .admin-panel__data-box-container {
   margin-left: 240px; /* Instead of padding, use margin to push content to the right of the sidebar */
   padding: 20px; /* Add some padding for better spacing */
+  overflow-y: auto;
 }

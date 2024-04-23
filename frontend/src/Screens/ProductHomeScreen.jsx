@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col, Form, FormControl, Button } from 'react-bootstrap';
 import Product from '../Components/Product';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/productActions';
@@ -15,15 +15,25 @@ function ProductHome() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categories, setCategories] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     dispatch(listProducts());
     fetchCategories();
   }, [dispatch]);
 
+  useEffect(() => {
+    const filteredProducts = products.filter(product =>
+      ((product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (product.user && product.user.name && product.user.name.toLowerCase().includes(searchTerm.toLowerCase()))) &&
+      (selectedCategory === '' || product.category === parseInt(selectedCategory))
+    );
+    setFilteredProducts(filteredProducts);
+  }, [searchTerm, selectedCategory, products]);
+
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/categories/');
+      const response = await fetch('/api/categories/');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -37,21 +47,24 @@ function ProductHome() {
     setSelectedCategory(categoryId);
   };
 
-  const filteredProducts = products.filter(product =>
-    (product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     product.user.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedCategory === '' || product.category === parseInt(selectedCategory))
-  );
-
   return (
     <div>
       <Navbar
-        handleSearch={(e) => setSearchTerm(e.target.value)}
-        searchTerm={searchTerm}
         categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
+      <div className="search-bar">
+        <Form inline={true.toString()}>
+          <FormControl
+            type="text"
+            placeholder="Search"
+            className="mr-sm-2"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Form>
+      </div>
       {loading ? (
         <Loader />
       ) : error ? (

@@ -75,3 +75,12 @@ class StatisticsQuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ['id', 'video', 'user', 'user_details', 'video_title', 'product_name', 'product_id', 'question', 'reply', 'createdAt']
 
+class QuestionSerializer(serializers.ModelSerializer):
+    video = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    user_details = UserSerializer(source='user', read_only=True)  # Add this field to get the user's details
+
+
+    class Meta:
+        model = Question
+        fields = '__all__'

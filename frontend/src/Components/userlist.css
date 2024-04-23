@@ -1,3 +1,5 @@
+/* userlist.css */
+
 /* Use a modern, easy-to-read font */
 .user-list-container {
   font-family: 'Segoe UI', 'Roboto', sans-serif;
@@ -6,6 +8,30 @@
   display: flex;
   flex-direction: column;
   color: #333; /* Dark grey color for better readability */
+  overflow-y: auto; /* Enable vertical scrollbar */
+  scrollbar-width: thin; /* Set the width of the scrollbar */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Set the color of the scrollbar */
+}
+
+/* Track */
+.user-list-container::-webkit-scrollbar-track {
+  background: transparent; /* Transparent background */
+}
+
+/* Handle */
+.user-list-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* Color of the scrollbar handle */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Handle on hover */
+.user-list-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4); /* Darker color on hover */
+}
+
+/* Add additional styles for scrollbar corners if needed */
+.user-list-container::-webkit-scrollbar-corner {
+  background-color: transparent; /* Transparent background */
 }
 
 .user-list-header {
@@ -102,4 +128,25 @@
 
 .student {
   background-color: #3498db; /* Blue for students */
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: #fff;
 }

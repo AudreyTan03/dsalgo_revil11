@@ -85,3 +85,23 @@
     }
   }
   
+/* Pagination styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: #fff;
+}

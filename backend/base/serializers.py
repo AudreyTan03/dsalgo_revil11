@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
 from django.core.exceptions import ValidationError
 from videos.serializers import AdminVideoSerializer, VideoSerializer
+# from videos.model import Question
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -107,12 +108,14 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = serializers.SerializerMethodField(read_only=True)
     user = serializers.SerializerMethodField(read_only=True)
+    product = serializers.SerializerMethodField(read_only=True)
     # id=serializers.SerializerMethodField(source='_id',read_only=True)
 
     class Meta:
         model = Order
         fields = '__all__'
-    
+
+
     def get_orderItems(self, obj):
         items = obj.order_items.all()  # Corrected related name
         serializer = OrderItemSerializer(items, many=True)  # Assuming you have an OrderItemSerializer
@@ -128,6 +131,10 @@ class OrderSerializer(serializers.ModelSerializer):
         product_data = Product.objects.filter(pk__in=products)
         serializer = ProductSerializer(product_data, many=True)  # Serialize product data
         return serializer.data
+
+
+    
+    
 
     
 # class RatingSerializer(serializers.ModelSerializer):

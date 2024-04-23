@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers, deleteUser } from '../actions/adminActions';
 import { Link } from 'react-router-dom';
@@ -8,9 +8,23 @@ const UserList = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.userReducer.users);
 
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5; // Number of users to display per page
+
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
+
+  // Pagination logic
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users && users.slice(indexOfFirstUser, indexOfLastUser);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => setCurrentPage(currentPage + 1);
+  const prevPage = () => setCurrentPage(currentPage - 1);
 
   const handleDelete = (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
@@ -27,7 +41,7 @@ const UserList = () => {
         <div className="header-item">Admin</div>
         <div className="header-item">Actions</div>
       </div>
-      {users && users.map((user) => (
+      {currentUsers && currentUsers.map((user) => (
         <div className="user-list-row" key={user.id}>
           <div className="row-item">{user.id}</div>
           <div className="row-item">
@@ -46,6 +60,14 @@ const UserList = () => {
           </div>
         </div>
       ))}
+      {/* Pagination */}
+      <div className="pagination">
+        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+        {[...Array(Math.ceil((users && users.length || 0) / usersPerPage)).keys()].map((number) => (
+          <button key={number + 1} onClick={() => paginate(number + 1)} className={currentPage === number + 1 ? 'active' : ''}>{number + 1}</button>
+        ))}
+        <button onClick={nextPage} disabled={currentPage === Math.ceil((users && users.length || 0) / usersPerPage)}>Next</button>
+      </div>
     </div>
   );
 };
