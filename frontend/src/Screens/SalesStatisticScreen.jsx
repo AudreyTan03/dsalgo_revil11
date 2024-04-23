@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
 import { useDispatch, useSelector } from 'react-redux';
 import { listUserProductQuestions } from '../actions/questionAction';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Chart as ChartJS,
@@ -30,7 +31,7 @@ ChartJS.register(
 
 function SalesStatisticScreen() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { userInfo } = useSelector(state => state.userLogin);
 
   const userProductQuestions = useSelector(state => state.listUserProductQuestionsReducer);
@@ -48,7 +49,7 @@ function SalesStatisticScreen() {
 
   const fetchSalesData = () => {
     $.ajax({
-      url: 'http://127.0.0.1:8000/api/sales-statistics/',
+      url: 'https://revilll101-27f25f7438c4.herokuapp.com/api/sales-statistics/',
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -69,12 +70,16 @@ function SalesStatisticScreen() {
     });
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   const handleReplySubmit = (questionId, productId, video) => {
     console.log('Product ID:', productId);
     console.log('Video:', video);
     
     $.ajax({
-      url: `http://127.0.0.1:8000/api/products/${productId}/videos/${video}/questions/${questionId}/reply/`,
+      url: `https://revilll101-27f25f7438c4.herokuapp.com/api/products/${productId}/videos/${video}/questions/${questionId}/reply/`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -261,7 +266,9 @@ function SalesStatisticScreen() {
                   <p style={{ color: 'black' }}>Question: {question.question}</p>
                   {question.reply ? (
                     <p style={{ color: 'black' }}>Reply: {question.reply}</p>
+                      
                   ) : (
+
                     <>
                       <input
                         type="text"
@@ -271,13 +278,16 @@ function SalesStatisticScreen() {
                         style={{ marginRight: '10px' }}
                       />
                       <button onClick={() => handleReplySubmit(question.id, question.product_id, question.video)}>Reply</button>
+                      
                     </>
                   )}
                 </div>
               ))
             ) : (
               <p style={{ color: 'black' }}>No questions found.</p>
+              
             )}
+              <button onClick={handleGoBack}>Go Back</button>
           </div>
         </div>
       </div>

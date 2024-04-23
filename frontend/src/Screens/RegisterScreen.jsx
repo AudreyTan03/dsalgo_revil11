@@ -40,7 +40,7 @@ function RegisterScreen() {
     <div className="" style={{ maxWidth: '100%', height:'100vh', paddingLeft:'1rem', background:'#ebe8df' }}>  
      <Row>
         <Col className='video' md={6} style={{height:'98vh'}}>
-          <video src="/Images/Gifforcode.mp4" autoPlay muted loop></video>
+          <img src="https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.15752-9/434992543_725123242862767_1805747067975356669_n.png?_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGELjweWxygTLx1gI0s_g3RE1vnJ3SpqewTW-cndKmp7HWNLUP64Lu7aq6MIWbZm3SVAVWwyDlT0_YpxEQYJ7MC&_nc_ohc=fFGF2l0aw98Ab6sfUqu&_nc_ht=scontent.fmnl4-2.fna&oh=03_Q7cD1QEjfABzwVqT7RP4U_JpyzSImxcAV1z56oMwzAA_tleUAg&oe=664EFB04" autoPlay muted loop></img>
           
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '10px', borderRadius: '5px' }}>
             <p style={{ margin: 0 }}>REVIL: Resources for Video Learning</p>

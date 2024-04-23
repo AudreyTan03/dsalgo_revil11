@@ -52,6 +52,7 @@ import Admin from "./Screens/Utils/AdminProutes";
 import Footer from "./Components/Footer";
 import About from "./Components/AboutUs";
 import Feedback from "./Screens/Feedback";
+import StatsProtectedRoutes from "./Screens/Utils/StatsProtectedRoutes";
 
 function App() {
   // const { isSubscribed } = useSelector((state) => state.userSubscription); // Assuming you have a slice of state that stores subscription status
@@ -86,7 +87,7 @@ function App() {
           <Route path="/profile/:userId" element={<ProfileWithProductScreen />} />
           <Route path="/feedback/:id" element={<Feedback />} />
           <Route path="/productlist" element={<ProductListScreen />} />
-          <Route path="/Statistics" element={<SalesStatisticScreen />} />
+          <Route path="/Statistics" element={<StatsProtectedRoutes><SalesStatisticScreen /> </StatsProtectedRoutes>} />
           <Route path="/cart/:id?" element={<CartScreen />} />  
           <Route path="/order/:id" element={<OrderScreen />} />
           <Route path="/payment" element={<PaymentScreen />} />

@@ -30,9 +30,16 @@ const ProductScreen = () => {
     }
   }, []);
 
+  console.log('Redux userInfo:', userInfo);
+  
+  const isAdmin = userInfo ? userInfo.isAdmin : false;
+  
+
+  
+
   const handleDeleteProduct = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/products/${id}/delete/`, {
+      const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/products/${id}/delete/`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -43,11 +50,12 @@ const ProductScreen = () => {
       setError(error.message);
     }
   };
+  
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/products/${id}`);
+        const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/products/${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch product. Status: ${response.status}`);
         }
@@ -69,13 +77,14 @@ const ProductScreen = () => {
     navigate(`/edit/${id}`, { state: { productId: id } }); // Pass the product ID
   };
   
-  const handleNavigateToUserProfile = (userId) => {
-    navigate(`/profile/${userId}`);
-  };
 
   const handleAddToCart = () => {
     dispatch(addToCart(id, 1));
     navigate('/cart');
+  };
+
+  const handleFeedback = () => {
+    navigate(`/feedback/${id}`);
   };
 
   const toggleDropdown = () => {
@@ -89,11 +98,6 @@ const ProductScreen = () => {
   const handleViewReviews = () => {
     navigate(`/review/${id}`); // Redirect to the review page with the product ID
   };
-
-  const handleFeedback = () => {
-    navigate(`/feedback/${id}`);
-  };
-  
 
   const handleScrollToVideo = (videoId) => {
     setSelectedVideoId(videoId);
@@ -130,8 +134,16 @@ const ProductScreen = () => {
           <div className="ratings">
             <button className="add-to-cart-button bigger-button" onClick={handleAddToCart}>Add to Cart</button>
             <button className="" onClick={handleFeedback}>feedbacks</button>
+
           </div>
         )}
+
+             {isAdmin && (
+             <div className="">
+               <button className="" onClick={handleViewReviews}>View Reviews</button>
+               </div>
+          )}
+
         {isUserSubscribed && (
           <div className="view-reviews-container">
             <button className="view-reviews-button" onClick={handleViewReviews}>View Reviews</button>
@@ -143,7 +155,7 @@ const ProductScreen = () => {
             <div className="dropdown-content">
               <button onClick={handleGoBack}>Go Back</button>
               {/* Only instructors who posted the product or admin can edit/delete */}
-              {(userId === product.user ) ||  userInfo.isAdmin ? (
+              {(userId === product.user ) || userType === 'admin' ? (
                 <>
                   <button onClick={handleDeleteProduct}>Delete Product</button>
                   <button onClick={() => handleEditProduct(product.id)}>Edit Product</button>
@@ -180,7 +192,7 @@ const ProductScreen = () => {
           {videos.map((video) => (
             <div key={video.id} style={{ display: selectedVideoId === video.id ? 'block' : 'none' }}>
               {/* Render only if the video ID matches the selectedVideoId */}
-              {((userId === product.user && userType === 'instructor') || userInfo.isAdmin || isUserSubscribed) ? (
+              {((userId === product.user && userType === 'instructor') || userType === 'admin' || isUserSubscribed) ? (
                 <a
                   href={`/product/${id}/video/${video.id}`}
                   style={{ color: 'blue', cursor: 'pointer' }}

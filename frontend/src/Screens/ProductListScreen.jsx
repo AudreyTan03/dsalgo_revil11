@@ -13,7 +13,7 @@ const ProductListScreen = () => {
     const fetchUserProducts = async () => {
       try {
         if (!userInfo || !userInfo.token || !userInfo.token.id) return;
-        const response = await fetch(`http://127.0.0.1:8000/api/user-products/?user=${userInfo.token.id}`, {
+        const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/user-products/?user=${userInfo.token.id}`, {
           headers: {
             Authorization: `Bearer ${userInfo.token.access}`
           }

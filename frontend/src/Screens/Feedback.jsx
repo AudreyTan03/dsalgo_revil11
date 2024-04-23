@@ -12,7 +12,7 @@ const Feedback = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/reviews/?product=${id}`);
+        const response = await fetch(`https://revilll101-27f25f7438c4.herokuapp.com/api/reviews/?product=${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch reviews. Status: ${response.status}`);
         }
