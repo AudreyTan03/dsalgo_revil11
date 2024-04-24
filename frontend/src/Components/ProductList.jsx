@@ -47,7 +47,7 @@ const ProductList = () => {
             <span>
               <Link to={`/admin/product-details/${product._id}`} className="AdminProduct-product-link">{product.name}</Link>
             </span>
-            <Link to={`/admin/edit-product/${product._id}`} className="AdminProduct-edit-link">Edit</Link>
+            {/* <Link to={`/admin/edit-product/${product._id}`} className="AdminProduct-edit-link">Edit</Link> */}
             <button onClick={() => handleDelete(product._id)} className="AdminProduct-delete-button">Delete</button>
           </li>
         ))}

@@ -330,3 +330,19 @@ class ContactMessageDeleteAPIView(DestroyAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
 
+from rest_framework.permissions import AllowAny
+
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def update_users(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = UserSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

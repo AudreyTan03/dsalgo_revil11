@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { editUser } from '../actions/adminActions';
 import { useParams, useNavigate } from 'react-router-dom'; // Import useParams from React Router
+import axios from 'axios'; // Import axios for making API calls
 
 const EditUser = () => {
   const { userId } = useParams();
@@ -14,6 +15,10 @@ const EditUser = () => {
     name: '',
     email: '',
     user_type: ''
+  });
+
+  const instance = axios.create({
+    baseURL: 'https://revil24-15f5d0b1bcb1.herokuapp.com/', // Replace this with your API base URL
   });
 
   useEffect(() => {
@@ -39,9 +44,13 @@ const EditUser = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (selectedUser) {
-      await dispatch(editUser(selectedUser._id, editedUserData));
-      // Redirect back to admin panel after editing
-      navigate('/admin');
+      try {
+        await instance.patch(`api/admin/users/edit/${selectedUser.id}/`, editedUserData);
+        // Redirect back to admin panel after editing
+        navigate('/admin');
+      } catch (error) {
+        console.error('Failed to edit user:', error);
+      }
     }
   };
 

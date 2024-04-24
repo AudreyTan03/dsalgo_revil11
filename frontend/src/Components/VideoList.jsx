@@ -42,7 +42,7 @@ const VideoList = () => {
                         <Card className="AdminVid-card"> {/* Add AdminVid prefix to card */}
                             <Card.Body>
                                 <Card.Title>{video.title}</Card.Title>
-                                <Link to={`/admin/video-details/${video.id}`} className="AdminVid-btn btn btn-primary mr-2">View Details</Link> {/* Add AdminVid prefix to btn */}
+                                {/* <Link to={`/admin/video-details/${video.id}`} className="AdminVid-btn btn btn-primary mr-2">View Details</Link> Add AdminVid prefix to btn */}
                                 <Button variant="danger" onClick={() => handleDelete(video.id)} className="AdminVid-delete-btn">Delete</Button> {/* Add AdminVid prefix to delete-btn */}
                             </Card.Body>
                         </Card>

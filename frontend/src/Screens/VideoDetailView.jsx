@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { videoDetailView } from '../actions/videoActions';
 import { postQuestion, postReply, listQuestions } from '../actions/questionAction';
-import Loader from '../Components/Loader'; // Import Loader component
 import './videodetailview.css';
 
 const VideoDetailView = () => {
@@ -26,19 +25,23 @@ const VideoDetailView = () => {
     };
 
     fetchVideoDetails();
+  }, [dispatch, productId, videoId]);
 
+  useEffect(() => {
+    // Dispatch the listQuestions action separately
     dispatch(listQuestions(productId, videoId));
   }, [dispatch, productId, videoId]);
 
-  const handleQuestionSubmit = () => {
-    dispatch(postQuestion(productId, videoId, { question: questionText }));
-    setQuestionText('');
-    window.location.reload(); // Reload the page after submitting a question
+  const handleQuestionSubmit = async () => {
+    await dispatch(postQuestion(productId, videoId, { question: questionText }));
+    setQuestionText(''); // Clear the question text after submission
+    dispatch(listQuestions(productId, videoId)); // Fetch the updated list of questions
   };
 
-  const handleReplySubmit = (questionId, replyText) => {
-    dispatch(postReply(productId, videoId, questionId, { reply: replyText }));
-    window.location.reload(); // Reload the page after submitting a question
+  const handleReplySubmit = async (questionId, replyText) => {
+    await dispatch(postReply(productId, videoId, questionId, { reply: replyText }));
+    setReplyText(''); // Clear the reply text after submission
+    dispatch(listQuestions(productId, videoId)); // Fetch the updated list of questions
   };
 
   return (
@@ -54,9 +57,7 @@ const VideoDetailView = () => {
             Your browser does not support the video tag.
           </video>
         </div>
-      ) : (
-        <Loader /> // Replace LoadingSpinner with Loader component
-      )}
+      ) : null}
 
       {/* Conditionally render the submit question button */}
       {userId !== video?.product_user && (
@@ -71,9 +72,7 @@ const VideoDetailView = () => {
       )}
 
       <h2>Questions</h2>
-      {questionsState.loading ? (
-        <Loader /> // Replace LoadingSpinner with Loader component
-      ) : questionsState.error ? (
+      {questionsState.error ? (
         <div>Error: {questionsState.error}</div>
       ) : (
         <div>
@@ -85,10 +84,6 @@ const VideoDetailView = () => {
                 <p>User: {question.user_details.name}</p> {/* Display the user's name */}
                 <p>{question.question}</p>
                 {/* Adjusted the condition to hide reply textbox and button if user is not the creator */}
-                {console.log('userInfo:', userInfo)}
-                {console.log('userId:', userId)}
-                {console.log('video.product_user:', video?.product_user)}
-                {console.log('Comparison result:', userInfo.id === video?.product_user)}
                 {video && userId && video.product_user && userId === video.product_user ? (
                   <div>
                     {!question.reply && ( // Only render if there is no reply

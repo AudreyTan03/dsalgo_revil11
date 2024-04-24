@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 import { listVideos, checkSubscription } from '../actions/videoActions';
-import '../Screens/productscreen.css';
+import '../Screens/ProductScreen.css';
 
 const ProductScreen = () => {
   const { id } = useParams();
@@ -34,7 +34,15 @@ const ProductScreen = () => {
   
   const isAdmin = userInfo ? userInfo.isAdmin : false;
   
-
+  const handleVideoDetails = () => {
+    // Find the selected video based on selectedVideoId
+    const selectedVideo = videos.find(video => video.id === selectedVideoId);
+    // Check if a video is found
+    if (selectedVideo) {
+      // Navigate to the video details page
+      navigate(`/product/${id}/video/${selectedVideo.id}`);
+    }
+  };
   
 
   const handleDeleteProduct = async () => {
@@ -194,7 +202,8 @@ const ProductScreen = () => {
               {/* Render only if the video ID matches the selectedVideoId */}
               {((userId === product.user && userType === 'instructor') || userType === 'admin' || isUserSubscribed) ? (
                 <a
-                  href={`/product/${id}/video/${video.id}`}
+                  onClick={handleVideoDetails}
+                  // href={`/product/${id}/video/${video.id}`}
                   style={{ color: 'blue', cursor: 'pointer' }}
                 >
                   {video.title}
